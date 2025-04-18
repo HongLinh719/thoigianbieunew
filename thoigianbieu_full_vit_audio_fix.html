@@ -393,9 +393,175 @@
             background-color: #FFEBEE;
             border-left: 4px solid var(--danger-color);
         }
-    </style>
+    /* Responsive design cho điện thoại */
+    @media screen and (max-width: 768px) {
+        body {
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 10px;
+            margin: 0;
+        }
+
+        /* Điều chỉnh header */
+        .header {
+            margin: 0 0 15px 0;
+            border-radius: 0;
+        }
+
+        .header h1 {
+            font-size: 20px;
+        }
+
+
+
+        /* Điều chỉnh cây và nút tưới nước */
+        div[style*="position: fixed; bottom: 500px; right: 340px;"] {
+            position: static !important;
+            width: 100% !important;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        #tree-img {
+            width: 120px !important;
+            height: 120px !important;
+        }
+
+        /* Điều chỉnh huy hiệu */
+        div[style*="position: fixed; top: 100px; right: 20px;"] {
+            position: static !important;
+            width: 100% !important;
+            margin: 10px 0;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Điều chỉnh tabs */
+        .tabs {
+            margin: 10px 0;
+        }
+
+        .tab {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .tab img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Điều chỉnh nhiệm vụ */
+        .task {
+            margin-bottom: 10px;
+        }
+
+        .task-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .task-time {
+            margin-bottom: 5px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .task-name {
+            width: 100%;
+        }
+
+        .rating-buttons {
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .rating-btn {
+            width: 100%;
+            padding: 12px;
+            justify-content: center;
+        }
+
+        /* Điều chỉnh hiệu ứng tưới nước */
+        #watering-gif {
+            width: 80px !important;
+            height: auto !important;
+            top: auto !important;
+            left: 50% !important;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        /* Điều chỉnh popup chúc mừng */
+        #popup-congrats {
+            width: 90% !important;
+            max-width: 300px;
+        }
+
+        #popup-congrats img {
+            width: 150px !important;
+            height: auto !important;
+        }
+
+        /* Điều chỉnh nút thống kê */
+        .stats-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .stats-content {
+            width: 95%;
+            max-width: none;
+            margin: 10px;
+            padding: 15px;
+        }
+
+        /* Tối ưu hiệu ứng */
+        .notification {
+            width: 90%;
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        /* Tối ưu scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+    }
+</style>
 </head>
 <body>
+    
+
+
+<!-- Thêm vào phần JavaScript để xử lý chuyển đổi hiển thị -->
+<script>
+// Cập nhật hàm switchTab để hiển thị đúng profile
+let originalSwitchTab;
+if (typeof switchTab !== 'undefined') {
+    originalSwitchTab = switchTab;
+    switchTab = function(childName) {
+        originalSwitchTab(childName);
+        updateLevelDisplay();
+        
+        // Ẩn/hiện profile tương ứng
+        document.getElementById('tridung-profile').style.display = childName === 'tridung' ? 'block' : 'none';
+        document.getElementById('thaoVy-profile').style.display = childName === 'thaoVy' ? 'block' : 'none';
+    };
+}
+</script>
 <div class="container">
 <div class="header">
 <h1>Thời gian biểu cho bé</h1>
@@ -407,10 +573,41 @@
 <button class="date-btn" onclick="changeDate(1)"><i class="fas fa-chevron-right"></i></button>
 </div>
 </div>
+
 <div class="tabs">
-<div class="tab active" onclick="switchTab('tridung')">Trí Dũng (5 tuổi)</div>
-<div class="tab" onclick="switchTab('thaoVy')">Thảo Vy (3 tuổi)</div>
+    <div class="tab active" onclick="switchTab('tridung')">
+        <img src="images/vit.jpg" style="width:30px; height:30px; border-radius:50%; margin-right:5px; vertical-align:middle;">
+        Trí Dũng (5 tuổi)
+    </div>
+    <div class="tab" onclick="switchTab('thaoVy')">
+        <img src="images/vy.jpg" style="width:30px; height:30px; border-radius:50%; margin-right:5px; vertical-align:middle;">
+        Thảo Vy (3 tuổi)
+    </div>
 </div>
+
+<style>
+.tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    /* ...existing styles... */
+}
+
+.tab img {
+    transition: transform 0.3s ease;
+}
+
+.tab:hover img {
+    transform: scale(1.1);
+}
+
+.tab.active img {
+    border: 2px solid #fff;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+</style>
+
 <div class="progress">
 <div class="progress-bar" id="progressBar" style="width: 0%">0/16 điểm</div>
 </div>
@@ -663,42 +860,6 @@
             return taskElement;
         }
         
-        // Đánh giá nhiệm vụ
-        function rateTask(childName, taskId, rating) {
-            // Xác thực mã PIN đơn giản
-            const pin = prompt("Nhập mã PIN để xác nhận (mặc định: 1234):");
-            if (pin !== "1234") {
-                alert("Mã PIN không đúng!");
-                return;
-            }
-            
-            const dateKey = getDateKey();
-            
-            if (scheduleData[childName][dateKey] && scheduleData[childName][dateKey].tasks) {
-                const task = scheduleData[childName][dateKey].tasks.find(t => t.id === taskId);
-                if (task) {
-                    // Cập nhật đánh giá
-                    task.rating = rating;
-                    
-                    // Tính lại tổng điểm
-                    recalculateTotalPoints(childName, dateKey);
-            // THÊM ĐOẠN CODE NÀY Ở ĐÂY, NGAY TRƯỚC CÁC DÒNG CẬP NHẬT GIAO DIỆN
-            if (rating === 'good') {
-    const taskTemplate = taskTemplates[childName].find(t => t.id === taskId);
-    if (taskTemplate) {
-        playCongrats(taskTemplate.name.toLowerCase());
-        // Thêm dòng này để tăng nước khi hoàn thành tốt
-        addWater(1);
-    }
-}
-                    // Cập nhật giao diện
-                    renderTasks();
-                    updateProgress();
-                    checkReward();
-                    saveData();
-                }
-            }
-        }
         
         // Tính lại tổng điểm
         function recalculateTotalPoints(childName, dateKey) {
@@ -776,7 +937,12 @@ scheduleData[childName][dateKey].totalPoints = totalPoints;
                 tab.style.display = 'none';
             });
             
-            document.getElementById(childName).style.display = 'block';
+            // Sửa tên biến cho đúng - thaoVy thành thaoVy
+            document.getElementById(childName === 'tridung' ? 'tridung' : 'thaoVy').style.display = 'block';
+            
+            // Ẩn/hiện profile tương ứng
+            document.getElementById('tridung-profile').style.display = childName === 'tridung' ? 'block' : 'none';
+            document.getElementById('thaoVy-profile').style.display = childName === 'thaoVy' ? 'block' : 'none';
             
             // Cập nhật tiến trình và trạng thái phần thưởng
             updateProgress();
@@ -946,6 +1112,34 @@ function saveData() {
         treeLevel: treeLevel
     }));
 }
+function updateTreeImage() {
+    // Xác định cấp độ cây dựa vào ngày trong tuần
+    const weekDay = new Date().getDay(); // 0: Chủ Nhật, 1: Thứ 2...
+    
+    // Nếu là chủ nhật, hiển thị cây trưởng thành
+    if (weekDay === 0) {
+        document.getElementById("tree-img").src = "images/tree_day7.png";
+        document.getElementById("tree-status").textContent = "Cây đã trưởng thành hoàn toàn! Chúc mừng bé!";
+        document.getElementById("tree-status").style.color = "#4CAF50";
+    } else {
+        // Các ngày khác trong tuần, hiển thị theo tiến độ
+        // Thứ 2 (1) -> cấp độ 1, Thứ 3 (2) -> cấp độ 2, ..., Thứ 7 (6) -> cấp độ 6
+        const expectedLevel = weekDay; // Cấp độ mong đợi cho ngày hiện tại
+        
+        // Hiển thị cây theo cấp độ thực tế (không vượt quá cấp độ mong đợi)
+        const displayLevel = Math.min(treeLevel, expectedLevel);
+        document.getElementById("tree-img").src = `images/tree_day${displayLevel}.png`;
+        
+        // Hiển thị thông báo về trạng thái cây
+        if (treeLevel < expectedLevel) {
+            document.getElementById("tree-status").textContent = "Cây cần thêm nước để phát triển!";
+            document.getElementById("tree-status").style.color = "#FF9800";
+        } else {
+            document.getElementById("tree-status").textContent = "Cây đang phát triển tốt!";
+            document.getElementById("tree-status").style.color = "#4CAF50";
+        }
+    }
+}
 
 // Hàm tải dữ liệu
 function loadData() {
@@ -973,7 +1167,7 @@ function loadData() {
     
     // Khởi tạo ngày hiện tại nếu chưa có
     initializeCurrentDate();
-    
+    checkAndResetTree();
     updateDateDisplay();
     updateSleepRecord();
     renderTasks();
@@ -1033,12 +1227,6 @@ function loadData() {
     <button onclick="waterTree()">💧 Bé tưới nước cho cây</button>
 </div>
 
-
-<script>
-// Đánh giá nhiệm vụ
-
-
-
 <!-- Thêm khu vực hiển thị huy hiệu -->
 <div style="position: fixed; top: 100px; right: 20px; text-align: center; background-color: rgba(255,255,255,0.8); padding: 10px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
     <h3 style="margin-top: 0; color: #FF6D00;">Huy hiệu của bé</h3>
@@ -1046,8 +1234,7 @@ function loadData() {
         <!-- Huy hiệu sẽ được thêm vào đây -->
     </div>
 </div>
-
-
+<script>
 // Định nghĩa các loại huy hiệu
 const badges = [
     { id: 'star3', name: '3 Ngày Sao Vàng', image: '⭐⭐⭐', condition: 'Hoàn thành tốt 3 ngày liên tiếp' },
@@ -1170,7 +1357,120 @@ function showBadgeAward(badgeId) {
     const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/218/218-preview.mp3');
     audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
 }
+// Thêm vào phần đầu script
+let childLevel = {
+    tridung: 1,
+    thaoVy: 1
+};
 
+// Kiểm tra và nâng cấp
+function checkAndUpgradeLevel() {
+    // Đọc dữ liệu cấp độ từ localStorage nếu có
+    const savedLevels = localStorage.getItem('childLevels');
+    if (savedLevels) {
+        childLevel = JSON.parse(savedLevels);
+    }
+    
+    // Tính tổng điểm của 7 ngày gần nhất
+    let weeklyPoints = 0;
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(currentDate);
+        date.setDate(date.getDate() - i);
+        const dateKey = getDateKey(date);
+        
+        if (scheduleData[currentChild][dateKey] && scheduleData[currentChild][dateKey].totalPoints) {
+            weeklyPoints += scheduleData[currentChild][dateKey].totalPoints;
+        }
+    }
+    
+    // Tính cấp độ mới dựa trên tổng điểm
+    const newLevel = Math.floor(weeklyPoints / 30) + 1;
+    
+    // Nếu cấp độ tăng
+    if (newLevel > childLevel[currentChild]) {
+        // Cập nhật cấp độ
+        const oldLevel = childLevel[currentChild];
+        childLevel[currentChild] = newLevel;
+        
+        // Lưu vào localStorage
+        localStorage.setItem('childLevels', JSON.stringify(childLevel));
+        
+        // Hiển thị thông báo nâng cấp
+        showLevelUpNotification(oldLevel, newLevel);
+        
+        // Cập nhật hiển thị
+        updateLevelDisplay();
+    }
+}
+
+// Hiển thị thông báo nâng cấp
+function showLevelUpNotification(oldLevel, newLevel) {
+    // Tạo phần tử thông báo
+    const notification = document.createElement('div');
+    notification.style.position = 'fixed';
+    notification.style.top = '50%';
+    notification.style.left = '50%';
+    notification.style.transform = 'translate(-50%, -50%)';
+    notification.style.background = 'linear-gradient(45deg, #4CAF50, #8BC34A)';
+    notification.style.color = 'white';
+    notification.style.padding = '20px';
+    notification.style.borderRadius = '15px';
+    notification.style.boxShadow = '0 5px 30px rgba(0,0,0,0.3)';
+    notification.style.textAlign = 'center';
+    notification.style.zIndex = '10000';
+    
+    // Nội dung thông báo
+    notification.innerHTML = `
+        <div style="font-size: 72px; margin-bottom: 10px;">🎉</div>
+        <div style="font-weight: bold; margin-bottom: 10px;">CHÚC MỪNG BÉ!</div>
+        <div>Bé đã lên cấp!</div>
+        <div style="display: flex; align-items: center; justify-content: center; margin: 20px 0;">
+            <div style="font-size: 24px; margin-right: 20px;">Cấp ${oldLevel}</div>
+            <div style="font-size: 24px;">➡️</div>
+            <div style="font-size: 36px; font-weight: bold; margin-left: 20px;">Cấp ${newLevel}</div>
+        </div>
+        <div>Hãy tiếp tục cố gắng nhé!</div>
+        <button style="margin-top: 20px; padding: 10px 20px; background: white; color: #4CAF50; border: none; border-radius: 30px; font-weight: bold; cursor: pointer;">Cảm ơn</button>
+    `;
+    
+    // Thêm vào body
+    document.body.appendChild(notification);
+    
+    // Xử lý sự kiện nút đóng
+    notification.querySelector('button').addEventListener('click', () => {
+        document.body.removeChild(notification);
+    });
+    
+    // Phát âm thanh chúc mừng
+    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/220/220-preview.mp3');
+    audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+    
+    // Hiệu ứng pháo hoa
+    createFireworks();
+}
+
+// Cập nhật hiển thị cấp độ
+function updateLevelDisplay() {
+    // Kiểm tra nếu phần tử hiển thị cấp độ chưa tồn tại, tạo mới
+    if (!document.getElementById('child-level-display')) {
+        const levelDisplay = document.createElement('div');
+        levelDisplay.id = 'child-level-display';
+        levelDisplay.style.position = 'fixed';
+        levelDisplay.style.top = '70px';
+        levelDisplay.style.left = '20px';
+        levelDisplay.style.background = 'linear-gradient(45deg, #673AB7, #3F51B5)';
+        levelDisplay.style.color = 'white';
+        levelDisplay.style.padding = '5px 15px';
+        levelDisplay.style.borderRadius = '20px';
+        levelDisplay.style.fontWeight = 'bold';
+        levelDisplay.style.zIndex = '999';
+        document.body.appendChild(levelDisplay);
+    }
+    
+    // Cập nhật nội dung
+    const levelDisplay = document.getElementById('child-level-display');
+    levelDisplay.innerHTML = `${currentChild === 'tridung' ? 'Trí Dũng' : 'Thảo Vy'} - Cấp ${childLevel[currentChild]}`;
+}
 // Hiển thị huy hiệu đã đạt được
 function renderBadges() {
     const container = document.getElementById('badges-container');
@@ -1204,68 +1504,361 @@ function renderBadges() {
         container.appendChild(badgeElement);
     });
 }
+// Đánh giá nhiệm vụ
 
-function playCongrats(taskName) {
+
+
+
+
+// Tạo hiệu ứng confetti nhỏ
+function createSmallConfetti(element) {
+    const rect = element.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.width = '8px';
+        confetti.style.height = '8px';
+        confetti.style.backgroundColor = getRandomColor();
+        confetti.style.left = `${centerX}px`;
+        confetti.style.top = `${centerY}px`;
+        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        confetti.style.opacity = '1';
+        confetti.style.zIndex = '9999';
+        confetti.style.pointerEvents = 'none';
+        document.body.appendChild(confetti);
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 20 + Math.random() * 80;
+        const duration = 0.5 + Math.random() * 1;
+
+        confetti.style.transition = `transform ${duration}s ease-out, opacity ${duration}s ease-out`;
+
+        setTimeout(() => {
+            confetti.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) rotate(${Math.random() * 360}deg)`;
+            confetti.style.opacity = '0';
+        }, 10);
+
+        setTimeout(() => {
+            if (document.body.contains(confetti)) {
+                document.body.removeChild(confetti);
+            }
+        }, duration * 1000);
+    }
+}
+
+// Cập nhật hàm loadData
+const originalLoadData = loadData;
+loadData = function() {
+    originalLoadData();
+    // Hiển thị cấp độ sau khi tải dữ liệu
+    updateLevelDisplay();
+    // Hiển thị huy hiệu
+    renderBadges();
+};
+
+
+// Cập nhật hàm rateTask
+function rateTask(childName, taskId, rating) {
+    const now = new Date();
+    const today = getDateKey(now);
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    const displayedDate = getDateKey(currentDate);
+
+    if (new Date(displayedDate) > new Date(today)) {
+        alert("Không thể đánh giá nhiệm vụ của ngày trong tương lai!");
+        return;
+    }
+
+    // Kiểm tra mật khẩu
+    const pin = prompt("Nhập mã PIN để xác nhận:");
+    if (pin !== "****") {
+        alert("Mã PIN không đúng!");
+        return;
+    }
+
+    const dateKey = getDateKey(currentDate);
+    const task = scheduleData[childName][dateKey]?.tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    // Play appropriate sound for bad rating
+    if (rating === 'bad') {
+        const audio = new Audio('./audio/chua_tot.mp3');
+        audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+    } else if (rating === 'neutral') {
+        const audio = new Audio('./audio/ban_co_gang_vao_lan_sau_nhe.mp3');
+        audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+    }
+
+    task.rating = rating;
+    recalculateTotalPoints(childName, dateKey);
+
+    // Xử lý khi đánh giá tốt
+    if (rating === 'good') {
+        const taskTemplate = taskTemplates[childName].find(t => t.id === taskId);
+        if (taskTemplate) {
+            // Thứ tự: pháo hoa -> âm thanh mẹ Quỳnh -> tăng nước
+            createFireworks();
+            
+            // Đợi pháo hoa xong mới phát âm thanh và tăng nước
+            setTimeout(() => {
+                playCongrats(taskTemplate.name.toLowerCase(), childName);
+                addWater(1);
+            }, 4000);
+        }
+    }
+
+    renderTasks();
+    updateProgress();
+    checkReward();
+    saveData();
+}
+
+function createFireworks() {
+    const fireworksContainer = document.createElement('div');
+    fireworksContainer.style.position = 'fixed';
+    fireworksContainer.style.top = '0';
+    fireworksContainer.style.left = '0';
+    fireworksContainer.style.width = '100%';
+    fireworksContainer.style.height = '100%';
+    fireworksContainer.style.pointerEvents = 'none';
+    fireworksContainer.style.zIndex = '999';
+    document.body.appendChild(fireworksContainer);
+
+    // Tạo âm thanh pháo hoa
+    const audio = document.getElementById("audio-congrats");
+    audio.src = "audio/firework.mp3";
+    audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+
+    // Tăng số lượng pháo hoa và thời gian hiển thị
+    const totalFireworks = 15; // Tăng từ 5 lên 15
+    const duration = 8000; // Tăng từ 6000 lên 8000ms
+
+    // Tạo pháo hoa với tần suất cao hơn
+    for (let i = 0; i < totalFireworks; i++) {
+        setTimeout(() => {
+            createLargeFirework(fireworksContainer);
+        }, i * 400); // Giảm khoảng cách giữa các quả pháo từ 800 xuống 400ms
+    }
+
+    setTimeout(() => {
+        document.body.removeChild(fireworksContainer);
+    }, duration);
+}
+
+function createLargeFirework(container) {
+    const startX = window.innerWidth / 2;
+    const startY = window.innerHeight;
+
+    // Tăng phạm vi nổ
+    const explodeX = startX + (Math.random() * 400 - 200); // Tăng từ 200 lên 400
+    const explodeY = window.innerHeight * (0.2 + Math.random() * 0.4); // Nổ từ 20% đến 60% chiều cao màn hình
+
+    const firework = document.createElement('div');
+    firework.style.position = 'absolute';
+    firework.style.width = '20px'; // Tăng kích thước từ 15px lên 20px
+    firework.style.height = '20px';
+    firework.style.borderRadius = '50%';
+    firework.style.backgroundColor = getRandomColor();
+    firework.style.boxShadow = `0 0 15px ${getRandomColor()}`; // Tăng độ sáng
+    firework.style.left = `${startX}px`;
+    firework.style.top = `${startY}px`;
+    firework.style.transition = `transform 1s ease-out, opacity 1s ease-out`;
+    container.appendChild(firework);
+
+    setTimeout(() => {
+        firework.style.transform = `translate(${explodeX - startX}px, ${explodeY - startY}px)`;
+
+        setTimeout(() => {
+            firework.style.opacity = '0';
+
+            // Tăng số lượng tia và kích thước
+            const numParticles = 120; // Tăng từ 80 lên 120
+            for (let i = 0; i < numParticles; i++) {
+                const angle = (i / numParticles) * 2 * Math.PI;
+                const distance = 200 + Math.random() * 200; // Tăng khoảng cách bắn
+                const duration = 2.5 + Math.random() * 1.5; // Tăng thời gian bay
+
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = '10px'; // Tăng kích thước tia
+                particle.style.height = '10px';
+                particle.style.backgroundColor = getRandomColor();
+                particle.style.boxShadow = `0 0 8px ${getRandomColor()}`; // Tăng độ sáng
+                particle.style.opacity = '1';
+                particle.style.borderRadius = '50%';
+                particle.style.left = `${explodeX}px`;
+                particle.style.top = `${explodeY}px`;
+                particle.style.transition = `transform ${duration}s ease-out, opacity ${duration}s ease-out`;
+                container.appendChild(particle);
+
+                setTimeout(() => {
+                    particle.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+                    particle.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => {
+                    if (document.body.contains(particle)) {
+                        container.removeChild(particle);
+                    }
+                }, duration * 1000);
+            }
+        }, 1000);
+    }, 10);
+}
+function getRandomColor() {
+    const colors = [
+        '#ff0000', '#ffa500', '#ffff00', '#00ff00', '#00ffff', 
+        '#0000ff', '#ff00ff', '#ff69b4', '#00ff7f', '#ff4500'
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function checkAndResetTree() {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 = Chủ nhật, 1 = Thứ 2, ...
+
+    // Kiểm tra xem có phải là thứ 2 không
+    if (dayOfWeek === 1) {
+        // Lấy ngày cuối cùng reset cây từ localStorage
+        const lastResetDate = localStorage.getItem('lastTreeReset');
+        const today = new Date().toDateString();
+
+        // Nếu chưa reset hôm nay
+        if (lastResetDate !== today) {
+            // Reset cây về cấp 1
+            treeLevel = 1;
+            document.getElementById("tree-img").src = "images/tree_day1.png";
+            document.getElementById("tree-status").textContent = "Cây đã reset! Hãy chăm sóc cây từ đầu nhé!";
+            document.getElementById("tree-status").style.color = "#FF9800";
+
+            // Lưu ngày đã reset
+            localStorage.setItem('lastTreeReset', today);
+            
+            // Lưu trạng thái cây
+            saveData();
+            
+            // Thông báo cho người dùng
+            alert("Đã sang tuần mới! Cây đã được reset về cấp 1.");
+        }
+    }
+}
+function createSingleFirework(container) {
+    // Vị trí xuất phát
+    const startX = Math.random() * window.innerWidth;
+    const startY = window.innerHeight;
+
+    // Vị trí nổ
+    const explodeX = startX + (Math.random() * 200 - 100);
+    const explodeY = 100 + Math.random() * (window.innerHeight / 2);
+
+    // Tạo pháo hoa
+    const firework = document.createElement('div');
+    firework.style.position = 'absolute';
+    firework.style.width = '8px';
+    firework.style.height = '8px';
+    firework.style.borderRadius = '50%';
+    firework.style.backgroundColor = getRandomColor();
+    firework.style.left = `${startX}px`;
+    firework.style.top = `${startY}px`;
+    firework.style.transition = `transform 1.5s ease-out, opacity 1.5s ease-out`;
+    container.appendChild(firework);
+
+    // Bay lên và nổ
+    setTimeout(() => {
+        firework.style.transform = `translate(${explodeX - startX}px, ${explodeY - startY}px)`;
+
+        // Nổ thành nhiều tia nhỏ
+        setTimeout(() => {
+            firework.style.opacity = '0';
+
+            // Tạo các tia nhỏ
+            const numParticles = 50;
+            for (let i = 0; i < numParticles; i++) {
+                const angle = (i / numParticles) * 2 * Math.PI;
+                const distance = 100 + Math.random() * 100;
+                const duration = 1.5 + Math.random() * 0.5;
+
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = '5px';
+                particle.style.height = '5px';
+                particle.style.backgroundColor = getRandomColor();
+                particle.style.opacity = '1';
+                particle.style.borderRadius = '50%';
+                particle.style.left = `${explodeX}px`;
+                particle.style.top = `${explodeY}px`;
+                particle.style.transition = `transform ${duration}s ease-out, opacity ${duration}s ease-out`;
+                container.appendChild(particle);
+
+                // Bắn tỏa ra
+                setTimeout(() => {
+                    particle.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+                    particle.style.opacity = '0';
+                }, 10);
+
+                // Xóa tia sau khi hoàn thành
+                setTimeout(() => {
+                    if (document.body.contains(particle)) {
+                        container.removeChild(particle);
+                    }
+                }, duration * 1000);
+            }
+        }, 1500);
+    }, 10);
+}
+function playCongrats(taskName, childName) {
+  const suffix = childName === 'thaoVy' ? '_thaovy' : '';
+  
   const messages = {
-    "ăn tối tại nhà": "audio/an_toi_tai_nha.mp3",
-    "vệ sinh cá nhân buổi tối": "audio/ve_sinh_ca_nhan_buoi_toi.mp3",
-    "đọc sách, tô màu hoặc làm toán": "audio/doc_sach_to_mau_hoac_lam_toan.mp3",
-    "đi ngủ": "audio/di_ngu.mp3",
-    "thức dậy, vệ sinh cá nhân, đi học": "audio/thuc_day_ve_sinh_ca_nhan_di_hoc.mp3",
-    "chơi tự do": "audio/choi_tu_do.mp3",
+    "ăn tối tại nhà": `audio/an_toi_tai_nha${suffix}.mp3`,
+    "vệ sinh cá nhân buổi tối": `audio/ve_sinh_ca_nhan_buoi_toi${suffix}.mp3`,
+    "đọc sách, tô màu hoặc làm toán": `audio/doc_sach_to_mau_hoac_lam_toan${suffix}.mp3`,
+    "đi ngủ": `audio/di_ngu${suffix}.mp3`,
+    "thức dậy, vệ sinh cá nhân, đi học": `audio/thuc_day_ve_sinh_ca_nhan_di_hoc${suffix}.mp3`,
+    "chơi tự do": `audio/choi_tu_do${suffix}.mp3`,
     "vệ sinh cá nhân sáng": "audio/ve_sinh_ca_nhan_sang.mp3",
-    "ngủ đêm qua": "audio/ngu_dem_qua.mp3"
+    "ngủ đêm qua": "audio/ngu_dem_qua.mp3",
+    "pháo hoa": "audio/firework.mp3"
   };
 
   const audio = document.getElementById("audio-congrats");
   const popup = document.getElementById("popup-congrats");
   const popupText = document.getElementById("popup-text");
 
-  audio.src = messages[taskName] || "";
-  popupText.innerText = "Chúc mừng anh Vít hoàn thành tốt nhiệm vụ: " + taskName;
+  // Chọn đúng file âm thanh dựa trên tên nhiệm vụ
+  const audioPath = messages[taskName.toLowerCase()];
+  if (audioPath) {
+    audio.src = audioPath;
+  }
+
+  // Hiển thị thông báo phù hợp với từng bé
+  const childDisplayName = childName === 'thaoVy' ? 'Thảo Vy' : 'anh Vít';
+  popupText.innerText = `Chúc mừng ${childDisplayName} hoàn thành tốt nhiệm vụ: ${taskName}`;
   popup.style.display = "block";
+
+  // Phát âm thanh
   if (audio.src) {
     audio.play().catch(e => console.warn("Không thể phát audio:", e));
   }
 
+  // Tự động ẩn popup sau 4.5 giây
   setTimeout(() => {
     popup.style.display = "none";
   }, 4500);
 }
 // Cập nhật hình ảnh cây theo ngày trong tuần
-function updateTreeImage() {
-    // Xác định cấp độ cây dựa vào ngày trong tuần
-    const weekDay = new Date().getDay(); // 0: Chủ Nhật, 1: Thứ 2...
-    
-    // Nếu là chủ nhật, hiển thị cây trưởng thành
-    if (weekDay === 0) {
-        document.getElementById("tree-img").src = "images/tree_day7.png";
-        document.getElementById("tree-status").textContent = "Cây đã trưởng thành hoàn toàn! Chúc mừng bé!";
-        document.getElementById("tree-status").style.color = "#4CAF50";
-    } else {
-        // Các ngày khác trong tuần, hiển thị theo tiến độ
-        // Thứ 2 (1) -> cấp độ 1, Thứ 3 (2) -> cấp độ 2, ..., Thứ 7 (6) -> cấp độ 6
-        const expectedLevel = weekDay; // Cấp độ mong đợi cho ngày hiện tại
-        
-        // Hiển thị cây theo cấp độ thực tế (không vượt quá cấp độ mong đợi)
-        const displayLevel = Math.min(treeLevel, expectedLevel);
-        document.getElementById("tree-img").src = `images/tree_day${displayLevel}.png`;
-        
-        // Hiển thị thông báo về trạng thái cây
-        if (treeLevel < expectedLevel) {
-            document.getElementById("tree-status").textContent = "Cây cần thêm nước để phát triển!";
-            document.getElementById("tree-status").style.color = "#FF9800";
-        } else {
-            document.getElementById("tree-status").textContent = "Cây đang phát triển tốt!";
-            document.getElementById("tree-status").style.color = "#4CAF50";
-        }
-    }
-}
+
+
 // Biến theo dõi trạng thái cây và nước
 let waterCredits = 0;       // Số lượt tưới
 let treeLevel = 1;          // Cấp độ cây (1-7)
 let currentWeekDay = 0;     // Ngày trong tuần (0: Chủ Nhật, 1: Thứ 2...)
-
+let waterReceivedTasks = {};
 // Sửa hàm addWater để tăng số lượt tưới
 // Sửa hàm addWater
 function addWater(units) {
@@ -1303,8 +1896,29 @@ function addWater(units) {
     
     console.log("Đã thêm", units, "lượt tưới, hiện có:", waterCredits);
 }
+// Cập nhật hàm rateTask
+/*
+const originalRateTask = rateTask;
+rateTask = function(childName, taskId, rating) {
+    // Gọi hàm gốc
+    originalRateTask(childName, taskId, rating);
 
+    // Nếu đánh giá tốt, tạo hiệu ứng
+    if (rating === 'good') {
+        const taskTemplate = taskTemplates[childName].find(t => t.id === taskId);
+        if (taskTemplate) {
+           playCongrats(taskTemplate.name.toLowerCase());
+            addWater(1);
+        }
+        createFireworks(); // Gọi hiệu ứng pháo hoa
+    }
 
+    // Kiểm tra và nâng cấp
+    checkAndUpgradeLevel();
+    // Kiểm tra và cấp huy hiệu
+    checkAndAwardBadges();
+};
+*/
 // Sửa hàm waterTree() để debug
 function waterTree() {
     console.log("Đang tưới cây, số lượt hiện tại:", waterCredits);
