@@ -738,15 +738,15 @@
     }
 
     .tree-image {
-        width: 150px;
-        height: 150px;
+        width: 300px; /* Tăng từ 150px lên 300px */
+        height: 300px; /* Tăng từ 150px lên 300px */
     }
 
     .water-button {
-        width: 60px;
-        height: 60px;
-        font-size: 20px;
-        right: -10px;
+        width: 80px; /* Tăng size nút tưới nước */
+        height: 80px;
+        font-size: 24px;
+        right: -15px;
     }
 }
 </style>
@@ -1543,8 +1543,8 @@ function showBadgeAward(badgeId) {
     style.textContent = `
         @keyframes badgeWiggle {
             0% { transform: translate(-50%, -50%) rotate(0deg); }
-            25% { transform: translate(-50%, -50%) rotate(-5deg); }
-            75% { transform: translate(-50%, -50%) rotate(5deg); }
+            25% { transform: translate(-53%) rotate(-5deg); }
+            75% { transform: translate(-47%) rotate(5deg); }
             100% { transform: translate(-50%, -50%) rotate(0deg); }
         }
         
@@ -1817,6 +1817,15 @@ function rateTask(childName, taskId, rating) {
     const task = scheduleData[childName][dateKey]?.tasks.find(t => t.id === taskId);
     if (!task) return;
 
+    // Play appropriate sound for bad rating
+    if (rating === 'bad') {
+        const audio = new Audio('audio/chua_tot.mp3');
+        audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+    } else if (rating === 'neutral') {
+        const audio = new Audio('audio/ban_co_gang_vao_lan_sau_nhe.mp3');
+        audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+    }
+
     task.rating = rating;
     recalculateTotalPoints(childName, dateKey);
 
@@ -2038,32 +2047,42 @@ function createSingleFirework(container) {
     }, 10);
 }
 function playCongrats(taskName) {
-  const messages = {
-    "ăn tối tại nhà": "audio/an_toi_tai_nha.mp3",
-    "vệ sinh cá nhân buổi tối": "audio/ve_sinh_ca_nhan_buoi_toi.mp3",
-    "đọc sách, tô màu hoặc làm toán": "audio/doc_sach_to_mau_hoac_lam_toan.mp3",
-    "đi ngủ": "audio/di_ngu.mp3",
-    "thức dậy, vệ sinh cá nhân, đi học": "audio/thuc_day_ve_sinh_ca_nhan_di_hoc.mp3",
-    "chơi tự do": "audio/choi_tu_do.mp3",
-    "vệ sinh cá nhân sáng": "audio/ve_sinh_ca_nhan_sang.mp3",
-    "ngủ đêm qua": "audio/ngu_dem_qua.mp3",
-    "pháo hoa": "audio/firework.mp3"
-  };
+    // Get current child
+    const childPrefix = currentChild === 'thaoVy' ? '_thaovy' : '';
+    
+    const messages = {
+        "ăn tối tại nhà": `audio/an_toi_tai_nha${childPrefix}.mp3`,
+        "vệ sinh cá nhân buổi tối": `audio/ve_sinh_ca_nhan_buoi_toi${childPrefix}.mp3`,
+        "đọc sách, tô màu hoặc làm toán": `audio/doc_sach_to_mau_hoac_lam_toan${childPrefix}.mp3`,
+        "đi ngủ": `audio/di_ngu${childPrefix}.mp3`,
+        "thức dậy, vệ sinh cá nhân, đi học": `audio/thuc_day_ve_sinh_ca_nhan_di_hoc${childPrefix}.mp3`,
+        "chơi tự do": `audio/choi_tu_do${childPrefix}.mp3`,
+        "ngủ đêm qua": `audio/ngu_dem_qua${childPrefix}.mp3`,
+        "pháo hoa": "audio/firework.mp3"
+    };
 
-  const audio = document.getElementById("audio-congrats");
-  const popup = document.getElementById("popup-congrats");
-  const popupText = document.getElementById("popup-text");
+    const audio = document.getElementById("audio-congrats");
+    const popup = document.getElementById("popup-congrats");
+    const popupText = document.getElementById("popup-text");
 
-  audio.src = messages[taskName] || "";
-  popupText.innerText = "Chúc mừng anh Vít hoàn thành tốt nhiệm vụ: " + taskName;
-  popup.style.display = "block";
-  if (audio.src) {
-    audio.play().catch(e => console.warn("Không thể phát audio:", e));
-  }
+    // Set audio source with fallback
+    const audioPath = messages[taskName.toLowerCase()];
+    if (audioPath) {
+        audio.src = audioPath;
+    }
 
-  setTimeout(() => {
-    popup.style.display = "none";
-  }, 4500);
+    // Update popup text based on child
+    const childName = currentChild === 'thaoVy' ? 'Thảo Vy' : 'anh Vít';
+    popupText.innerText = `Chúc mừng ${childName} hoàn thành tốt nhiệm vụ: ${taskName}`;
+    popup.style.display = "block";
+
+    if (audio.src) {
+        audio.play().catch(e => console.warn("Không thể phát audio:", e));
+    }
+
+    setTimeout(() => {
+        popup.style.display = "none";
+    }, 4500);
 }
 // Cập nhật hình ảnh cây theo ngày trong tuần
 
