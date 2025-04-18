@@ -417,7 +417,24 @@
             font-size: 20px;
         }
 
+        /* Điều chỉnh profile */
+        div[style*="position: fixed; left: 20px; top: 100px;"] {
+            position: static !important;
+            width: 100% !important;
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+        }
 
+        #tridung-profile, #thaoVy-profile {
+            margin: 0 !important;
+            text-align: center;
+        }
+
+        #tridung-profile img, #thaoVy-profile img {
+            width: 80px !important;
+            height: 80px !important;
+        }
 
         /* Điều chỉnh cây và nút tưới nước */
         div[style*="position: fixed; bottom: 500px; right: 340px;"] {
@@ -544,7 +561,20 @@
 </head>
 <body>
     
-
+<!-- Thêm div chứa hình ảnh và thông tin của 2 em -->
+<div style="position: fixed; left: 20px; top: 100px; text-align: center;">
+    <!-- Profile Trí Dũng -->
+    <div id="tridung-profile" style="margin-bottom: 20px;">
+        <img src="images/vit.jpg" style="width: 200px; height: 200px; border-radius: 10px; object-fit: cover; border: 3px solid #FF7043;">
+        <div style="font-weight: bold; color: #FF7043; margin-top: 5px;">Trí Dũng - Cấp <span id="tridung-level">1</span></div>
+    </div>
+    
+    <!-- Profile Thảo Vy -->
+    <div id="thaoVy-profile" style="display: none;">
+        <img src="images/vy.jpg" style="width: 200px; height: 200px; border-radius: 10px; object-fit: cover; border: 3px solid #FF7043;">
+        <div style="font-weight: bold; color: #FF7043; margin-top: 5px;">Thảo Vy - Cấp <span id="thaoVy-level">1</span></div>
+    </div>
+</div>
 
 <!-- Thêm vào phần JavaScript để xử lý chuyển đổi hiển thị -->
 <script>
