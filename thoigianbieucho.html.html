@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thời gian biểu cho bé</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #FF7043;
+            --secondary-color: #FFAB91;
+            --neutral-color: #FBE9E7;
+            --text-color: #3E2723;
+            --light-text: #795548;
+            --success-color: #66BB6A;
+            --warning-color: #FFCA28;
+            --danger-color: #EF5350;
+        }
+        
+        body {
+            font-family: 'Baloo 2', cursive;
+            margin: 0;
+            padding: 0;
+            background-color: var(--neutral-color);
+            color: var(--text-color);
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        
+        .date-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .date-display {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .date-nav {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .date-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .progress {
+            height: 30px;
+            background-color: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: 600;
+            transition: width 0.5s;
+        }
+        
+        .task-list {
+            margin-bottom: 20px;
+        }
+        
+        .task {
+            background-color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .task.completed-good {
+            border-left: 5px solid var(--success-color);
+        }
+        
+        .task.completed-neutral {
+            border-left: 5px solid var(--warning-color);
+        }
+        
+        .task.completed-bad {
+            border-left: 5px solid var(--danger-color);
+        }
+        
+        .task-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .task-time {
+            background-color: var(--neutral-color);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .task-name {
+            font-weight: 600;
+            font-size: 16px;
+            flex-grow: 1;
+        }
+        
+        .rating-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .rating-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Baloo 2', cursive;
+            font-weight: 600;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        
+        .good-btn {
+            background-color: #E8F5E9;
+            color: var(--success-color);
+        }
+        
+        .good-btn:hover, .good-btn.active {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .neutral-btn {
+            background-color: #FFF8E1;
+            color: var(--warning-color);
+        }
+        
+        .neutral-btn:hover, .neutral-btn.active {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .bad-btn {
+            background-color: #FFEBEE;
+            color: var(--danger-color);
+        }
+        
+        .bad-btn:hover, .bad-btn.active {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .reward {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(45deg, #FFD54F, #FFCA28);
+            border-radius: 12px;
+            margin-top: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+        }
+        
+        .reward.active {
+            display: block;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            animation: slideDown 0.5s;
+        }
+        
+        @keyframes slideDown {
+            from { top: -100px; opacity: 0; }
+            to { top: 20px; opacity: 1; }
+        }
+        
+        .stats-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .stats-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .stats-modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .stats-content {
+            background-color: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .stats-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--light-text);
+        }
+        
+        .stats-chart {
+            height: 200px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            background-color: var(--primary-color);
+            transition: height 0.5s;
+            border-radius: 5px 5px 0 0;
+            position: relative;
+            min-width: 30px;
+        }
+        
+        .chart-bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        
+        .chart-bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .stats-summary {
+            margin-top: 40px;
+            background-color: var(--neutral-color);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .sleep-record {
+            display: flex;
+            justify-content: space-between;
+            background-color: #E8F5E9;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .sleep-record.good {
+            background-color: #E8F5E9;
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .sleep-record.neutral {
+            background-color: #FFF8E1;
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .sleep-record.bad {
+            background-color: #FFEBEE;
+            border-left: 4px solid var(--danger-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Thời gian biểu cho bé</h1>
+        </div>
+        
+        <div class="date-container">
+            <div class="date-display" id="currentDate">Hôm nay, 17/04/2025</div>
+            <div class="date-nav">
+                <button class="date-btn" onclick="changeDate(-1)"><i class="fas fa-chevron-left"></i></button>
+                <button class="date-btn" onclick="changeDate(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('tridung')">Trí Dũng (5 tuổi)</div>
+            <div class="tab" onclick="switchTab('thaoVy')">Thảo Vy (3 tuổi)</div>
+        </div>
+        
+        <div class="progress">
+            <div id="progressBar" class="progress-bar" style="width: 0%">0/16 điểm</div>
+        </div>
+        
+        <div id="tridung" class="child-tab">
+            <div class="sleep-record" id="sleepRecord">
+                <div><i class="fas fa-bed"></i> Ngủ đêm qua:</div>
+                <div id="sleepStatus">Chưa có dữ liệu</div>
+            </div>
+            <div class="task-list">
+                <!-- Tasks will be added here dynamically -->
+            </div>
+        </div>
+        
+        <div id="thaoVy" class="child-tab" style="display:none">
+            <div class="sleep-record" id="sleepRecordThaoVy">
+                <div><i class="fas fa-bed"></i> Ngủ đêm qua:</div>
+                <div id="sleepStatusThaoVy">Chưa có dữ liệu</div>
+            </div>
+            <div class="task-list">
+                <!-- Tasks will be added here dynamically -->
+            </div>
+        </div>
+        
+        <div id="reward" class="reward">
+            <i class="fas fa-trophy"></i> Chúc mừng! Bé đã hoàn thành nhiệm vụ và được phép chơi thiết bị điện tử từ 20:00 - 21:00
+        </div>
+    </div>
+    
+    <div id="notification" class="notification">
+        <i class="fas fa-bell"></i> Đến giờ thực hiện nhiệm vụ mới!
+    </div>
+    
+    <button class="stats-btn" onclick="toggleStats()">
+        <i class="fas fa-chart-bar"></i>
+    </button>
+    
+    <div id="statsModal" class="stats-modal">
+        <div class="stats-content">
+            <div class="stats-header">
+                <h2>Thống kê hoạt động</h2>
+                <button class="stats-close" onclick="toggleStats()"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div id="statsChart" class="stats-chart">
+                <!-- Chart bars will be added here -->
+            </div>
+            
+            <div class="stats-summary">
+                <h3>Tóm tắt 7 ngày qua</h3>
+                <p><strong>Tổng điểm:</strong> <span id="totalPoints">0</span> điểm</p>
+                <p><strong>Điểm trung bình:</strong> <span id="averagePoints">0</span> điểm/ngày</p>
+                <p><strong>Ngày tốt nhất:</strong> <span id="bestDay">Chưa có dữ liệu</span></p>
+                <p><strong>Số ngày được chơi thiết bị:</strong> <span id="deviceDays">0</span>/7 ngày</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Thiết lập ngày hiện tại
+        let currentDate = new Date();
+        let currentChild = 'tridung';
+        
+        // Dữ liệu lưu trữ
+        const storageKey = 'kidScheduleData';
+        let scheduleData = {
+            tridung: {},
+            thaoVy: {}
+        };
+        
+        // Hạng mục đánh giá
+        const ratingValues = {
+            good: 3,
+            neutral: 1,
+            bad: 0
+        };
+        
+        // Danh sách nhiệm vụ cố định
+        const taskTemplates = {
+            tridung: [
+                { id: 1, time: "21:00", name: "Đi ngủ (đêm qua)", isPreviousSleep: true, ratings: ["Đúng giờ", "Trễ giờ", "Không ngủ"] },
+                { id: 2, time: "6:30 - 7:00", name: "Thức dậy, vệ sinh cá nhân, đi học", ratings: ["Tốt", "Chưa được tốt", "Chưa tốt"] },
+                { id: 3, time: "17:00 - 18:00", name: "Chơi tự do", ratings: ["Tốt", "Chưa được tốt", "Chưa tốt"] },
+                { id: 4, time: "18:00 - 18:30", name: "Ăn tối tại nhà", ratings: ["Ăn nhanh và nhiều", "Ăn chậm", "Không chịu ăn"] },
+                { id: 5, time: "18:30 - 19:00", name: "Vệ sinh cá nhân buổi tối", ratings: ["Tốt", "Chưa được tốt", "Chưa tốt"] },
+                { id: 6, time: "19:00 - 20:00", name: "Đọc sách, tô màu hoặc làm toán", ratings: ["Tốt", "Chưa được tốt", "Chưa tốt"] },
+                { id: 7, time: "21:00", name: "Đi ngủ", ratings: ["Đúng giờ", "Trễ giờ", "Không ngủ"] }
+            ],
+            thaoVy: [
+                { id: 1, time: "21:00", name: "Đi ngủ (đêm qua)", isPreviousSleep: true, ratings: ["Đúng giờ", "Trễ giờ", "Không ngủ"] },
+                { id: 2, time: "6:30 - 7:00", name: "Thức dậy, vệ sinh cá nhân, đi học", ratings: ["Tốt", "Chưa được tốt", "Chưa tốt"] },
+                { id: 3, time: "17:00 - 18:00", name: "Chơi tự do", ratings: ["Tốt", "Chưa được tốt", "Chưa tốt"] },
+                { id: 4, time: "18:00 - 18:30", name: "Ăn tối tại nhà", ratings: ["Ăn nhanh và nhiều", "Ăn chậm", "Không chịu ăn"] },
+                { id: 5, time: "18:30 - 19:00", name: "Vệ sinh cá nhân buổi tối", ratings: ["Tốt", "Chưa được tốt", "Chưa tốt"] },
+                { id: 6, time: "19:00 - 20:00", name: "Đọc sách, tô màu", ratings: ["Tốt", "Chưa được tốt", "Chưa tốt"] },
+                { id: 7, time: "21:00", name: "Đi ngủ", ratings: ["Đúng giờ", "Trễ giờ", "Không ngủ"] }
+            ]
+        };
+        
+        // Hiển thị ngày hiện tại
+        function updateDateDisplay() {
+            const options = { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' };
+            const dateString = currentDate.toLocaleDateString('vi-VN', options);
+            const capitalizedDate = dateString.charAt(0).toUpperCase() + dateString.slice(1);
+            document.getElementById('currentDate').textContent = capitalizedDate;
+        }
+        
+        // Đổi ngày
+        function changeDate(delta) {
+            const newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() + delta);
+            currentDate = newDate;
+            updateDateDisplay();
+            renderTasks();
+            updateSleepRecord();
+            checkReward();
+        }
+        
+        // Lấy key cho ngày hiện tại
+        function getDateKey(date = currentDate) {
+            return date.toISOString().split('T')[0];
+        }
+        
+        // Lấy key cho ngày hôm trước
+        function getPreviousDateKey() {
+            const prevDate = new Date(currentDate);
+            prevDate.setDate(prevDate.getDate() - 1);
+            return getDateKey(prevDate);
+        }
+        
+        // Cập nhật trạng thái ngủ của ngày hôm trước
+        function updateSleepRecord() {
+            const prevDateKey = getPreviousDateKey();
+            const currentDateKey = getDateKey();
+            
+            // Kiểm tra trạng thái ngủ cho Trí Dũng
+            const sleepStatus = document.getElementById('sleepStatus');
+            if (scheduleData.tridung[prevDateKey] && scheduleData.tridung[prevDateKey].tasks) {
+                const sleepTask = scheduleData.tridung[prevDateKey].tasks.find(t => t.id === 7);
+                if (sleepTask && sleepTask.rating) {
+                    sleepStatus.textContent = sleepTask.rating === 'good' ? 'Tốt' : 
+                                              sleepTask.rating === 'neutral' ? 'Trễ giờ' : 'Không ngủ';
+                    
+                    const sleepRecord = document.getElementById('sleepRecord');
+                    sleepRecord.className = 'sleep-record ' + sleepTask.rating;
+                } else {
+                    sleepStatus.textContent = 'Chưa có dữ liệu';
+                    document.getElementById('sleepRecord').className = 'sleep-record';
+                }
+            } else {
+                sleepStatus.textContent = 'Chưa có dữ liệu';
+                document.getElementById('sleepRecord').className = 'sleep-record';
+            }
+            
+            // Kiểm tra trạng thái ngủ cho Thảo Vy
+            const sleepStatusThaoVy = document.getElementById('sleepStatusThaoVy');
+            if (scheduleData.thaoVy[prevDateKey] && scheduleData.thaoVy[prevDateKey].tasks) {
+                const sleepTaskThaoVy = scheduleData.thaoVy[prevDateKey].tasks.find(t => t.id === 7);
+                if (sleepTaskThaoVy && sleepTaskThaoVy.rating) {
+                    sleepStatusThaoVy.textContent = sleepTaskThaoVy.rating === 'good' ? 'Tốt' : 
+                                                  sleepTaskThaoVy.rating === 'neutral' ? 'Trễ giờ' : 'Không ngủ';
+                    
+                    const sleepRecordThaoVy = document.getElementById('sleepRecordThaoVy');
+                    sleepRecordThaoVy.className = 'sleep-record ' + sleepTaskThaoVy.rating;
+                } else {
+                    sleepStatusThaoVy.textContent = 'Chưa có dữ liệu';
+                    document.getElementById('sleepRecordThaoVy').className = 'sleep-record';
+                }
+            } else {
+                sleepStatusThaoVy.textContent = 'Chưa có dữ liệu';
+                document.getElementById('sleepRecordThaoVy').className = 'sleep-record';
+            }
+            
+            // Chuẩn bị dữ liệu cho ngày hiện tại nếu chưa có
+            ['tridung', 'thaoVy'].forEach(child => {
+                if (!scheduleData[child][currentDateKey]) {
+                    scheduleData[child][currentDateKey] = {
+                        tasks: [],
+                        totalPoints: 0
+                    };
+                    
+                    // Tạo các nhiệm vụ từ template
+                    scheduleData[child][currentDateKey].tasks = taskTemplates[child].map(template => {
+                        return {
+                            id: template.id,
+                            time: template.time,
+                            name: template.name,
+                            isPreviousSleep: template.isPreviousSleep || false,
+                            rating: null
+                        };
+                    });
+                }
+            });
+        }
+        
+        // Hiển thị danh sách nhiệm vụ
+        function renderTasks() {
+            const dateKey = getDateKey();
+            
+            // Render nhiệm vụ cho Trí Dũng
+            const tridungTaskList = document.querySelector('#tridung .task-list');
+            tridungTaskList.innerHTML = '';
+            
+            if (scheduleData.tridung[dateKey] && scheduleData.tridung[dateKey].tasks) {
+                // Lọc ra nhiệm vụ của ngày hiện tại (không phải ngủ của ngày hôm trước)
+                const currentTasks = scheduleData.tridung[dateKey].tasks.filter(task => !task.isPreviousSleep);
+                
+                currentTasks.forEach(task => {
+                    const taskElement = createTaskElement(task, 'tridung');
+                    tridungTaskList.appendChild(taskElement);
+                });
+            }
+            
+            // Render nhiệm vụ cho Thảo Vy
+            const thaoVyTaskList = document.querySelector('#thaoVy .task-list');
+            thaoVyTaskList.innerHTML = '';
+            
+            if (scheduleData.thaoVy[dateKey] && scheduleData.thaoVy[dateKey].tasks) {
+                // Lọc ra nhiệm vụ của ngày hiện tại (không phải ngủ của ngày hôm trước)
+                const currentTasks = scheduleData.thaoVy[dateKey].tasks.filter(task => !task.isPreviousSleep);
+                
+                currentTasks.forEach(task => {
+                    const taskElement = createTaskElement(task, 'thaoVy');
+                    thaoVyTaskList.appendChild(taskElement);
+                });
+            }
+            
+            updateProgress();
+        }
+        
+        // Tạo phần tử nhiệm vụ
+        function createTaskElement(task, childName) {
+            const taskElement = document.createElement('div');
+            taskElement.className = `task ${task.rating ? 'completed-' + task.rating : ''}`;
+            
+            const template = taskTemplates[childName].find(t => t.id === task.id);
+            
+            taskElement.innerHTML = `
+                <div class="task-header">
+                    <div class="task-time">${task.time}</div>
+                    <div class="task-name">${task.name}</div>
+                </div>
+                <div class="rating-buttons">
+                    <button class="rating-btn good-btn ${task.rating === 'good' ? 'active' : ''}" 
+                            onclick="rateTask('${childName}', ${task.id}, 'good')">
+                        <i class="fas fa-smile"></i> ${template.ratings[0]}
+                    </button>
+                    <button class="rating-btn neutral-btn ${task.rating === 'neutral' ? 'active' : ''}" 
+                            onclick="rateTask('${childName}', ${task.id}, 'neutral')">
+                        <i class="fas fa-meh"></i> ${template.ratings[1]}
+                    </button>
+                    <button class="rating-btn bad-btn ${task.rating === 'bad' ? 'active' : ''}" 
+                            onclick="rateTask('${childName}', ${task.id}, 'bad')">
+                        <i class="fas fa-frown"></i> ${template.ratings[2]}
+                    </button>
+                </div>
+            `;
+            
+            return taskElement;
+        }
+        
+        // Đánh giá nhiệm vụ
+        function rateTask(childName, taskId, rating) {
+            // Xác thực mã PIN đơn giản
+            const pin = prompt("Nhập mã PIN để xác nhận (mặc định: 1234):");
+            if (pin !== "1234") {
+                alert("Mã PIN không đúng!");
+                return;
+            }
+            
+            const dateKey = getDateKey();
+            
+            if (scheduleData[childName][dateKey] && scheduleData[childName][dateKey].tasks) {
+                const task = scheduleData[childName][dateKey].tasks.find(t => t.id === taskId);
+                if (task) {
+                    // Cập nhật đánh giá
+                    task.rating = rating;
+                    
+                    // Tính lại tổng điểm
+                    recalculateTotalPoints(childName, dateKey);
+                    
+                    // Cập nhật giao diện
+                    renderTasks();
+                    updateProgress();
+                    checkReward();
+                    saveData();
+                }
+            }
+        }
+        
+        // Tính lại tổng điểm
+        function recalculateTotalPoints(childName, dateKey) {
+            let totalPoints = 0;
+            
+            if (scheduleData[childName][dateKey] && scheduleData[childName][dateKey].tasks) {
+                scheduleData[childName][dateKey].tasks.forEach(task => {
+                    if (task.rating) {
+                        totalPoints += ratingValues[task.rating];
+                    }
+                });
+scheduleData[childName][dateKey].totalPoints = totalPoints;
+            }
+        }
+        
+        // Cập nhật thanh tiến trình
+        function updateProgress() {
+            const dateKey = getDateKey();
+            const childData = scheduleData[currentChild][dateKey];
+            
+            if (childData) {
+                const totalPoints = childData.totalPoints || 0;
+                const maxPoints = taskTemplates[currentChild].length * 3;
+                const progressPercent = (totalPoints / maxPoints) * 100;
+                
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.width = `${progressPercent}%`;
+                progressBar.textContent = `${totalPoints}/${maxPoints} điểm`;
+            }
+        }
+        
+        // Kiểm tra xem có đạt yêu cầu nhận phần thưởng không
+        function checkReward() {
+            const dateKey = getDateKey();
+            const prevDateKey = getPreviousDateKey();
+            
+            // Kiểm tra xem có dữ liệu cho ngày hiện tại và ngày hôm trước không
+            if (!scheduleData[currentChild][dateKey] || !scheduleData[currentChild][prevDateKey]) {
+                document.getElementById('reward').classList.remove('active');
+                return;
+            }
+            
+            // Kiểm tra đánh giá ngủ của ngày hôm trước
+            const previousSleepTask = scheduleData[currentChild][prevDateKey].tasks.find(t => t.id === 7);
+            const goodSleepYesterday = previousSleepTask && (previousSleepTask.rating === 'good' || previousSleepTask.rating === 'neutral');
+            
+            // Kiểm tra tổng điểm của ngày hôm nay (cần đạt ít nhất 12 điểm)
+            const goodPointsToday = scheduleData[currentChild][dateKey].totalPoints >= 12;
+            
+            // Hiển thị phần thưởng nếu đủ điều kiện
+            const rewardElement = document.getElementById('reward');
+            if (goodSleepYesterday && goodPointsToday) {
+                rewardElement.classList.add('active');
+            } else {
+                rewardElement.classList.remove('active');
+            }
+        }
+        
+        // Chuyển đổi giữa các tab
+        function switchTab(childName) {
+            currentChild = childName;
+            
+            // Cập nhật trạng thái tab
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            const activeTab = document.querySelector(`.tab[onclick="switchTab('${childName}')"]`);
+            activeTab.classList.add('active');
+            
+            // Hiển thị tab con tương ứng
+            const childTabs = document.querySelectorAll('.child-tab');
+            childTabs.forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            document.getElementById(childName).style.display = 'block';
+            
+            // Cập nhật tiến trình và trạng thái phần thưởng
+            updateProgress();
+            checkReward();
+        }
+        
+        // Hiển thị thông báo
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.innerHTML = `<i class="fas fa-bell"></i> ${message}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Kiểm tra thông báo dựa trên thời gian
+        function checkTaskNotifications() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            
+            const dateKey = getDateKey();
+            
+            // Kiểm tra cả hai bé
+            ['tridung', 'thaoVy'].forEach(childName => {
+                if (scheduleData[childName][dateKey] && scheduleData[childName][dateKey].tasks) {
+                    scheduleData[childName][dateKey].tasks.forEach(task => {
+                        if (!task.isPreviousSleep) { // Bỏ qua nhiệm vụ ngủ của ngày hôm trước
+                            const timeRange = task.time.split(' - ');
+                            if (timeRange.length > 1) {
+                                const startTime = timeRange[0].split(':');
+                                const startHour = parseInt(startTime[0]);
+                                const startMinute = parseInt(startTime[1]);
+                                
+                                if (hours === startHour && minutes === startMinute && !task.rating) {
+                                    showNotification(`${childName === 'tridung' ? 'Trí Dũng' : 'Thảo Vy'}: Đến giờ ${task.name}`);
+                                }
+                            } else if (timeRange[0].includes(':')) {
+                                const exactTime = timeRange[0].split(':');
+                                const exactHour = parseInt(exactTime[0]);
+                                const exactMinute = parseInt(exactTime[1]);
+                                
+                                if (hours === exactHour && minutes === exactMinute && !task.rating) {
+                                    showNotification(`${childName === 'tridung' ? 'Trí Dũng' : 'Thảo Vy'}: Đến giờ ${task.name}`);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Hiển thị/ẩn modal thống kê
+        function toggleStats() {
+            const statsModal = document.getElementById('statsModal');
+            statsModal.classList.toggle('active');
+            
+            if (statsModal.classList.contains('active')) {
+                updateStats();
+            }
+        }
+        
+        // Cập nhật thống kê
+        function updateStats() {
+            const statsChart = document.getElementById('statsChart');
+            statsChart.innerHTML = '';
+            
+            // Lấy dữ liệu 7 ngày gần nhất
+            const last7Days = [];
+            let totalPoints = 0;
+            let deviceDays = 0;
+            let bestDay = { date: null, points: 0 };
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(currentDate);
+                date.setDate(date.getDate() - i);
+                const dateKey = getDateKey(date);
+                
+                // Format ngày hiển thị
+                const dayDisplay = date.getDate() + '/' + (date.getMonth() + 1);
+                
+                // Dữ liệu điểm
+                let dayPoints = 0;
+                if (scheduleData[currentChild][dateKey] && scheduleData[currentChild][dateKey].totalPoints) {
+                    dayPoints = scheduleData[currentChild][dateKey].totalPoints;
+                }
+                
+                // Thêm vào tổng điểm
+                totalPoints += dayPoints;
+                
+                // Kiểm tra ngày tốt nhất
+                if (dayPoints > bestDay.points) {
+                    bestDay = {
+                        date: new Date(date),
+                        points: dayPoints
+                    };
+                }
+                
+                // Kiểm tra xem ngày đó có được chơi thiết bị không
+                const prevDate = new Date(date);
+                prevDate.setDate(prevDate.getDate() - 1);
+                const prevDateKey = getDateKey(prevDate);
+                
+                // Điều kiện được chơi thiết bị: Ngủ tốt ngày hôm trước + điểm cao ngày hôm nay
+                let canUseDevice = false;
+                
+                if (scheduleData[currentChild][prevDateKey] && scheduleData[currentChild][dateKey]) {
+                    const previousSleepTask = scheduleData[currentChild][prevDateKey].tasks?.find(t => t.id === 7);
+                    const goodSleepYesterday = previousSleepTask && (previousSleepTask.rating === 'good' || previousSleepTask.rating === 'neutral');
+                    const goodPointsToday = dayPoints >= 12;
+                    
+                    canUseDevice = goodSleepYesterday && goodPointsToday;
+                    if (canUseDevice) deviceDays++;
+                }
+                
+                // Thêm vào mảng dữ liệu
+                last7Days.push({
+                    date: dayDisplay,
+                    points: dayPoints,
+                    canUseDevice: canUseDevice
+                });
+            }
+            
+            // Tạo biểu đồ
+            last7Days.forEach(day => {
+                // Tính chiều cao dựa trên điểm (tối đa 21 điểm ~ chiều cao 100%)
+                const heightPercent = (day.points / 21) * 100;
+                
+                const barElement = document.createElement('div');
+                barElement.className = `chart-bar ${day.canUseDevice ? 'good-btn' : ''}`;
+                barElement.style.height = `${heightPercent}%`;
+                
+                barElement.innerHTML = `
+                    <div class="chart-bar-value">${day.points}</div>
+                    <div class="chart-bar-label">${day.date}</div>
+                `;
+                
+                statsChart.appendChild(barElement);
+            });
+            
+            // Cập nhật tóm tắt thống kê
+            document.getElementById('totalPoints').textContent = totalPoints;
+            document.getElementById('averagePoints').textContent = (totalPoints / 7).toFixed(1);
+            document.getElementById('deviceDays').textContent = deviceDays;
+            
+            if (bestDay.date) {
+                const options = { weekday: 'long', day: 'numeric', month: 'numeric' };
+                const bestDayStr = bestDay.date.toLocaleDateString('vi-VN', options);
+                document.getElementById('bestDay').textContent = `${bestDayStr} (${bestDay.points} điểm)`;
+            } else {
+                document.getElementById('bestDay').textContent = 'Chưa có dữ liệu';
+            }
+        }
+        
+        // Lưu dữ liệu
+        function saveData() {
+            localStorage.setItem(storageKey, JSON.stringify(scheduleData));
+        }
+        
+        // Tải dữ liệu
+        function loadData() {
+            const savedData = localStorage.getItem(storageKey);
+            if (savedData) {
+                scheduleData = JSON.parse(savedData);
+            }
+            
+            // Khởi tạo ngày hiện tại nếu chưa có
+            initializeCurrentDate();
+            
+            updateDateDisplay();
+            updateSleepRecord();
+            renderTasks();
+            checkReward();
+        }
+        
+        // Khởi tạo dữ liệu cho ngày hiện tại nếu chưa có
+        function initializeCurrentDate() {
+            const dateKey = getDateKey();
+            
+            ['tridung', 'thaoVy'].forEach(child => {
+                if (!scheduleData[child][dateKey]) {
+                    scheduleData[child][dateKey] = {
+                        tasks: [],
+                        totalPoints: 0
+                    };
+                    
+                    // Tạo các nhiệm vụ từ template
+                    scheduleData[child][dateKey].tasks = taskTemplates[child].map(template => {
+                        return {
+                            id: template.id,
+                            time: template.time,
+                            name: template.name,
+                            isPreviousSleep: template.isPreviousSleep || false,
+                            rating: null
+                        };
+                    });
+                }
+            });
+        }
+        
+        // Kiểm tra thông báo mỗi phút
+        setInterval(checkTaskNotifications, 60000);
+        
+        // Thêm sự kiện lưu dữ liệu
+        window.addEventListener('beforeunload', saveData);
+        
+        // Khởi chạy ứng dụng
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>

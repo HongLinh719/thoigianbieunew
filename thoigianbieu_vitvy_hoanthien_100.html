@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Thời gian biểu cho bé</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>Thời gian biểu cho bé</h1>
+</div>
+<div class="date-container">
+<div class="date-display" id="currentDate">Hôm nay, 17/04/2025</div>
+<div class="date-nav">
+<button class="date-btn" onclick="changeDate(-1)"><i class="fas fa-chevron-left"></i></button>
+<button class="date-btn" onclick="changeDate(1)"><i class="fas fa-chevron-right"></i></button>
+</div>
+</div>
+<div class="tabs">
+<div class="tab active" onclick="switchTab('tridung')">Trí Dũng (5 tuổi)</div>
+<div class="tab" onclick="switchTab('thaoVy')">Thảo Vy (3 tuổi)</div>
+</div>
+<div class="progress">
+<div class="progress-bar" id="progressBar" style="width: 0%">0/16 điểm</div>
+</div>
+<div class="child-tab" id="tridung">
+<div class="sleep-record" id="sleepRecord">
+<div><i class="fas fa-bed"></i> Ngủ đêm qua:</div>
+<div id="sleepStatus">Chưa có dữ liệu</div>
+</div>
+<div class="task-list">
+<!-- Tasks will be added here dynamically -->
+</div>
+</div>
+<div class="child-tab" id="thaoVy" style="display:none">
+<div class="sleep-record" id="sleepRecordThaoVy">
+<div><i class="fas fa-bed"></i> Ngủ đêm qua:</div>
+<div id="sleepStatusThaoVy">Chưa có dữ liệu</div>
+</div>
+<div class="task-list">
+<!-- Tasks will be added here dynamically -->
+</div>
+</div>
+<div class="reward" id="reward">
+<i class="fas fa-trophy"></i> Chúc mừng! Bé đã hoàn thành nhiệm vụ và được phép chơi thiết bị điện tử từ 20:00 - 21:00
+        </div>
+</div>
+<div class="notification" id="notification">
+<i class="fas fa-bell"></i> Đến giờ thực hiện nhiệm vụ mới!
+    </div>
+<button class="stats-btn" onclick="toggleStats()">
+<i class="fas fa-chart-bar"></i>
+</button>
+<div class="stats-modal" id="statsModal">
+<div class="stats-content">
+<div class="stats-header">
+<h2>Thống kê hoạt động</h2>
+<button class="stats-close" onclick="toggleStats()"><i class="fas fa-times"></i></button>
+</div>
+<div class="stats-chart" id="statsChart">
+<!-- Chart bars will be added here -->
+</div>
+<div class="stats-summary">
+<h3>Tóm tắt 7 ngày qua</h3>
+<p><strong>Tổng điểm:</strong> <span id="totalPoints">0</span> điểm</p>
+<p><strong>Điểm trung bình:</strong> <span id="averagePoints">0</span> điểm/ngày</p>
+<p><strong>Ngày tốt nhất:</strong> <span id="bestDay">Chưa có dữ liệu</span></p>
+<p><strong>Số ngày được chơi thiết bị:</strong> <span id="deviceDays">0</span>/7 ngày</p>
+</div>
+</div>
+</div>
+
+<div id="popup-congrats" style="display:none; position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); z-index:9999; text-align:center;">
+<img alt="Mẹ Quỳnh" src="images/me_quynh.jpg" style="width:250px; border-radius:10px; box-shadow: 0 0 10px #888;"/>
+<div id="popup-text" style="background:white; padding:10px; font-weight:bold; font-size:18px; margin-top:-5px;">Bé làm tốt lắm!</div>
+</div>
+<audio id="audio-congrats" preload="auto" src=""></audio>
+<img id="watering-gif" src="images/water.gif" style="display:none; position:absolute; width:120px; top:350px; left:1190px; z-index:10;"/>
+<!-- THÊM ĐOẠN NÀY -->
+<div style="position: fixed; bottom: 500px; right: 340px; text-align: center; z-index: 50;">
+<img id="tree-img" src="images/tree_day1.png" style="width:150px; height:150px;"/>
+<div id="tree-status" style="font-weight:bold; color:#FF9800; margin:5px 0;">
+        Cây cần nước để phát triển!
+    </div>
+<div style="margin-top:5px; margin-bottom:10px;">
+<span id="water-count" style="font-weight:bold; color:#2196F3;">💧 <span id="water-units">0</span> lượt tưới</span>
+</div>
+<button onclick="waterTree()">💧 Bé tưới nước cho cây</button>
+</div>
+<!-- Thêm khu vực hiển thị huy hiệu -->
+<div style="position: fixed; top: 100px; right: 20px; text-align: center; background-color: rgba(255,255,255,0.8); padding: 10px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+<h3 style="margin-top: 0; color: #FF6D00;">Huy hiệu của bé</h3>
+<div id="badges-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; max-width: 150px;">
+<!-- Huy hiệu sẽ được thêm vào đây -->
+</div>
+</div>
+
+
+<div style="position:fixed; bottom:20px; right:20px; z-index:999;">
+<button onclick="resetAllData()" style="padding:10px 20px; background:red; color:white; font-weight:bold; border:none; border-radius:10px;">
+    🔄 Reset toàn bộ dữ liệu
+  </button>
+</div>
+
+<script>
+let waterUnits = 0;
+let treeLevel = 1;
+let childLevel = { tridung: 1, thaoVy: 1 };
+
+// Reset toàn bộ hệ thống
+function resetAllData() {
+    if (confirm("Bạn có chắc muốn reset toàn bộ dữ liệu của cả hai bé không?")) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+</script>
+</body>
+</html>

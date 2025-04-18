@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Thời gian biểu cho bé</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>Thời gian biểu cho bé</h1>
+</div>
+<div class="date-container">
+<div class="date-display" id="currentDate">Hôm nay, 17/04/2025</div>
+<div class="date-nav">
+<button class="date-btn" onclick="changeDate(-1)"><i class="fas fa-chevron-left"></i></button>
+<button class="date-btn" onclick="changeDate(1)"><i class="fas fa-chevron-right"></i></button>
+</div>
+</div>
+<div class="tabs">
+<div class="tab active" onclick="switchTab('tridung')">Trí Dũng (5 tuổi)</div>
+<div class="tab" onclick="switchTab('thaoVy')">Thảo Vy (3 tuổi)</div>
+</div>
+<div class="progress">
+<div class="progress-bar" id="progressBar" style="width: 0%">0/16 điểm</div>
+</div>
+<div class="child-tab" id="tridung">
+<div class="sleep-record" id="sleepRecord">
+<div><i class="fas fa-bed"></i> Ngủ đêm qua:</div>
+<div id="sleepStatus">Chưa có dữ liệu</div>
+</div>
+<div class="task-list">
+<!-- Tasks will be added here dynamically -->
+</div>
+</div>
+<div class="child-tab" id="thaoVy" style="display:none">
+<div class="sleep-record" id="sleepRecordThaoVy">
+<div><i class="fas fa-bed"></i> Ngủ đêm qua:</div>
+<div id="sleepStatusThaoVy">Chưa có dữ liệu</div>
+</div>
+<div class="task-list">
+<!-- Tasks will be added here dynamically -->
+</div>
+</div>
+<div class="reward" id="reward">
+<i class="fas fa-trophy"></i> Chúc mừng! Bé đã hoàn thành nhiệm vụ và được phép chơi thiết bị điện tử từ 20:00 - 21:00
+        </div>
+</div>
+<div class="notification" id="notification">
+<i class="fas fa-bell"></i> Đến giờ thực hiện nhiệm vụ mới!
+    </div>
+<button class="stats-btn" onclick="toggleStats()">
+<i class="fas fa-chart-bar"></i>
+</button>
+<div class="stats-modal" id="statsModal">
+<div class="stats-content">
+<div class="stats-header">
+<h2>Thống kê hoạt động</h2>
+<button class="stats-close" onclick="toggleStats()"><i class="fas fa-times"></i></button>
+</div>
+<div class="stats-chart" id="statsChart">
+<!-- Chart bars will be added here -->
+</div>
+<div class="stats-summary">
+<h3>Tóm tắt 7 ngày qua</h3>
+<p><strong>Tổng điểm:</strong> <span id="totalPoints">0</span> điểm</p>
+<p><strong>Điểm trung bình:</strong> <span id="averagePoints">0</span> điểm/ngày</p>
+<p><strong>Ngày tốt nhất:</strong> <span id="bestDay">Chưa có dữ liệu</span></p>
+<p><strong>Số ngày được chơi thiết bị:</strong> <span id="deviceDays">0</span>/7 ngày</p>
+</div>
+</div>
+</div>
+
+<div id="popup-congrats" style="display:none; position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); z-index:9999; text-align:center;">
+<img alt="Mẹ Quỳnh" src="images/me_quynh.jpg" style="width:250px; border-radius:10px; box-shadow: 0 0 10px #888;"/>
+<div id="popup-text" style="background:white; padding:10px; font-weight:bold; font-size:18px; margin-top:-5px;">Bé làm tốt lắm!</div>
+</div>
+<audio id="audio-congrats" preload="auto" src=""></audio>
+<img id="watering-gif" src="images/water.gif" style="display:none; position:absolute; width:120px; top:350px; left:1190px; z-index:10;"/>
+<!-- THÊM ĐOẠN NÀY -->
+<div style="position: fixed; bottom: 500px; right: 340px; text-align: center; z-index: 50;">
+<img id="tree-img" src="images/tree_day1.png" style="width:150px; height:150px;"/>
+<div id="tree-status" style="font-weight:bold; color:#FF9800; margin:5px 0;">
+        Cây cần nước để phát triển!
+    </div>
+<div style="margin-top:5px; margin-bottom:10px;">
+<span id="water-count" style="font-weight:bold; color:#2196F3;">💧 <span id="water-units">0</span> lượt tưới</span>
+</div>
+<button onclick="waterTree()">💧 Bé tưới nước cho cây</button>
+</div>
+
+function playCongrats(taskName) {
+  const messages = {
+    "ăn tối tại nhà": "audio/an_toi_tai_nha.mp3",
+    "vệ sinh cá nhân buổi tối": "audio/ve_sinh_ca_nhan_buoi_toi.mp3",
+    "đọc sách, tô màu hoặc làm toán": "audio/doc_sach_to_mau_hoac_lam_toan.mp3",
+    "đi ngủ": "audio/di_ngu.mp3",
+    "thức dậy, vệ sinh cá nhân, đi học": "audio/thuc_day_ve_sinh_ca_nhan_di_hoc.mp3",
+    "chơi tự do": "audio/choi_tu_do.mp3",
+    "vệ sinh cá nhân sáng": "audio/ve_sinh_ca_nhan_sang.mp3",
+    "ngủ đêm qua": "audio/ngu_dem_qua.mp3"
+  };
+
+  const audio = document.getElementById("audio-congrats");
+  const popup = document.getElementById("popup-congrats");
+  const popupText = document.getElementById("popup-text");
+
+  audio.src = messages[taskName] || "";
+  popupText.innerText = "Chúc mừng anh Vít hoàn thành tốt nhiệm vụ: " + taskName;
+  popup.style.display = "block";
+  if (audio.src) {
+    audio.play().catch(e =&gt; console.warn("Không thể phát audio:", e));
+  }
+
+  setTimeout(() =&gt; {
+    popup.style.display = "none";
+  }, 4500);
+}
+// Cập nhật hình ảnh cây theo ngày trong tuần
+function updateTreeImage() {
+    // Xác định cấp độ cây dựa vào ngày trong tuần
+    const weekDay = new Date().getDay(); // 0: Chủ Nhật, 1: Thứ 2...
+    
+    // Nếu là chủ nhật, hiển thị cây trưởng thành
+    if (weekDay === 0) {
+        document.getElementById("tree-img").src = "images/tree_day7.png";
+        document.getElementById("tree-status").textContent = "Cây đã trưởng thành hoàn toàn! Chúc mừng bé!";
+        document.getElementById("tree-status").style.color = "#4CAF50";
+    } else {
+        // Các ngày khác trong tuần, hiển thị theo tiến độ
+        // Thứ 2 (1) -&gt; cấp độ 1, Thứ 3 (2) -&gt; cấp độ 2, ..., Thứ 7 (6) -&gt; cấp độ 6
+        const expectedLevel = weekDay; // Cấp độ mong đợi cho ngày hiện tại
+        
+        // Hiển thị cây theo cấp độ thực tế (không vượt quá cấp độ mong đợi)
+        const displayLevel = Math.min(treeLevel, expectedLevel);
+        document.getElementById("tree-img").src = `images/tree_day${displayLevel}.png`;
+        
+        // Hiển thị thông báo về trạng thái cây
+        if (treeLevel &lt; expectedLevel) {
+            document.getElementById("tree-status").textContent = "Cây cần thêm nước để phát triển!";
+            document.getElementById("tree-status").style.color = "#FF9800";
+        } else {
+            document.getElementById("tree-status").textContent = "Cây đang phát triển tốt!";
+            document.getElementById("tree-status").style.color = "#4CAF50";
+        }
+    }
+}
+// Biến theo dõi trạng thái cây và nước
+let waterCredits = 0;       // Số lượt tưới
+let treeLevel = 1;          // Cấp độ cây (1-7)
+let currentWeekDay = 0;     // Ngày trong tuần (0: Chủ Nhật, 1: Thứ 2...)
+
+// Sửa hàm addWater để tăng số lượt tưới
+// Sửa hàm addWater
+function addWater(units) {
+    // Tăng số lượt tưới
+    waterCredits += units;
+    
+    // Cập nhật UI ngay lập tức
+    document.getElementById("water-units").textContent = waterCredits;
+    
+    // Hiển thị thông báo
+    const waterNotification = document.createElement("div");
+    waterNotification.style.position = "fixed";
+    waterNotification.style.bottom = "10px";
+    waterNotification.style.left = "50%";
+    waterNotification.style.transform = "translateX(-50%)";
+    waterNotification.style.backgroundColor = "#2196F3";
+    waterNotification.style.color = "white";
+    waterNotification.style.padding = "10px 20px";
+    waterNotification.style.borderRadius = "5px";
+    waterNotification.style.zIndex = "9999";
+    waterNotification.innerHTML = `<i class="fas fa-plus"></i> Đã thêm ${units} lượt tưới nước!`;
+    
+    document.body.appendChild(waterNotification);
+    
+    setTimeout(() =&gt; {
+        waterNotification.style.opacity = "0";
+        waterNotification.style.transition = "opacity 0.5s";
+        setTimeout(() =&gt; {
+            document.body.removeChild(waterNotification);
+        }, 500);
+    }, 2000);
+    
+    // Lưu dữ liệu
+    saveData();
+    
+    console.log("Đã thêm", units, "lượt tưới, hiện có:", waterCredits);
+}
+
+
+// Sửa hàm waterTree() để debug
+function waterTree() {
+    console.log("Đang tưới cây, số lượt hiện tại:", waterCredits);
+    
+    // Debug thông báo
+    if (waterCredits &lt;= 0) {
+        alert("Không đủ lượt tưới nước! Hãy hoàn thành nhiệm vụ tốt để có thêm lượt tưới.");
+        return;
+    }
+    
+    // Giảm số lượt tưới và cập nhật ngay lập tức
+    waterCredits--;
+    document.getElementById("water-units").textContent = waterCredits;
+    
+    // Hiển thị hiệu ứng tưới nước
+    const wateringGif = document.getElementById("watering-gif");
+    wateringGif.style.display = "block";
+    
+    // Cập nhật cấp độ cây
+    treeLevel = Math.min(treeLevel + 1, 7);
+    
+    // Cập nhật hình ảnh cây sau 1.5 giây
+    setTimeout(() =&gt; {
+        document.getElementById("tree-img").src = `images/tree_day${treeLevel}.png`;
+        wateringGif.style.display = "none";
+        
+        // Thông báo cho người dùng biết cây đã tăng cấp
+        document.getElementById("tree-status").textContent = "Cây đã phát triển!";
+        document.getElementById("tree-status").style.color = "#4CAF50";
+        
+        // Lưu dữ liệu
+        saveData();
+    }, 1500);
+}
+
+
+<script src="scripts/vitvy_full.js"></script></body>
+</html>
