@@ -557,22 +557,75 @@
             -webkit-tap-highlight-color: transparent;
         }
     }
+    /* Thêm CSS cho profile sticky */
+.profile-container {
+    position: sticky;
+    top: 10px;
+    left: 20px;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+}
+
+.profile-container img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #FF7043;
+}
+
+.profile-info {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile-name {
+    font-weight: bold;
+    color: #FF7043;
+}
+
+.profile-level {
+    font-size: 14px;
+    color: #795548;
+}
+
+/* Điều chỉnh responsive */
+@media screen and (max-width: 768px) {
+    .profile-container {
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+    }
+}
 </style>
 </head>
 <body>
     
 <!-- Thêm div chứa hình ảnh và thông tin của 2 em -->
-<div style="position: fixed; left: 20px; top: 100px; text-align: center;">
-    <!-- Profile Trí Dũng -->
-    <div id="tridung-profile" style="margin-bottom: 20px;">
-        <img src="images/vit.jpg" style="width: 200px; height: 200px; border-radius: 10px; object-fit: cover; border: 3px solid #FF7043;">
-        <div style="font-weight: bold; color: #FF7043; margin-top: 5px;">Trí Dũng - Cấp <span id="tridung-level">1</span></div>
+<div class="profile-container" id="tridung-profile">
+    <img src="images/vit.jpg" alt="Trí Dũng">
+    <div class="profile-info">
+        <div class="profile-name">Trí Dũng</div>
+        <div class="profile-level">Cấp <span id="tridung-level">1</span></div>
     </div>
-    
-    <!-- Profile Thảo Vy -->
-    <div id="thaoVy-profile" style="display: none;">
-        <img src="images/vy.jpg" style="width: 200px; height: 200px; border-radius: 10px; object-fit: cover; border: 3px solid #FF7043;">
-        <div style="font-weight: bold; color: #FF7043; margin-top: 5px;">Thảo Vy - Cấp <span id="thaoVy-level">1</span></div>
+</div>
+
+<div class="profile-container" id="thaoVy-profile" style="display: none;">
+    <img src="images/vy.jpg" alt="Thảo Vy">
+    <div class="profile-info">
+        <div class="profile-name">Thảo Vy</div>
+        <div class="profile-level">Cấp <span id="thaoVy-level">1</span></div>
     </div>
 </div>
 
