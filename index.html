@@ -1909,16 +1909,19 @@ loadData = function() {
 function rateTask(childName, taskId, rating) {
     const now = new Date();
     const today = getDateKey(now);
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
 
     const displayedDate = getDateKey(currentDate);
+
     if (new Date(displayedDate) > new Date(today)) {
         alert("Không thể đánh giá nhiệm vụ của ngày trong tương lai!");
         return;
     }
 
-    // Kiểm tra mật khẩu 
-    const pin = prompt("Nhập mã PIN để xác nhận:");
-    if (pin !== "****") {
+    // Kiểm tra mật khẩu
+    const pin = prompt("Nhập mã PIN để xác nhận (****)");
+    if (pin !== "2022") {
         alert("Mã PIN không đúng!");
         return;
     }
@@ -1927,12 +1930,12 @@ function rateTask(childName, taskId, rating) {
     const task = scheduleData[childName][dateKey]?.tasks.find(t => t.id === taskId);
     if (!task) return;
 
-    // Play appropriate sound for bad rating
+    // Xử lý âm thanh cho đánh giá không tốt
     if (rating === 'bad') {
-        const audio = new Audio('audio/chua_tot.mp3');
+        const audio = new Audio('./audio/chua_tot.mp3');
         audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
     } else if (rating === 'neutral') {
-        const audio = new Audio('audio/ban_co_gang_vao_lan_sau_nhe.mp3');
+        const audio = new Audio('./audio/ban_co_gang_vao_lan_sau_nhe.mp3');
         audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
     }
 
@@ -2476,6 +2479,250 @@ document.addEventListener('DOMContentLoaded', function() {
     updateXPDisplay();
     updateWeeklyChallenge();
 });
+
+// Thêm hệ thống AI vào trước thẻ </body>
+
+// Định nghĩa câu động viên cho từng bé
+const aiResponses = {
+    tridung: {
+        morning: [
+            "Chào buổi sáng anh Vít! 🌞 Hôm nay mình sẽ có một ngày tuyệt vời!",
+            "Dậy sớm thế này là ngoan lắm! Anh Vít đúng là gương mẫu cho em Vy rồi! 🌟",
+            "Chúc anh Vít một ngày mới nhiều năng lượng và niềm vui! 🎈"
+        ],
+        goodTask: [
+            "Giỏi quá! Anh Vít thật là xuất sắc! 🏆",
+            "Mẹ rất tự hào về anh Vít! Con làm tốt lắm! ❤️",
+            "Tuyệt vời! Anh Vít đang tiến bộ mỗi ngày! 🌟",
+            "Wow! Anh Vít làm việc này chuẩn như một người anh trai mẫu mực! 👏"
+        ],
+        needImprovement: [
+            "Không sao đâu anh Vít, lần sau mình cố gắng hơn nhé! 💪",
+            "Mẹ tin anh Vít có thể làm tốt hơn! Cố lên con! 🌈",
+            "Anh Vít đã cố gắng rồi, lần sau chắc chắn sẽ làm tốt hơn! 🎯"
+        ],
+        goodSleep: [
+            "Anh Vít ngủ sớm như thế này sẽ cao lớn và thông minh hơn đấy! 😴",
+            "Ngủ đủ giấc giúp anh Vít có nhiều năng lượng cho ngày mới! 🌙"
+        ],
+        motivation: [
+            "Anh Vít ơi, hãy là tấm gương tốt cho em Vy nha! 🌟",
+            "Mỗi việc tốt anh làm là một bước tiến đến thành công! 🎯",
+            "Anh Vít thật tuyệt vời, cứ tiếp tục phát huy nhé! 🌈"
+        ]
+    },
+    thaoVy: {
+        morning: [
+            "Chào buổi sáng Thảo Vy bé yêu! 🌞 Ngày mới vui vẻ nha!",
+            "Dậy sớm ghê! Thảo Vy của mẹ ngoan quá! 🌟",
+            "Chào bé Vy đáng yêu! Hôm nay mình cùng cố gắng nha! 🎈"
+        ],
+        goodTask: [
+            "Giỏi quá! Thảo Vy của mẹ thật là ngoan! 🏆",
+            "Mẹ rất tự hào về Thảo Vy! Con gái mẹ giỏi lắm! ❤️",
+            "Tuyệt vời! Thảo Vy đang lớn lên mỗi ngày! 🌟",
+            "Bé Vy làm việc này chuẩn như một công chúa nhỏ! 👸"
+        ],
+        needImprovement: [
+            "Không sao đâu Thảo Vy, lần sau mình cố gắng hơn nha! 💪",
+            "Mẹ tin Thảo Vy có thể làm tốt hơn! Cố lên con gái! 🌈",
+            "Thảo Vy đã cố gắng rồi, lần sau chắc chắn sẽ làm tốt hơn! 🎯"
+        ],
+        goodSleep: [
+            "Thảo Vy ngủ sớm như thế này sẽ xinh đẹp và khỏe mạnh hơn đấy! 😴",
+            "Ngủ đủ giấc giúp Thảo Vy có nhiều năng lượng vui chơi! 🌙"
+        ],
+        motivation: [
+            "Thảo Vy là cô bé ngoan của mẹ! Cố gắng lên nha! 🌟",
+            "Mỗi việc tốt Thảo Vy làm là một nụ hoa xinh đẹp! 🌸",
+            "Thảo Vy thật tuyệt vời, cứ tiếp tục phát huy nhé! 🌈"
+        ]
+    }
+};
+
+// Cập nhật hàm phân tích hành vi
+function analyzeAndSuggest(childName) {
+    const patterns = behaviorPatterns[childName];
+    const dateKey = getDateKey();
+    const today = new Date();
+    const hour = today.getHours();
+    const dayOfWeek = today.getDay();
+
+    // Phân tích thời gian trong ngày
+    if (hour < 7) {
+        showAISuggestion(childName, 'morning');
+    } else if (hour >= 21) {
+        showAISuggestion(childName, 'goodSleep');
+    }
+
+    // Phân tích xu hướng hoàn thành nhiệm vụ
+    if (patterns.taskCompletionRate) {
+        const recentTasks = Object.entries(patterns.taskCompletionRate)
+            .filter(([taskName, stats]) => stats.total >= 3);
+
+        const goodTasks = recentTasks.filter(([_, stats]) => 
+            (stats.good / stats.total) >= 0.7);
+
+        if (goodTasks.length > 0) {
+            const randomGoodTask = goodTasks[Math.floor(Math.random() * goodTasks.length)];
+            showAIMotivation(childName, randomGoodTask[0]);
+        }
+    }
+
+    // Kiểm tra và gửi lời động viên định kỳ
+    if (dayOfWeek === 1 || dayOfWeek === 5) { // Thứ 2 và thứ 6
+        showAISuggestion(childName, 'motivation');
+    }
+
+    // Phân tích tiến bộ
+    if (scheduleData[childName][dateKey]) {
+        const todayPoints = scheduleData[childName][dateKey].totalPoints || 0;
+        const prevDay = new Date(today);
+        prevDay.setDate(prevDay.getDate() - 1);
+        const prevDateKey = getDateKey(prevDay);
+        
+        if (scheduleData[childName][prevDateKey]) {
+            const yesterdayPoints = scheduleData[childName][prevDateKey].totalPoints || 0;
+            if (todayPoints > yesterdayPoints) {
+                showAIProgressReport(childName, true);
+            }
+        }
+    }
+}
+
+// Thêm hàm hiển thị lời động viên đặc biệt
+function showAIMotivation(childName, taskName) {
+    const motivationMessage = aiResponses[childName].motivation[
+        Math.floor(Math.random() * aiResponses[childName].motivation.length)
+    ];
+
+    const aiMessage = document.createElement('div');
+    aiMessage.className = 'ai-message special-motivation';
+    aiMessage.innerHTML = `
+        <div class="ai-avatar">
+            <img src="images/me_quynh.jpg" alt="AI Assistant">
+        </div>
+        <div class="ai-text">${motivationMessage}</div>
+    `;
+
+    // Thêm hiệu ứng đặc biệt
+    aiMessage.style.animation = 'motivationPulse 2s infinite';
+
+    // Thêm style cho hiệu ứng mới
+    if (!document.querySelector('#motivationStyle')) {
+        const style = document.createElement('style');
+        style.id = 'motivationStyle';
+        style.textContent = `
+            @keyframes motivationPulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+            
+            .special-motivation {
+                background: linear-gradient(45deg, #FFD700, #FFA500);
+                border: 2px solid #FFD700;
+            }
+            
+            .special-motivation .ai-text {
+                color: white;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+                background: rgba(255,255,255,0.2);
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    const container = document.querySelector('.container');
+    container.insertBefore(aiMessage, container.firstChild);
+
+    // Thêm âm thanh động viên
+    const audio = new Audio('audio/congratulation.mp3');
+    audio.volume = 0.5;
+    audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+
+    // Xóa tin nhắn sau 8 giây
+    setTimeout(() => {
+        aiMessage.style.opacity = '0';
+        setTimeout(() => {
+            if (aiMessage.parentNode) {
+                aiMessage.parentNode.removeChild(aiMessage);
+            }
+        }, 500);
+    }, 8000);
+}
+
+// Cập nhật hàm rateTask để tích hợp AI thông minh hơn
+rateTask = function(childName, taskId, rating) {
+    const now = new Date();
+    const today = getDateKey(now);
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    const displayedDate = getDateKey(currentDate);
+
+    if (new Date(displayedDate) > new Date(today)) {
+        alert("Không thể đánh giá nhiệm vụ của ngày trong tương lai!");
+        return;
+    }
+
+    // Kiểm tra mật khẩu
+    const pin = prompt("Nhập mã PIN để xác nhận (****)");
+    if (pin !== "2022") {
+        alert("Mã PIN không đúng!");
+        return;
+    }
+
+    const dateKey = getDateKey(currentDate);
+    const task = scheduleData[childName][dateKey]?.tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    // Cập nhật đánh giá
+    task.rating = rating;
+    recalculateTotalPoints(childName, dateKey);
+
+    // Phân tích và phản hồi thông minh
+    if (rating === 'good') {
+        // Tạo hiệu ứng pháo hoa
+        createFireworks();
+        
+        // Phát âm thanh và hiển thị lời khen
+        const taskTemplate = taskTemplates[childName].find(t => t.id === taskId);
+        if (taskTemplate) {
+            setTimeout(() => {
+                playCongrats(taskTemplate.name.toLowerCase(), childName);
+                showAISuggestion(childName, 'goodTask');
+                addWater(1);
+            }, 1000);
+        }
+
+        // Thêm XP và cập nhật tiến trình
+        addXP(childName, 20);
+        updateWeeklyScore(childName, 3);
+    } else if (rating === 'neutral') {
+        showAISuggestion(childName, 'needImprovement');
+        addXP(childName, 10);
+        updateWeeklyScore(childName, 1);
+    } else {
+        // Phát âm thanh động viên
+        const audio = new Audio('./audio/chua_tot.mp3');
+        audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+        showAISuggestion(childName, 'needImprovement');
+    }
+
+    // Cập nhật giao diện
+    renderTasks();
+    updateProgress();
+    checkReward();
+    checkAndUpgradeLevel();
+    checkAndAwardBadges();
+    
+    // Lưu dữ liệu
+    saveData();
+    
+    // Phân tích hành vi mới
+    analyzeAndSuggest(childName);
+}
 </script>
 </body>
 </html>
