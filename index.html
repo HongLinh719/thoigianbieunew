@@ -178,17 +178,22 @@
         
         .rating-btn {
             flex: 1;
-            padding: 8px;
+            padding: 12px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-family: 'Baloo 2', cursive;
             font-weight: 600;
+            font-size: 16px; /* Tăng kích thước chữ */
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
             transition: all 0.2s;
+        }
+
+        .rating-btn i {
+            font-size: 24px; /* Tăng kích thước icon */
         }
         
         .good-btn {
@@ -606,6 +611,53 @@
         width: 100%;
         margin: 0;
         border-radius: 0;
+    }
+}
+/* Cập nhật CSS cho profile container */
+.profile-container {
+    position: sticky;
+    top: 10px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+    z-index: 1000;
+}
+
+.profile-container img {
+    width: 100px; /* Tăng kích thước ảnh */
+    height: 100px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 3px solid #FF7043;
+}
+
+.profile-info {
+    margin-left: 15px;
+}
+
+/* Responsive cho mobile */
+@media screen and (max-width: 768px) {
+    .profile-container {
+        flex-direction: row; /* Giữ layout ngang trên mobile */
+        margin: 0;
+        padding: 8px;
+        width: 100%;
+        border-radius: 0;
+        background: rgba(255, 255, 255, 0.98);
+    }
+
+    .profile-container img {
+        width: 80px; /* Giảm kích thước ảnh trên mobile nhưng vẫn đủ lớn */
+        height: 80px;
+    }
+
+    .profile-info {
+        margin-left: 12px;
+        text-align: left;
     }
 }
 </style>
@@ -1647,28 +1699,20 @@ loadData = function() {
 function rateTask(childName, taskId, rating) {
     const now = new Date();
     const today = getDateKey(now);
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
     const displayedDate = getDateKey(currentDate);
-   // Tạo key duy nhất cho mỗi nhiệm vụ trong ngày
-   //const taskWaterKey = `${dateKey}_${childName}_${taskId}`;
-    //const taskWater = scheduleData[childName][dateKey].tasks.find(t => t.id === taskId);
-   // if (!taskWater) return;
-    // Kiểm tra ngày tương lai
+
     if (new Date(displayedDate) > new Date(today)) {
         alert("Không thể đánh giá nhiệm vụ của ngày trong tương lai!");
         return;
     }
 
-    // Kiểm tra mật khẩu TRƯỚC KHI thực hiện bất kỳ hành động nào
-    const pin = prompt("Nhập mã PIN để xác nhận (mặc định: 1234):");
-    if (pin !== "1234") {
+    // Kiểm tra mật khẩu 
+    const pin = prompt("Nhập mã PIN để xác nhận:");
+    if (pin !== "2022") {
         alert("Mã PIN không đúng!");
         return;
     }
 
-    // Chỉ thực hiện các hành động sau khi mã PIN đúng
     const dateKey = getDateKey(currentDate);
     const task = scheduleData[childName][dateKey]?.tasks.find(t => t.id === taskId);
     if (!task) return;
@@ -1700,14 +1744,6 @@ function rateTask(childName, taskId, rating) {
     saveData();
 }
 
-// QUAN TRỌNG: Xóa hoàn toàn đoạn code này ở cuối file
-// Xóa đoạn:
-/*
-const originalRateTask = rateTask;
-rateTask = function(childName, taskId, rating) {
-    ...
-};
-*/
 function createFireworks() {
     const fireworksContainer = document.createElement('div');
     fireworksContainer.style.position = 'fixed';
@@ -2031,6 +2067,58 @@ function waterTree() {
         saveData();
     }, 1500);
 }
+
+// Thêm audio báo thức
+const alarmAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2530/2530-preview.mp3');
+const alarmMessages = {
+    '6:30': 'Dậy thôi 2 anh em ơi, dậy vệ sinh cá nhân rồi đi học nào!',
+    '17:00': 'Giờ chơi tự do của 2 anh em rồi nè!',
+    '18:00': 'Đến giờ ăn tối rồi các con!',
+    '18:30': 'Đến giờ vệ sinh cá nhân buổi tối rồi!',
+    '19:00': 'Đến giờ đọc sách và làm bài tập rồi!',
+    '21:00': 'Đến giờ đi ngủ rồi các con!'
+};
+
+// Hàm kiểm tra và phát báo thức
+function checkAlarms() {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const currentTime = `${currentHour}:${currentMinute}`;
+
+    Object.keys(alarmMessages).forEach(alarmTime => {
+        const [hour, minute] = alarmTime.split(':').map(Number);
+        if (currentHour === hour && currentMinute === minute) {
+            // Phát âm thanh báo thức
+            alarmAudio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+            
+            // Hiển thị thông báo
+            const message = alarmMessages[alarmTime];
+            showNotification(message);
+            
+            // Thêm hiệu ứng rung lắc cho thông báo
+            const notification = document.getElementById('notification');
+            notification.style.animation = 'shake 0.5s infinite';
+            setTimeout(() => {
+                notification.style.animation = '';
+            }, 2000);
+        }
+    });
+}
+
+// Thêm CSS cho hiệu ứng rung lắc
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(-50%) rotate(0deg); }
+        25% { transform: translateX(-53%) rotate(-5deg); }
+        75% { transform: translateX(-47%) rotate(5deg); }
+    }
+`;
+document.head.appendChild(style);
+
+// Kiểm tra báo thức mỗi phút
+setInterval(checkAlarms, 60000);
 
 </script>
 </body>
