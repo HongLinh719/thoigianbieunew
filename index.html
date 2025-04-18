@@ -393,23 +393,158 @@
             background-color: #FFEBEE;
             border-left: 4px solid var(--danger-color);
         }
-    </style>
+    /* Responsive design cho điện thoại */
+    @media screen and (max-width: 768px) {
+        body {
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 10px;
+            margin: 0;
+        }
+
+        /* Điều chỉnh header */
+        .header {
+            margin: 0 0 15px 0;
+            border-radius: 0;
+        }
+
+        .header h1 {
+            font-size: 20px;
+        }
+
+
+
+        /* Điều chỉnh cây và nút tưới nước */
+        div[style*="position: fixed; bottom: 500px; right: 340px;"] {
+            position: static !important;
+            width: 100% !important;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        #tree-img {
+            width: 120px !important;
+            height: 120px !important;
+        }
+
+        /* Điều chỉnh huy hiệu */
+        div[style*="position: fixed; top: 100px; right: 20px;"] {
+            position: static !important;
+            width: 100% !important;
+            margin: 10px 0;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Điều chỉnh tabs */
+        .tabs {
+            margin: 10px 0;
+        }
+
+        .tab {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .tab img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Điều chỉnh nhiệm vụ */
+        .task {
+            margin-bottom: 10px;
+        }
+
+        .task-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .task-time {
+            margin-bottom: 5px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .task-name {
+            width: 100%;
+        }
+
+        .rating-buttons {
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .rating-btn {
+            width: 100%;
+            padding: 12px;
+            justify-content: center;
+        }
+
+        /* Điều chỉnh hiệu ứng tưới nước */
+        #watering-gif {
+            width: 80px !important;
+            height: auto !important;
+            top: auto !important;
+            left: 50% !important;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        /* Điều chỉnh popup chúc mừng */
+        #popup-congrats {
+            width: 90% !important;
+            max-width: 300px;
+        }
+
+        #popup-congrats img {
+            width: 150px !important;
+            height: auto !important;
+        }
+
+        /* Điều chỉnh nút thống kê */
+        .stats-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .stats-content {
+            width: 95%;
+            max-width: none;
+            margin: 10px;
+            padding: 15px;
+        }
+
+        /* Tối ưu hiệu ứng */
+        .notification {
+            width: 90%;
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        /* Tối ưu scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+    }
+</style>
 </head>
 <body>
-<!-- Thêm div chứa hình ảnh và thông tin của 2 em -->
-<div style="position: fixed; left: 20px; top: 100px; text-align: center;">
-    <!-- Profile Trí Dũng -->
-    <div id="tridung-profile" style="margin-bottom: 20px;">
-        <img src="images/vit.jpg" style="width: 200px; height: 200px; border-radius: 10px; object-fit: cover; border: 3px solid #FF7043;">
-        <div style="font-weight: bold; color: #FF7043; margin-top: 5px;">Trí Dũng - Cấp <span id="tridung-level">1</span></div>
-    </div>
     
-    <!-- Profile Thảo Vy -->
-    <div id="thaoVy-profile" style="display: none;">
-        <img src="images/vy.jpg" style="width: 200px; height: 200px; border-radius: 10px; object-fit: cover; border: 3px solid #FF7043;">
-        <div style="font-weight: bold; color: #FF7043; margin-top: 5px;">Thảo Vy - Cấp <span id="thaoVy-level">1</span></div>
-    </div>
-</div>
+
 
 <!-- Thêm vào phần JavaScript để xử lý chuyển đổi hiển thị -->
 <script>
