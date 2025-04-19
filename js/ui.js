@@ -4,17 +4,30 @@ import { DataService } from './data.js';
 export class UI {
     static updateTaskDisplay(childName) {
         const taskList = document.querySelector(`#${childName} .task-list`);
-        const data = DataService.getChildProgress(childName);
-        taskList.innerHTML = this.generateTasksHTML(data.tasks);
+        const tasks = CONFIG.TASKS[childName];
+        
+        if (taskList && tasks) {
+            taskList.innerHTML = tasks.map(task => `
+                <task-item 
+                    task-id="${task.id}" 
+                    time="${task.time}" 
+                    name="${task.name}"
+                    audio-path="${task.audioPath}"
+                ></task-item>
+            `).join('');
+        }
     }
 
     static updateLevelDisplay(childName) {
-        const levelElement = document.querySelector(`#${childName}-level`);
-        const data = DataService.getChildProgress(childName);
-        const level = CONFIG.LEVELS[data.level];
-        
-        if (levelElement && level) {
-            levelElement.textContent = `${level.title} - Cấp ${data.level}`;
+        const child = document.querySelector(`#${childName}`);
+        if (child) {
+            const profile = child.querySelector('child-profile');
+            if (profile) {
+                const data = JSON.parse(localStorage.getItem('kidScheduleData') || '{}');
+                const childData = data[childName] || { level: 1, experience: 0 };
+                profile.setAttribute('level', childData.level);
+                profile.setAttribute('points', childData.experience);
+            }
         }
     }
 
@@ -29,36 +42,11 @@ export class UI {
         `;
         
         document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 5000);
+        setTimeout(() => notification.remove(), 3000);
     }
 
-    static generateTasksHTML(tasks) {
-        return tasks.map(task => `
-            <div class="task ${task.rating || ''}" data-task-id="${task.id}">
-                <div class="task-header">
-                    <div class="task-time">${task.time}</div>
-                    <div class="task-name">${task.name}</div>
-                </div>
-                <div class="rating-buttons">
-                    ${this.generateRatingButtons(task)}
-                </div>
-            </div>
-        `).join('');
-    }
-
-    static generateRatingButtons(task) {
-        const ratings = [
-            { value: 'good', icon: 'smile', text: 'Tốt' },
-            { value: 'neutral', icon: 'meh', text: 'Bình thường' },
-            { value: 'bad', icon: 'frown', text: 'Chưa tốt' }
-        ];
-
-        return ratings.map(rating => `
-            <button class="rating-btn ${rating.value}-btn ${task.rating === rating.value ? 'active' : ''}"
-                    onclick="rateTask('${task.id}', '${rating.value}')">
-                <i class="fas fa-${rating.icon}"></i>
-                ${rating.text}
-            </button>
-        `).join('');
+    static playAudio(path) {
+        const audio = new Audio(path);
+        return audio.play();
     }
 }

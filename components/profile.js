@@ -23,7 +23,7 @@ export class ProfileComponent extends HTMLElement {
         const level = this.getAttribute('level') || '1';
         const points = this.getAttribute('points') || '0';
         const displayName = childName === 'tridung' ? 'Trí Dũng' : 'Thảo Vy';
-        const imagePath = childName === 'tridung' ? '/thoigianbieunew/images/vit.jpg' : '/thoigianbieunew/images/vy.jpg';
+        const imagePath = childName === 'tridung' ? './images/vit.jpg' : './images/vy.jpg';
 
         this.shadowRoot.innerHTML = `
             <style>

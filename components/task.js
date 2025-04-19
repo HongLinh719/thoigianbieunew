@@ -17,6 +17,7 @@ export class TaskComponent extends HTMLElement {
         const time = this.getAttribute('time');
         const name = this.getAttribute('name');
         const rating = this.getAttribute('rating');
+        const audioPath = this.getAttribute('audio-path') || '';
 
         this.shadowRoot.innerHTML = `
             <style>
@@ -70,6 +71,15 @@ export class TaskComponent extends HTMLElement {
                     transition: all 0.3s;
                 }
 
+                .play-audio {
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    color: var(--primary-color, #FF7043);
+                    padding: 5px;
+                    margin-left: 10px;
+                }
+
                 .good-btn {
                     background: #E8F5E9;
                     color: var(--success-color, #66BB6A);
@@ -106,6 +116,9 @@ export class TaskComponent extends HTMLElement {
                 <div class="task-header">
                     <div class="task-time">${time}</div>
                     <div class="task-name">${name}</div>
+                    ${audioPath ? `<button class="play-audio" onclick="new Audio('${audioPath}').play()">
+                        <i class="fas fa-volume-up"></i>
+                    </button>` : ''}
                 </div>
                 <div class="rating-buttons">
                     <button class="rating-btn good-btn ${rating === 'good' ? 'active' : ''}"
