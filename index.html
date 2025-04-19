@@ -14,7 +14,6 @@
         import './components/profile.js';
         import './components/task.js';
 
-        // Khởi tạo ứng dụng khi tài liệu đã sẵn sàng
         document.addEventListener('DOMContentLoaded', () => {
             const app = {
                 currentChild: 'tridung',
@@ -26,7 +25,6 @@
                 },
 
                 setupEventListeners() {
-                    // Xử lý chuyển đổi tab
                     document.querySelectorAll('.tab').forEach(tab => {
                         tab.addEventListener('click', (e) => {
                             const childName = e.currentTarget.dataset.child;
@@ -34,17 +32,20 @@
                         });
                     });
 
-                    // Xử lý đánh giá nhiệm vụ
-                    document.addEventListener('rate-task', (e) => {
+                    document.addEventListener('rate-task', async (e) => {
                         const { taskId, rating } = e.detail;
-                        this.rateTask(taskId, rating);
+                        const pin = prompt('Nhập mã PIN để xác nhận (****)');
+                        if (pin !== CONFIG.PIN) {
+                            UI.showNotification('Mã PIN không đúng!', 'error');
+                            return;
+                        }
+                        await UI.handleTaskRating(this.currentChild, taskId, rating);
                     });
                 },
 
                 loadInitialData() {
                     const data = DataService.load();
                     if (!data.tridung || !data.thaoVy) {
-                        // Khởi tạo dữ liệu mặc định
                         DataService.save({
                             tridung: { tasks: [], level: 1, experience: 0 },
                             thaoVy: { tasks: [], level: 1, experience: 0 }
@@ -54,7 +55,6 @@
 
                 updateDisplay() {
                     UI.updateTaskDisplay(this.currentChild);
-                    UI.updateLevelDisplay(this.currentChild);
                 },
 
                 switchChild(childName) {
@@ -66,32 +66,9 @@
                         content.style.display = content.id === childName ? 'block' : 'none';
                     });
                     this.updateDisplay();
-                },
-
-                async rateTask(taskId, rating) {
-                    const pin = prompt('Nhập mã PIN để xác nhận (****)');
-                    if (pin !== CONFIG.PIN) {
-                        UI.showNotification('Mã PIN không đúng!', 'error');
-                        return;
-                    }
-
-                    const data = DataService.getChildProgress(this.currentChild);
-                    const task = data.tasks.find(t => t.id === taskId);
-                    if (task) {
-                        task.rating = rating;
-                        DataService.saveChildProgress(this.currentChild, data);
-                        this.updateDisplay();
-                        
-                        if (rating === 'good') {
-                            const audio = new Audio(CONFIG.AUDIO_PATHS.goodTask);
-                            await audio.play();
-                            UI.showNotification('Tuyệt vời! Bé đã hoàn thành tốt nhiệm vụ!', 'success');
-                        }
-                    }
                 }
             };
 
-            // Khởi chạy ứng dụng
             app.init();
         });
     </script>
@@ -114,12 +91,10 @@
         </div>
 
         <div id="tridung" class="child-content">
-            <child-profile child-name="tridung"></child-profile>
             <div class="task-list"></div>
         </div>
 
         <div id="thaoVy" class="child-content" style="display: none;">
-            <child-profile child-name="thaoVy"></child-profile>
             <div class="task-list"></div>
         </div>
     </div>

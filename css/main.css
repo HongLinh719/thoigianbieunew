@@ -1,19 +1,22 @@
 :root {
+    --bg-color: #2D2424;
     --primary-color: #FF7043;
     --secondary-color: #FFAB91;
-    --neutral-color: #FBE9E7;
-    --text-color: #3E2723;
-    --light-text: #795548;
+    --text-color: #ffffff;
     --success-color: #66BB6A;
     --warning-color: #FFCA28;
     --danger-color: #EF5350;
+    --task-bg: #1E1919;
+    --btn-good: #1B4332;
+    --btn-neutral: #8B7355;
+    --btn-bad: #7B1818;
 }
 
 body {
     font-family: 'Baloo 2', cursive;
     margin: 0;
     padding: 0;
-    background-color: var(--neutral-color);
+    background-color: var(--bg-color);
     color: var(--text-color);
 }
 
@@ -31,24 +34,27 @@ body {
 .header h1 {
     color: var(--primary-color);
     margin: 0;
+    font-size: 24px;
 }
 
 .tabs {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
+    background: var(--task-bg);
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .tab {
     flex: 1;
-    background: white;
     padding: 10px;
     border-radius: 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: var(--text-color);
     transition: all 0.3s ease;
 }
 
@@ -61,7 +67,87 @@ body {
 
 .tab.active {
     background: var(--primary-color);
-    color: white;
+}
+
+.task {
+    background: var(--task-bg);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.task-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.task-time {
+    background: var(--bg-color);
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-right: 10px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.task-name {
+    flex: 1;
+    font-weight: 600;
+}
+
+.rating-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.rating-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.good-btn {
+    background: var(--btn-good);
+}
+
+.neutral-btn {
+    background: var(--btn-neutral);
+}
+
+.bad-btn {
+    background: var(--btn-bad);
+}
+
+.rating-btn.active {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.rating-btn:not(.active) {
+    opacity: 0.7;
+}
+
+.good-btn.active {
+    background: var(--success-color);
+}
+
+.neutral-btn.active {
+    background: var(--warning-color);
+}
+
+.bad-btn.active {
+    background: var(--danger-color);
 }
 
 .notification {
@@ -111,27 +197,19 @@ body {
 
     .tabs {
         flex-direction: column;
-        gap: 10px;
     }
 
-    .tab {
+    .rating-buttons {
+        flex-direction: column;
+    }
+
+    .rating-btn {
         width: 100%;
         padding: 15px;
     }
 
     .task {
         margin-bottom: 10px;
-    }
-
-    .rating-buttons {
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .rating-btn {
-        width: 100%;
-        padding: 15px;
-        font-size: 16px;
     }
 
     .profile-container {
