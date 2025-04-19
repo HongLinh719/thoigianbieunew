@@ -1,11 +1,7 @@
 :root {
     --bg-color: #2D2424;
     --primary-color: #FF7043;
-    --secondary-color: #FFAB91;
     --text-color: #ffffff;
-    --success-color: #66BB6A;
-    --warning-color: #FFCA28;
-    --danger-color: #EF5350;
     --task-bg: #1E1919;
     --btn-good: #1B4332;
     --btn-neutral: #8B7355;
@@ -35,6 +31,20 @@ body {
     color: var(--primary-color);
     margin: 0;
     font-size: 24px;
+}
+
+.current-time {
+    margin-top: 10px;
+    opacity: 0.8;
+}
+
+.current-time .time {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.current-time .date {
+    font-size: 14px;
 }
 
 .tabs {
@@ -115,6 +125,11 @@ body {
     justify-content: center;
     gap: 8px;
     transition: all 0.3s;
+    opacity: 0.7;
+}
+
+.rating-btn:hover {
+    opacity: 1;
 }
 
 .good-btn {
@@ -134,62 +149,504 @@ body {
     transform: scale(1.05);
 }
 
-.rating-btn:not(.active) {
-    opacity: 0.7;
+.play-audio {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-color);
+    padding: 5px;
+    margin-left: 10px;
 }
 
-.good-btn.active {
-    background: var(--success-color);
-}
-
-.neutral-btn.active {
-    background: var(--warning-color);
-}
-
-.bad-btn.active {
-    background: var(--danger-color);
-}
-
-.notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 15px 20px;
-    border-radius: 8px;
-    background: white;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    animation: slideIn 0.3s ease-out;
-    z-index: 1000;
-}
-
-.notification.success {
-    background: var(--success-color);
-    color: white;
-}
-
-.notification.error {
-    background: var(--danger-color);
-    color: white;
-}
-
-.notification-content {
+/* Progress Section Styles */
+.progress-section {
+    background: var(--task-bg);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
+    gap: 20px;
+}
+
+.tree-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+.tree-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.water-animation {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    z-index: 2;
+}
+
+.points-display {
+    flex: 1;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.points {
+    color: var(--primary-color);
+}
+
+.level {
+    font-size: 18px;
+    margin-top: 5px;
+    opacity: 0.8;
+}
+
+/* Motivation Message Styles */
+.motivation-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    animation: slideDown 0.3s ease-out;
+}
+
+.motivation-content {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.motivation-content.good {
+    border-left: 5px solid var(--success-color);
+}
+
+.motivation-content.neutral {
+    border-left: 5px solid var(--warning-color);
+}
+
+.motivation-content.bad {
+    border-left: 5px solid var(--danger-color);
+}
+
+.motivation-content .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.motivation-content .message {
+    color: white;
+    font-size: 16px;
+}
+
+/* Level Up Message Styles */
+.level-up-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    animation: scaleIn 0.3s ease-out;
+}
+
+.level-up-content {
+    background: rgba(0, 0, 0, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.level-up-content img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+}
+
+.level-up-content h2 {
+    color: var(--primary-color);
+    margin: 0 0 10px;
+}
+
+.level-up-content p {
+    color: white;
+    font-size: 18px;
+    margin: 0;
+}
+
+/* Motivation Message Overlay */
+.motivation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.motivation-content {
+    background: var(--task-bg);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 300px;
+    animation: scaleIn 0.3s ease-out;
+}
+
+.motivation-content .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 3px solid var(--primary-color);
+}
+
+.motivation-content .message {
+    color: var(--text-color);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Level Display Styles */
+.level-display {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.level-star {
+    color: gold;
+}
+
+/* Weekly Challenge Styles */
+.weekly-challenge {
+    background: var(--task-bg);
+    padding: 15px;
+    border-radius: 12px;
+    margin: 20px 0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    border-left: 4px solid gold;
+    animation: glow 2s infinite alternate;
+}
+
+.weekly-challenge h3 {
+    margin-top: 0;
+    color: gold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.challenge-progress {
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.challenge-reward {
+    font-size: 20px;
+    animation: bounce 1s infinite;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+    }
+    to {
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Weekly Challenge Section */
+.weekly-challenge-container {
+    background-color: #fffdea;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 20px auto;
+    max-width: 90%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: 2px solid #ffc107;
+}
+
+.weekly-challenge-container h3 {
+    color: #ff6b6b;
+    margin-top: 0;
+    text-align: center;
+    font-size: 1.4em;
+}
+
+.progress-bar-container {
+    margin: 15px 0;
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#challenge-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    width: 0%;
+    transition: width 1s ease;
+}
+
+#challenge-progress-text {
+    text-align: center;
+    margin-top: 5px;
+    font-weight: bold;
+    color: #666;
+}
+
+.challenge-reward-container {
+    background: #fff5e6;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px dashed #ffab40;
+    margin-top: 10px;
+}
+
+.challenge-reward-container h4 {
+    margin: 0;
+    color: #ff9800;
+}
+
+#challenge-reward-text {
+    margin: 5px 0 0;
+    font-style: italic;
+}
+
+/* Admin Controls */
+.admin-controls {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 15px auto;
+    max-width: 600px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-left: 4px solid #6c757d;
+}
+
+.admin-btn {
+    background-color: #e9ecef;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    margin: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.admin-btn:hover {
+    background-color: #dee2e6;
+}
+
+/* Admin toggle button */
+#admin-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #3f51b5;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 100;
+    transition: transform 0.3s ease;
+}
+
+#admin-toggle:hover {
+    transform: rotate(30deg);
+}
+
+/* Admin Controls */
+.admin-button {
+    background: #454545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.admin-button:hover {
+    background: #555;
+    transform: scale(1.05);
+}
+
+/* Admin Panel Styles */
+#admin-panel {
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    width: 250px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 99;
+    overflow: hidden;
+}
+
+.admin-header {
+    background: #3f51b5;
+    color: white;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-header h4 {
+    margin: 0;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.admin-controls {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
 }
 
-@keyframes slideIn {
+.admin-btn {
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    background: #f5f5f5;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.admin-btn:hover {
+    background: #e0e0e0;
+}
+
+#reset-day {
+    background: #c8e6c9;
+}
+
+#reset-week {
+    background: #bbdefb;
+}
+
+#backup-data {
+    background: #d1c4e9;
+}
+
+#restore-data {
+    background: #ffccbc;
+}
+
+/* Animations */
+@keyframes slideDown {
     from {
-        transform: translateX(100%);
+        transform: translate(-50%, -100%);
         opacity: 0;
     }
     to {
-        transform: translateX(0);
+        transform: translate(-50%, 0);
         opacity: 1;
     }
 }
 
-/* Responsive styles for mobile */
+@keyframes scaleIn {
+    from {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes celebrate {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.task.good {
+    animation: celebrate 0.5s ease-in-out;
+}
+
+.task-streak {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.streak-flame {
+    font-size: 16px;
+    animation: flicker 1s infinite;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
 @media screen and (max-width: 768px) {
     .container {
         padding: 10px;
@@ -208,40 +665,167 @@ body {
         padding: 15px;
     }
 
-    .task {
-        margin-bottom: 10px;
-    }
-
-    .profile-container {
+    .progress-section {
         flex-direction: column;
         text-align: center;
     }
 
-    .profile-image {
-        margin: 0 auto 10px;
+    .tree-container {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
     }
 
-    .notification {
-        width: calc(100% - 40px);
-        top: auto;
-        bottom: 20px;
+    .motivation-message {
+        width: 90%;
+    }
+
+    .level-up-message {
+        width: 80%;
+    }
+
+    .motivation-content {
+        margin: 20px;
+        max-width: none;
     }
 }
 
 /* Touch-friendly styles */
 @media (hover: none) {
     .rating-btn {
-        min-height: 44px; /* Minimum touch target size */
-        margin: 5px 0;
-    }
-
-    .tab {
         min-height: 44px;
     }
 
-    input[type="button"],
-    button {
+    .play-audio {
         min-height: 44px;
         min-width: 44px;
     }
+}
+
+/* Weekly Challenge Styles */
+.weekly-challenge-container {
+    background-color: #f8f4e6;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 20px auto;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    border: 2px dashed #8bc34a;
+}
+
+.weekly-challenge-container h3 {
+    color: #4CAF50;
+    font-size: 1.4em;
+    margin-bottom: 10px;
+}
+
+.progress-bar-container {
+    margin: 15px 0;
+}
+
+.progress-bar {
+    height: 18px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+#challenge-progress-fill {
+    height: 100%;
+    background-color: #8bc34a;
+    width: 0%;
+    transition: width 0.5s ease-in-out;
+}
+
+#challenge-progress-text {
+    font-weight: bold;
+    color: #4a5568;
+}
+
+.challenge-reward-container {
+    background-color: #fff9c4;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.challenge-reward-container h4 {
+    color: #ff9800;
+    margin-bottom: 5px;
+}
+
+/* Admin Panel Styles */
+#admin-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    width: 250px;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.admin-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.admin-btn:hover {
+    background-color: #3e8e41;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+}
+
+.btn-close:hover {
+    color: #333;
+}
+
+/* Admin button to open panel */
+#admin-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 999;
+    border: 1px solid #ddd;
+    font-size: 18px;
+    color: #555;
 }

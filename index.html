@@ -7,76 +7,272 @@
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&display=swap" rel="stylesheet"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
     <link href="css/main.css" rel="stylesheet"/>
-    <script type="module">
-        import { CONFIG } from './js/config.js';
-        import { DataService } from './js/data.js';
-        import { UI } from './js/ui.js';
-        import './components/profile.js';
-        import './components/task.js';
+    
+    <!-- Thêm CSS cho profile, cây và các phần thiếu -->
+    <style>
+        /* CSS cho phần cây và nút tưới */
+        .tree-container {
+            position: relative;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const app = {
-                currentChild: 'tridung',
-                
-                init() {
-                    this.setupEventListeners();
-                    this.loadInitialData();
-                    this.updateDisplay();
-                },
+        .tree-image {
+            width: 200px;
+            height: 200px;
+            transition: transform 0.3s ease;
+        }
 
-                setupEventListeners() {
-                    document.querySelectorAll('.tab').forEach(tab => {
-                        tab.addEventListener('click', (e) => {
-                            const childName = e.currentTarget.dataset.child;
-                            this.switchChild(childName);
-                        });
-                    });
+        .tree-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 10px 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
 
-                    document.addEventListener('rate-task', async (e) => {
-                        const { taskId, rating } = e.detail;
-                        const pin = prompt('Nhập mã PIN để xác nhận (****)');
-                        if (pin !== CONFIG.PIN) {
-                            UI.showNotification('Mã PIN không đúng!', 'error');
-                            return;
-                        }
-                        await UI.handleTaskRating(this.currentChild, taskId, rating);
-                    });
-                },
+        .water-button {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #2196F3, #03A9F4);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
 
-                loadInitialData() {
-                    const data = DataService.load();
-                    if (!data.tridung || !data.thaoVy) {
-                        DataService.save({
-                            tridung: { tasks: [], level: 1, experience: 0 },
-                            thaoVy: { tasks: [], level: 1, experience: 0 }
-                        });
-                    }
-                },
+        .water-button:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
 
-                updateDisplay() {
-                    UI.updateTaskDisplay(this.currentChild);
-                },
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(33, 150, 243, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
+        }
 
-                switchChild(childName) {
-                    this.currentChild = childName;
-                    document.querySelectorAll('.tab').forEach(tab => {
-                        tab.classList.toggle('active', tab.dataset.child === childName);
-                    });
-                    document.querySelectorAll('.child-content').forEach(content => {
-                        content.style.display = content.id === childName ? 'block' : 'none';
-                    });
-                    this.updateDisplay();
-                }
-            };
+        .tree-growth {
+            animation: grow 1s ease-out;
+        }
 
-            app.init();
-        });
-    </script>
+        @keyframes grow {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* CSS cho profile sticky */
+        .profile-container {
+            position: sticky;
+            top: 10px;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            z-index: 1000;
+        }
+
+        .profile-container img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 3px solid #FF7043;
+        }
+
+        .profile-info {
+            margin-left: 15px;
+        }
+
+        .profile-name {
+            font-weight: bold;
+            color: #FF7043;
+        }
+
+        .profile-level {
+            font-size: 14px;
+            color: #795548;
+        }
+        
+        /* Cập nhật CSS cho hiển thị cấp độ */
+        .xp-bar {
+            height: 6px;
+            background-color: #ddd;
+            border-radius: 3px;
+            margin: 5px 0;
+            overflow: hidden;
+        }
+
+        .xp-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.3s;
+        }
+
+        .level-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: linear-gradient(45deg, #FF6D00, #FFA726);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        /* CSS cho thử thách tuần */
+        .weekly-challenge {
+            background: linear-gradient(45deg, #7E57C2, #5C6BC0);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            animation: pulse 2s infinite;
+        }
+
+        .challenge-progress {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .challenge-reward {
+            display: inline-block;
+            font-size: 24px;
+            margin-top: 5px;
+        }
+        
+        /* CSS cho popup chúc mừng */
+        #popup-congrats {
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            text-align: center;
+            display: none;
+        }
+
+        #popup-congrats img {
+            width: 250px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #888;
+        }
+
+        #popup-text {
+            background: white;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: -5px;
+        }
+        
+        /* CSS cho hiệu ứng tưới nước */
+        #watering-gif {
+            display: none;
+            position: absolute;
+            width: 120px;
+            z-index: 10;
+        }
+        
+        /* CSS cho hiển thị cấp độ */
+        .level-display {
+            text-align: center;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+        }
+
+        .level-star {
+            color: gold;
+            text-shadow: 0 0 2px #000;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .profile-container {
+                flex-direction: row;
+                margin: 0;
+                padding: 8px;
+                width: 100%;
+                border-radius: 0;
+                background: rgba(255, 255, 255, 0.98);
+            }
+
+            .profile-container img {
+                width: 80px;
+                height: 80px;
+            }
+
+            .profile-info {
+                margin-left: 12px;
+                text-align: left;
+            }
+            
+            .tree-container {
+                padding: 10px;
+                margin-top: 10px;
+            }
+
+            .tree-image {
+                width: 300px;
+                height: 300px;
+            }
+
+            .water-button {
+                width: 80px;
+                height: 80px;
+                font-size: 24px;
+                right: -15px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Thêm profile của 2 em -->
+    <div class="profile-container" id="tridung-profile">
+        <img src="images/vit.jpg" alt="Trí Dũng">
+        <div class="profile-info">
+            <div class="profile-name">Trí Dũng</div>
+            <div class="profile-level">Cấp <span id="tridung-level">1</span></div>
+            <div class="xp-bar">
+                <div class="xp-progress" id="tridung-xp-progress" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-container" id="thaoVy-profile" style="display: none;">
+        <img src="images/vy.jpg" alt="Thảo Vy">
+        <div class="profile-info">
+            <div class="profile-name">Thảo Vy</div>
+            <div class="profile-level">Cấp <span id="thaoVy-level">1</span></div>
+            <div class="xp-bar">
+                <div class="xp-progress" id="thaoVy-xp-progress" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>Thời gian biểu cho bé</h1>
+            <div class="current-time"></div>
         </div>
 
         <div class="tabs">
@@ -96,6 +292,928 @@
 
         <div id="thaoVy" class="child-content" style="display: none;">
             <div class="task-list"></div>
+        </div>
+    </div>
+
+    <script>
+        // Hàm phát âm thanh
+        function playAudio(filename) {
+            const audio = new Audio(`audio/${filename}`);
+            audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+        }
+
+        // Hệ thống tính điểm
+        const POINTS = {
+            good: 3,
+            neutral: 1,
+            bad: 0
+        };
+
+        // Hệ thống huy hiệu
+        const badges = {
+            sleep7: {
+                id: 'sleep7',
+                name: 'Ngủ Ngoan 7 Ngày',
+                icon: '😴',
+                condition: 'Đi ngủ đúng giờ 7 ngày liên tiếp'
+            },
+            star3: {
+                id: 'star3',
+                name: '3 Ngày Sao Vàng',
+                icon: '⭐',
+                condition: 'Hoàn thành tốt 3 ngày liên tiếp'
+            },
+            tree: {
+                id: 'tree',
+                name: 'Người Trồng Cây',
+                icon: '🌳',
+                condition: 'Cây phát triển đầy đủ'
+            },
+            eat5: {
+                id: 'eat5',
+                name: 'Ăn Giỏi 5 Ngày',
+                icon: '🍽️',
+                condition: 'Ăn tối ngoan 5 ngày liên tiếp'
+            }
+        };
+
+        // Nhiệm vụ của mỗi em
+        const tasks = {
+            tridung: [
+                { id: 'td1', time: '06:00', name: 'Thức dậy, vệ sinh cá nhân & đi học', audio: 'thuc_day_ve_sinh_ca_nhan_di_hoc.mp3' },
+                { id: 'td2', time: '17:00', name: 'Đọc sách, tô màu hoặc làm toán', audio: 'doc_sach_to_mau_hoac_lam_toan.mp3' },
+                { id: 'td3', time: '18:00', name: 'Chơi tự do', audio: 'choi_tu_do.mp3' },
+                { id: 'td4', time: '19:00', name: 'Ăn tối tại nhà', audio: 'an_toi_tai_nha.mp3' },
+                { id: 'td5', time: '20:00', name: 'Vệ sinh cá nhân buổi tối', audio: 've_sinh_ca_nhan_buoi_toi.mp3' },
+                { id: 'td6', time: '21:00', name: 'Đi ngủ', audio: 'di_ngu.mp3' }
+            ],
+            thaoVy: [
+                { id: 'tv1', time: '06:00', name: 'Thức dậy, vệ sinh cá nhân & đi học', audio: 'thuc_day_ve_sinh_ca_nhan_di_hoc_thaovy.mp3' },
+                { id: 'tv2', time: '17:00', name: 'Đọc sách, tô màu hoặc làm toán', audio: 'doc_sach_to_mau_hoac_lam_toan_thaovy.mp3' },
+                { id: 'tv3', time: '18:00', name: 'Chơi tự do', audio: 'choi_tu_do_thaovy.mp3' },
+                { id: 'tv4', time: '19:00', name: 'Ăn tối tại nhà', audio: 'an_toi_tai_nha_thaovy.mp3' },
+                { id: 'tv5', time: '20:00', name: 'Vệ sinh cá nhân buổi tối', audio: 've_sinh_ca_nhan_buoi_toi_thaovy.mp3' },
+                { id: 'tv6', time: '21:00', name: 'Đi ngủ', audio: 'di_ngu_thaovy.mp3' }
+            ]
+        };
+
+        // Biến cho hệ thống cây phát triển
+        let treeLevel = 1;
+        let waterCredits = 0;
+        let currentChild = 'tridung';
+        let currentWeekDay = 0; // 0: Chủ Nhật, 1: Thứ 2...
+
+        // Hàm để cập nhật hình ảnh cây
+        function updateTreeImage() {
+            // Xác định cấp độ cây dựa vào ngày trong tuần
+            const weekDay = new Date().getDay(); // 0: Chủ Nhật, 1: Thứ 2...
+            
+            // Nếu là chủ nhật, hiển thị cây trưởng thành
+            if (weekDay === 0) {
+                document.getElementById("tree-img").src = "images/tree_full.png";
+                document.getElementById("tree-status").textContent = "Cây đã trưởng thành hoàn toàn! Chúc mừng bé!";
+                document.getElementById("tree-status").style.color = "#4CAF50";
+            } else {
+                // Các ngày khác trong tuần, hiển thị theo tiến độ
+                // Thứ 2 (1) -> cấp độ 1, Thứ 3 (2) -> cấp độ 2, ..., Thứ 7 (6) -> cấp độ 6
+                const expectedLevel = weekDay; // Cấp độ mong đợi cho ngày hiện tại
+                
+                // Hiển thị cây theo cấp độ thực tế (không vượt quá cấp độ mong đợi)
+                const displayLevel = Math.min(treeLevel, expectedLevel);
+                document.getElementById("tree-img").src = `images/tree_day${displayLevel}.png`;
+                
+                // Hiển thị thông báo về trạng thái cây
+                if (treeLevel < expectedLevel) {
+                    document.getElementById("tree-status").textContent = "Cây cần được tưới nước thêm!";
+                    document.getElementById("tree-status").style.color = "#FF9800";
+                } else {
+                    document.getElementById("tree-status").textContent = "Cây đang phát triển tốt!";
+                    document.getElementById("tree-status").style.color = "#4CAF50";
+                }
+            }
+        }
+
+        // Hàm tưới nước cho cây
+        function waterTree() {
+            console.log("Đang tưới cây, số lượt hiện tại:", waterCredits);
+            
+            // Kiểm tra nếu không còn lượt tưới
+            if (waterCredits <= 0) {
+                alert("Bé cần hoàn thành nhiệm vụ để nhận lượt tưới nước!");
+                return;
+            }
+            
+            // Giảm số lượt tưới
+            waterCredits--;
+            
+            // Hiển thị hiệu ứng tưới nước
+            const wateringGif = document.getElementById("watering-gif");
+            wateringGif.style.display = "block";
+            
+            // Cập nhật cấp độ cây
+            treeLevel = Math.min(treeLevel + 1, 7);
+            
+            // Cập nhật hình ảnh cây sau 1.5 giây
+            setTimeout(() => {
+                const treeImg = document.getElementById("tree-img");
+                treeImg.classList.add('tree-growth');
+                setTimeout(() => {
+                    treeImg.classList.remove('tree-growth');
+                }, 1000);
+                
+                document.getElementById("tree-img").src = `images/tree_day${treeLevel}.png`;
+                wateringGif.style.display = "none";
+                
+                // Thông báo cho người dùng biết cây đã tăng cấp
+                document.getElementById("tree-status").textContent = "Cây đã phát triển!";
+                document.getElementById("tree-status").style.color = "#4CAF50";
+                
+                // Tạo hiệu ứng
+                createSmallConfetti(treeImg);
+                
+                // Lưu dữ liệu
+                saveData();
+            }, 1500);
+        }
+
+        // Hàm tạo hiệu ứng confetti nhỏ
+        function createSmallConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '8px';
+                confetti.style.height = '8px';
+                confetti.style.backgroundColor = getRandomColor();
+                confetti.style.left = `${centerX}px`;
+                confetti.style.top = `${centerY}px`;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.opacity = '1';
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                document.body.appendChild(confetti);
+
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 20 + Math.random() * 80;
+                const duration = 0.5 + Math.random() * 1;
+
+                confetti.style.transition = `transform ${duration}s ease-out, opacity ${duration}s ease-out`;
+
+                setTimeout(() => {
+                    confetti.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+                    confetti.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => {
+                    document.body.removeChild(confetti);
+                }, duration * 1000);
+            }
+        }
+
+        // Hàm tạo màu ngẫu nhiên
+        function getRandomColor() {
+            const colors = [
+                '#ff0000', '#ffa500', '#ffff00', '#00ff00', '#00ffff', 
+                '#0000ff', '#ff00ff', '#ff69b4', '#00ff7f', '#ff4500'
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Hàm tạo hiệu ứng pháo hoa
+        function createFireworks() {
+            const fireworksContainer = document.createElement('div');
+            fireworksContainer.style.position = 'fixed';
+            fireworksContainer.style.top = '0';
+            fireworksContainer.style.left = '0';
+            fireworksContainer.style.width = '100%';
+            fireworksContainer.style.height = '100%';
+            fireworksContainer.style.pointerEvents = 'none';
+            fireworksContainer.style.zIndex = '999';
+            document.body.appendChild(fireworksContainer);
+
+            // Tạo âm thanh pháo hoa
+            const audio = document.getElementById("audio-congrats");
+            audio.src = "audio/firework.mp3";
+            audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+
+            // Tăng số lượng pháo hoa và thời gian hiển thị
+            const totalFireworks = 15; 
+            const duration = 8000; 
+
+            // Tạo pháo hoa với tần suất cao hơn
+            for (let i = 0; i < totalFireworks; i++) {
+                setTimeout(() => {
+                    createSingleFirework(fireworksContainer);
+                }, i * 400);
+            }
+
+            setTimeout(() => {
+                document.body.removeChild(fireworksContainer);
+            }, duration);
+        }
+
+        // Hàm tạo một pháo hoa
+        function createSingleFirework(container) {
+            // Vị trí xuất phát
+            const startX = Math.random() * window.innerWidth;
+            const startY = window.innerHeight;
+
+            // Vị trí nổ
+            const explodeX = startX + (Math.random() * 200 - 100);
+            const explodeY = 100 + Math.random() * (window.innerHeight / 2);
+
+            // Tạo pháo hoa
+            const firework = document.createElement('div');
+            firework.style.position = 'absolute';
+            firework.style.width = '8px';
+            firework.style.height = '8px';
+            firework.style.borderRadius = '50%';
+            firework.style.backgroundColor = getRandomColor();
+            firework.style.boxShadow = `0 0 6px ${getRandomColor()}`;
+            firework.style.left = `${startX}px`;
+            firework.style.top = `${startY}px`;
+            firework.style.transition = `transform 1.5s ease-out, opacity 1.5s ease-out`;
+            container.appendChild(firework);
+
+            // Bay lên và nổ
+            setTimeout(() => {
+                firework.style.transform = `translate(${explodeX - startX}px, ${explodeY - startY}px)`;
+
+                // Nổ thành nhiều tia nhỏ
+                setTimeout(() => {
+                    firework.remove();
+                    createExplosion(container, explodeX, explodeY);
+                }, 1500);
+            }, 10);
+        }
+
+        // Tạo hiệu ứng nổ
+        function createExplosion(container, x, y) {
+            const particles = 30 + Math.floor(Math.random() * 20);
+            const explosionColor = getRandomColor();
+
+            for (let i = 0; i < particles; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = '4px';
+                particle.style.height = '4px';
+                particle.style.borderRadius = '50%';
+                particle.style.backgroundColor = explosionColor;
+                particle.style.boxShadow = `0 0 4px ${explosionColor}`;
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                particle.style.opacity = '1';
+                particle.style.transition = `transform 1s ease-out, opacity 1s ease-out`;
+                container.appendChild(particle);
+
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 20 + Math.random() * 100;
+                
+                setTimeout(() => {
+                    particle.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+                    particle.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        if(container.contains(particle)) {
+                            container.removeChild(particle);
+                        }
+                    }, 1000);
+                }, 10);
+            }
+        }
+
+        // Hàm kiểm tra và reset cây hàng tuần
+        function checkAndResetTree() {
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // 0 = Chủ nhật, 1 = Thứ 2, ...
+
+            // Kiểm tra xem có phải là thứ 2 không
+            if (dayOfWeek === 1) {
+                // Lấy ngày cuối cùng reset cây từ localStorage
+                const lastResetDate = localStorage.getItem('lastTreeReset');
+                const today = new Date().toDateString();
+
+                // Nếu chưa reset hôm nay
+                if (lastResetDate !== today) {
+                    // Reset cây về cấp độ 1
+                    treeLevel = 1;
+                    document.getElementById("tree-img").src = "images/tree_day1.png";
+                    document.getElementById("tree-status").textContent = "Tuần mới bắt đầu! Hãy chăm cây mới!";
+                    
+                    // Lưu ngày đã reset
+                    localStorage.setItem('lastTreeReset', today);
+                    
+                    // Lưu dữ liệu
+                    saveData();
+                }
+            }
+        }
+
+        // Hàm thêm credits tưới nước
+        function addWaterCredits(units) {
+            waterCredits += units;
+            document.getElementById("water-units").textContent = waterCredits;
+            
+            // Hiển thị thông báo
+            const waterNotification = document.createElement("div");
+            waterNotification.style.position = "fixed";
+            waterNotification.style.bottom = "10px";
+            waterNotification.style.left = "50%";
+            waterNotification.style.transform = "translateX(-50%)";
+            waterNotification.style.backgroundColor = "#2196F3";
+            waterNotification.style.color = "white";
+            waterNotification.style.padding = "10px 20px";
+            waterNotification.style.borderRadius = "5px";
+            waterNotification.style.zIndex = "9999";
+            waterNotification.innerHTML = `<i class="fas fa-plus"></i> Đã thêm ${units} lượt tưới nước!`;
+            
+            document.body.appendChild(waterNotification);
+            
+            setTimeout(() => {
+                waterNotification.style.opacity = "0";
+                waterNotification.style.transition = "opacity 0.5s";
+                setTimeout(() => {
+                    document.body.removeChild(waterNotification);
+                }, 500);
+            }, 2000);
+            
+            // Lưu dữ liệu
+            saveData();
+            
+            console.log("Đã thêm", units, "lượt tưới, hiện có:", waterCredits);
+        }
+        
+        // Hàm lưu dữ liệu
+        function saveData() {
+            // Lưu dữ liệu cây
+            localStorage.setItem('treeData', JSON.stringify({
+                waterCredits: waterCredits,
+                treeLevel: treeLevel
+            }));
+        }
+
+        // Hàm tải dữ liệu
+        function loadData() {
+            // Tải dữ liệu cây
+            const treeData = localStorage.getItem('treeData');
+            if (treeData) {
+                const parsedTreeData = JSON.parse(treeData);
+                waterCredits = parsedTreeData.waterCredits || 0;
+                treeLevel = parsedTreeData.treeLevel || 1;
+                
+                // Cập nhật UI
+                if (document.getElementById("water-units")) {
+                    document.getElementById("water-units").textContent = waterCredits;
+                }
+                updateTreeImage();
+                
+                console.log("Đã tải dữ liệu: lượt tưới =", waterCredits, "cấp độ cây =", treeLevel);
+            }
+            
+            // Lấy ngày trong tuần hiện tại
+            currentWeekDay = new Date().getDay(); // 0: Chủ Nhật, 1: Thứ 2...
+            
+            // Kiểm tra và reset cây nếu cần
+            checkAndResetTree();
+        }
+
+        // Hàm đánh giá nhiệm vụ
+        function rateTask(childName, taskId, rating) {
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+            
+            // Kiểm tra mật khẩu nếu không phải là môi trường phát triển
+            if (!window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+                const pin = prompt("Nhập mã PIN để xác nhận (****)");
+                if (pin !== "2022") {
+                    alert("Mã PIN không đúng!");
+                    return;
+                }
+            }
+            
+            // Lưu đánh giá
+            let childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
+            if (!childData.tasks) childData.tasks = {};
+            if (!childData.tasks[today]) childData.tasks[today] = {};
+            
+            childData.tasks[today][taskId] = rating;
+            
+            // Tính điểm
+            if (rating === 'good') {
+                // Thêm lượt tưới nước khi hoàn thành tốt
+                addWaterCredits(1);
+                
+                // Phát âm thanh khen ngợi
+                const task = tasks[childName].find(t => t.id === taskId);
+                if (task && task.audio) {
+                    playAudio(task.audio);
+                }
+                
+                // Hiển thị popup chúc mừng
+                showCongratulation(task.name, childName);
+            }
+            
+            // Lưu dữ liệu
+            localStorage.setItem(`${childName}Data`, JSON.stringify(childData));
+            
+            // Cập nhật giao diện
+            updateTaskDisplay();
+            
+            // Kiểm tra và cập nhật huy hiệu
+            checkBadges(childName);
+        }
+
+        // Hàm hiển thị chúc mừng
+        function showCongratulation(taskName, childName) {
+            const popup = document.getElementById("popup-congrats");
+            const popupText = document.getElementById("popup-text");
+            
+            // Hiển thị thông báo phù hợp với từng bé
+            const childDisplayName = childName === 'thaoVy' ? 'Thảo Vy' : 'Trí Dũng';
+            popupText.innerText = `Chúc mừng bé ${childDisplayName} hoàn thành tốt nhiệm vụ: ${taskName}`;
+            popup.style.display = "block";
+            
+            // Tự động ẩn sau 3 giây
+            setTimeout(() => {
+                popup.style.display = "none";
+            }, 3000);
+        }
+
+        // Hàm kiểm tra và cấp huy hiệu
+        function checkBadges(childName) {
+            // Lấy dữ liệu nhiệm vụ
+            const childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
+            if (!childData.tasks) return;
+            
+            // Lấy danh sách huy hiệu đã có
+            let earnedBadges = JSON.parse(localStorage.getItem('earnedBadges') || '{}');
+            
+            // Kiểm tra huy hiệu ngủ ngoan 7 ngày
+            const sleepTask = childName === 'tridung' ? 'td6' : 'tv6';
+            let sleepStreak = 0;
+            
+            // Lấy 7 ngày gần nhất
+            for (let i = 0; i < 7; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateKey = date.toISOString().split('T')[0];
+                
+                if (childData.tasks[dateKey] && 
+                    childData.tasks[dateKey][sleepTask] === 'good') {
+                    sleepStreak++;
+                } else {
+                    break;
+                }
+            }
+            
+            // Cấp huy hiệu nếu đủ điều kiện
+            const badgeKey = `sleep7_${childName}`;
+            if (sleepStreak >= 7 && !earnedBadges[badgeKey]) {
+                earnedBadges[badgeKey] = {
+                    date: new Date().toISOString(),
+                    forChild: childName
+                };
+                
+                // Hiệu ứng thông báo huy hiệu mới
+                showBadgeAward('sleep7', childName);
+            }
+            
+            // Lưu danh sách huy hiệu
+            localStorage.setItem('earnedBadges', JSON.stringify(earnedBadges));
+        }
+
+        // Hiệu ứng hiển thị huy hiệu mới
+        function showBadgeAward(badgeId, childName) {
+            const badge = badges[badgeId];
+            if (!badge) return;
+            
+            // Tạo phần tử thông báo
+            const notification = document.createElement('div');
+            notification.style.position = 'fixed';
+            notification.style.top = '50%';
+            notification.style.left = '50%';
+            notification.style.transform = 'translate(-50%, -50%)';
+            notification.style.background = 'linear-gradient(45deg, #FF9800, #FF5722)';
+            notification.style.color = 'white';
+            notification.style.padding = '20px';
+            notification.style.borderRadius = '15px';
+            notification.style.boxShadow = '0 5px 30px rgba(0,0,0,0.3)';
+            notification.style.textAlign = 'center';
+            notification.style.zIndex = '10000';
+            notification.style.fontSize = '24px';
+            notification.style.animation = 'badgeWiggle 1s infinite';
+            
+            // Thêm style animation
+            if (!document.getElementById('badgeAnimStyle')) {
+                const style = document.createElement('style');
+                style.id = 'badgeAnimStyle';
+                style.textContent = `
+                    @keyframes badgeWiggle {
+                        0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+                        25% { transform: translate(-50%, -50%) rotate(-5deg); }
+                        75% { transform: translate(-50%, -50%) rotate(5deg); }
+                    }
+                    
+                    @keyframes badgeFade {
+                        from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                        to { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Nội dung thông báo
+            const childDisplayName = childName === 'thaoVy' ? 'Thảo Vy' : 'Trí Dũng';
+            notification.innerHTML = `
+                <div style="font-size: 72px; margin-bottom: 10px;">${badge.icon}${badge.icon}${badge.icon}</div>
+                <div style="font-weight: bold; margin-bottom: 10px;">🎉 CHÚC MỪNG BÉ ${childDisplayName.toUpperCase()}! 🎉</div>
+                <div>Bé đã đạt được huy hiệu mới:</div>
+                <div style="font-weight: bold; font-size: 28px; margin: 10px 0;">${badge.name}</div>
+                <div>${badge.condition}</div>
+                <button style="margin-top: 20px; padding: 10px 20px; background: white; color: #FF5722; border: none; border-radius: 30px; font-weight: bold; cursor: pointer;">Cảm ơn</button>
+            `;
+            
+            // Thêm vào body
+            document.body.appendChild(notification);
+            
+            // Xử lý sự kiện nút đóng
+            notification.querySelector('button').addEventListener('click', () => {
+                notification.style.animation = 'badgeFade 0.5s forwards';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            });
+            
+            // Tự động đóng sau 10 giây
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    notification.style.animation = 'badgeFade 0.5s forwards';
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 500);
+                }
+            }, 10000);
+            
+            // Phát âm thanh vui nhộn
+            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/218/218-preview.mp3');
+            audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+        }
+
+        // Hàm hiển thị nhiệm vụ
+        function updateTaskDisplay() {
+            const taskLists = document.querySelectorAll('.task-list');
+            taskLists.forEach(list => {
+                list.innerHTML = '';
+            });
+            
+            // Lấy ngày hiện tại
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Hiển thị nhiệm vụ cho từng bé
+            for (const childName in tasks) {
+                const childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
+                const taskList = document.querySelector(`#${childName} .task-list`);
+                
+                if (!taskList) continue;
+                
+                tasks[childName].forEach(task => {
+                    const rating = childData.tasks && childData.tasks[today] ? 
+                                   childData.tasks[today][task.id] : null;
+                    
+                    const taskElement = document.createElement('div');
+                    taskElement.className = `task ${rating ? 'completed-' + rating : ''}`;
+                    taskElement.innerHTML = `
+                        <div class="task-header">
+                            <div class="task-time">${task.time}</div>
+                            <div class="task-name">${task.name}</div>
+                        </div>
+                        <div class="rating-buttons">
+                            <button class="rating-btn good-btn ${rating === 'good' ? 'active' : ''}" 
+                                    onclick="rateTask('${childName}', '${task.id}', 'good')">
+                                <i class="fas fa-smile"></i> Tốt
+                            </button>
+                            <button class="rating-btn neutral-btn ${rating === 'neutral' ? 'active' : ''}" 
+                                    onclick="rateTask('${childName}', '${task.id}', 'neutral')">
+                                <i class="fas fa-meh"></i> Chấp nhận được
+                            </button>
+                            <button class="rating-btn bad-btn ${rating === 'bad' ? 'active' : ''}" 
+                                    onclick="rateTask('${childName}', '${task.id}', 'bad')">
+                                <i class="fas fa-frown"></i> Chưa tốt
+                            </button>
+                        </div>
+                    `;
+                    
+                    taskList.appendChild(taskElement);
+                });
+            }
+        }
+
+        // Hàm chuyển đổi tab
+        function switchTab(childName) {
+            currentChild = childName;
+            
+            // Cập nhật trạng thái tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelector(`.tab[data-child="${childName}"]`).classList.add('active');
+            
+            // Hiển thị nội dung tương ứng
+            document.querySelectorAll('.child-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            document.getElementById(childName).style.display = 'block';
+            
+            // Ẩn/hiện profile tương ứng
+            document.getElementById('tridung-profile').style.display = childName === 'tridung' ? 'flex' : 'none';
+            document.getElementById('thaoVy-profile').style.display = childName === 'thaoVy' ? 'flex' : 'none';
+            
+            // Cập nhật tên cây
+            const treeName = document.getElementById('tree-name');
+            if (treeName) {
+                treeName.textContent = `Cây của bé ${childName === 'tridung' ? 'Trí Dũng' : 'Thảo Vy'}`;
+            }
+        }
+
+        // Khởi tạo ứng dụng
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tải dữ liệu
+            loadData();
+            
+            // Cập nhật hiển thị nhiệm vụ
+            updateTaskDisplay();
+            
+            // Cập nhật thời gian hiện tại
+            updateCurrentTime();
+            
+            // Cập nhật thời gian mỗi phút
+            setInterval(updateCurrentTime, 60000);
+            
+            // Thêm sự kiện cho các tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const childName = this.getAttribute('data-child');
+                    switchTab(childName);
+                });
+            });
+        });
+
+        // Hàm cập nhật thời gian hiện tại
+        function updateCurrentTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'numeric', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            const timeString = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            const dateString = now.toLocaleDateString('vi-VN', options);
+            
+            const timeElements = document.querySelectorAll('.current-time');
+            timeElements.forEach(el => {
+                el.textContent = `${timeString}, ${dateString.charAt(0).toUpperCase() + dateString.slice(1)}`;
+            });
+            
+            // Kiểm tra thông báo nhiệm vụ
+            checkTaskNotifications();
+        }
+
+        // Kiểm tra thông báo dựa trên thời gian
+        function checkTaskNotifications() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const currentTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            
+            // Kiểm tra cả hai bé
+            for (const childName in tasks) {
+                const childTasks = tasks[childName];
+                
+                // Tìm nhiệm vụ gần với thời gian hiện tại nhất
+                childTasks.forEach(task => {
+                    if (task.time === `${hours}:${minutes < 10 ? '0' + minutes : minutes}`) {
+                        showNotification(`Đến giờ ${task.name} rồi!`);
+                        
+                        // Phát âm thanh nếu có
+                        if (task.audio) {
+                            playAudio(task.audio);
+                        }
+                    }
+                });
+            }
+        }
+
+        // Hiển thị thông báo
+        function showNotification(message) {
+            // Kiểm tra xem đã có thông báo hay chưa
+            let notification = document.getElementById("notification");
+            
+            // Nếu chưa có, tạo mới
+            if (!notification) {
+                notification = document.createElement("div");
+                notification.id = "notification";
+                notification.className = "notification";
+                document.body.appendChild(notification);
+            }
+            
+            notification.innerHTML = `<i class="fas fa-bell"></i> ${message}`;
+            notification.style.display = 'block';
+            
+            // Tự động ẩn sau 5 giây
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+
+        // Hàm reset cây (admin)
+        function resetTree() {
+            const pin = prompt("Nhập mã PIN để xác nhận reset cây (****)");
+            if (pin !== "2022") {
+                alert("Mã PIN không đúng!");
+                return;
+            }
+
+            if (confirm("Bạn có chắc chắn muốn reset cây về trạng thái ban đầu?")) {
+                treeLevel = 1;
+                waterCredits = 0;
+                document.getElementById("tree-img").src = "images/tree_day1.png";
+                document.getElementById("tree-status").textContent = "Cây đã được reset về trạng thái ban đầu!";
+                if (document.getElementById("water-units")) {
+                    document.getElementById("water-units").textContent = "0";
+                }
+                saveData();
+                alert("Đã reset cây thành công!");
+            }
+        }
+    </script>
+
+    <!-- Thay thế phần div cây cũ bằng container mới -->
+    <div class="tree-container">
+        <img id="tree-img" src="images/tree_day1.png" class="tree-image" alt="Cây phát triển">
+        <div class="tree-name" id="tree-name">
+            Cây của bé Trí Dũng
+        </div>
+        <div id="tree-status" style="font-weight:bold; color:#FF9800; margin:5px 0;">
+            Cây cần nước để phát triển!
+        </div>
+        <div style="margin-top:5px;">
+            <span id="water-count" style="font-weight:bold; color:#2196F3;"></span>
+        </div>
+        <button class="water-button" onclick="waterTree()" title="Tưới nước cho cây">
+            💧
+        </button>
+    </div>
+
+    <!-- Add this section after the tree container -->
+    <div class="weekly-challenge-container">
+        <h3>Thử Thách Tuần Này</h3>
+        <p id="current-challenge">Đang tải thử thách...</p>
+        
+        <div class="progress-bar-container">
+            <div class="progress-bar">
+                <div id="challenge-progress-fill"></div>
+            </div>
+            <span id="challenge-progress-text">0/3</span>
+        </div>
+        
+        <div class="challenge-reward-container">
+            <h4>Phần thưởng:</h4>
+            <p id="challenge-reward">2 lượt tưới nước đặc biệt</p>
+        </div>
+    </div>
+
+    <!-- Admin panel -->
+    <div id="admin-panel" style="display: none;">
+        <div class="admin-header">
+            <h3>Quản lý</h3>
+            <button id="admin-close" class="btn-close">×</button>
+        </div>
+        <div class="admin-controls">
+            <button id="btn-add-water" class="admin-btn">Thêm 1 lượt tưới nước</button>
+            <button id="btn-reset-tree" class="admin-btn">Đặt lại cây</button>
+            <button id="btn-trigger-fireworks" class="admin-btn">Hiệu ứng pháo hoa</button>
+        </div>
+    </div>
+
+    <div class="weekly-challenge-container">
+        <h3><i class="fas fa-trophy"></i> Thử thách tuần này</h3>
+        <div class="challenge-description" id="current-challenge">
+            Hoàn thành <strong>3 nhiệm vụ</strong> Đi ngủ đúng giờ liên tiếp!
+        </div>
+        <div class="challenge-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="challenge-progress-fill" style="width: 0%"></div>
+            </div>
+            <span id="challenge-progress-text">0/3</span>
+        </div>
+        <div class="challenge-reward">
+            <span id="reward-icon">🎁</span> Phần thưởng: <span id="challenge-reward">2 lượt tưới nước đặc biệt!</span>
+        </div>
+    </div>
+
+    <!-- Admin Controls (hidden by default) -->
+    <div class="admin-controls" id="admin-panel" style="display: none;">
+        <h3><i class="fas fa-cog"></i> Quản lý</h3>
+        <button id="btn-add-water" class="admin-btn">
+            <i class="fas fa-plus"></i> Thêm 1 lượt tưới
+        </button>
+        <button id="btn-reset-tree" class="admin-btn">
+            <i class="fas fa-sync"></i> Đặt lại cây
+        </button>
+        <button id="btn-trigger-fireworks" class="admin-btn">
+            <i class="fas fa-fire"></i> Hiệu ứng pháo hoa
+        </button>
+    </div>
+
+    <div id="popup-congrats" style="display:none; position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); z-index:9999; text-align:center;">
+        <img alt="Mẹ Quỳnh" src="images/me_quynh.jpg" style="width:250px; border-radius:10px; box-shadow: 0 0 10px #888;"/>
+        <div id="popup-text" style="background:white; padding:10px; font-weight:bold; font-size:18px; margin-top:-5px;">Bé làm tốt lắm!</div>
+    </div>
+    <audio id="audio-congrats" preload="auto" src=""></audio>
+    <img id="watering-gif" src="images/water.gif" style="display:none; position:absolute; width:120px; top:350px; left:1190px; z-index:10;"/>
+
+    <div class="level-display">
+        Level: <span id="levelNumber">1</span>
+        <span id="levelStars" class="level-star"></span>
+    </div>
+
+    <!-- Weekly Challenge Section -->
+    <div class="weekly-challenge">
+        <h3><i class="fas fa-trophy"></i> Thử thách tuần này</h3>
+        <div id="challenge-description">Hoàn thành tốt các nhiệm vụ 5 ngày liên tiếp</div>
+        <div class="challenge-progress">Tiến độ: <span id="challenge-progress-text">0/5</span></div>
+        <div>Phần thưởng: <span class="challenge-reward">🎁</span></div>
+    </div>
+
+    <!-- Admin Controls (hidden by default) -->
+    <div style="margin-top: 20px; text-align: center; padding: 10px; background-color: #f5f5f5; border-radius: 8px; display: none;" id="admin-controls">
+        <h4>Quản lý hệ thống</h4>
+        <button onclick="resetTree()" class="admin-button">Reset cây</button>
+        <button onclick="addWaterCredits(5)" class="admin-button">Thêm 5 lượt tưới</button>
+        <button onclick="localStorage.clear(); location.reload();" class="admin-button">Xóa dữ liệu</button>
+    </div>
+
+    <!-- Admin Access Button -->
+    <div style="text-align: center; margin-top: 20px;">
+        <button onclick="toggleAdminControls()" style="background: none; border: none; color: #999; font-size: 14px;">⚙️</button>
+    </div>
+
+    <!-- Admin toggle function -->
+    <script>
+        function toggleAdminControls() {
+            const pin = prompt("Nhập mã PIN để truy cập tính năng quản trị (****)");
+            if (pin === "2022") {
+                const adminControls = document.getElementById("admin-controls");
+                adminControls.style.display = adminControls.style.display === "none" ? "block" : "none";
+            } else {
+                alert("Mã PIN không đúng!");
+            }
+        }
+    </script>
+
+    <!-- Add this just before the closing body tag -->
+    <!-- Weekly Challenge Section -->
+    <div class="weekly-challenge-container">
+        <h3>Thử thách tuần này</h3>
+        <p id="current-challenge-text">Hoàn thành 10 nhiệm vụ trong tuần này!</p>
+        
+        <div class="progress-bar-container">
+            <div class="progress-bar">
+                <div id="challenge-progress-fill"></div>
+            </div>
+            <div id="challenge-progress-text">0/10 nhiệm vụ</div>
+        </div>
+        
+        <div class="challenge-reward-container">
+            <h4>Phần thưởng:</h4>
+            <p id="challenge-reward-text">Một chuyến đi chơi công viên cuối tuần!</p>
+        </div>
+    </div>
+
+    <!-- Admin Panel Toggle Button -->
+    <div id="admin-toggle" title="Cài đặt quản trị">⚙️</div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" style="display: none;">
+        <div class="admin-header">
+            <h4>Quản lý hệ thống</h4>
+            <button class="btn-close" id="close-admin">×</button>
+        </div>
+        <div class="admin-controls">
+            <button class="admin-btn" id="reset-day">Reset ngày mới</button>
+            <button class="admin-btn" id="reset-week">Reset tuần mới</button>
+            <button class="admin-btn" id="backup-data">Sao lưu dữ liệu</button>
+            <button class="admin-btn" id="restore-data">Khôi phục dữ liệu</button>
         </div>
     </div>
 </body>
