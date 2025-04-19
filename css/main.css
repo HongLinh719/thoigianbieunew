@@ -22,3 +22,62 @@ body {
     margin: 0 auto;
     padding: 15px;
 }
+
+/* Responsive styles for mobile */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .tabs {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .tab {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .task {
+        margin-bottom: 10px;
+    }
+
+    .rating-buttons {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .rating-btn {
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+    }
+
+    .profile-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-image {
+        margin: 0 auto 10px;
+    }
+}
+
+/* Touch-friendly styles */
+@media (hover: none) {
+    .rating-btn {
+        min-height: 44px; /* Minimum touch target size */
+        margin: 5px 0;
+    }
+
+    .tab {
+        min-height: 44px;
+    }
+
+    input[type="button"],
+    button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
