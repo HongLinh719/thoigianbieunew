@@ -3,9 +3,11 @@
     --primary-color: #FF7043;
     --text-color: #ffffff;
     --task-bg: #1E1919;
-    --btn-good: #1B4332;
-    --btn-neutral: #8B7355;
-    --btn-bad: #7B1818;
+    --btn-good: #1B8A34;  /* Màu xanh tươi hơn */
+    --btn-neutral: #DB8A27;  /* Màu cam vàng */
+    --btn-bad: #BA2525;  /* Màu đỏ tươi hơn */
+    --header-gradient: linear-gradient(45deg, #ff5722, #ff9800);
+    --weekly-challenge-bg: linear-gradient(135deg, #6A3DE8, #8A56FF);
 }
 
 body {
@@ -23,19 +25,25 @@ body {
 }
 
 .header {
-    text-align: center;
+    background: var(--header-gradient);
+    border-radius: 12px;
+    padding: 15px;
     margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .header h1 {
-    color: var(--primary-color);
     margin: 0;
+    color: white;
     font-size: 24px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .current-time {
     margin-top: 10px;
-    opacity: 0.8;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: bold;
 }
 
 .current-time .time {
@@ -84,6 +92,37 @@ body {
     padding: 15px;
     border-radius: 12px;
     margin-bottom: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.task:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--primary-color);
+    opacity: 0.7;
+}
+
+.task:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.task.good:before {
+    background: var(--btn-good);
+}
+
+.task.neutral:before {
+    background: var(--btn-neutral);
+}
+
+.task.bad:before {
+    background: var(--btn-bad);
 }
 
 .task-header {
@@ -94,17 +133,21 @@ body {
 
 .task-time {
     background: var(--bg-color);
-    padding: 5px 10px;
+    padding: 6px 10px;
     border-radius: 8px;
     font-weight: 600;
     margin-right: 10px;
     min-width: 60px;
     text-align: center;
+    font-size: 16px;
 }
 
 .task-name {
     flex: 1;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .rating-buttons {
@@ -125,11 +168,13 @@ body {
     justify-content: center;
     gap: 8px;
     transition: all 0.3s;
-    opacity: 0.7;
+    opacity: 0.9;
 }
 
 .rating-btn:hover {
     opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .good-btn {
@@ -147,6 +192,24 @@ body {
 .rating-btn.active {
     opacity: 1;
     transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+.rating-btn i {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.rating-btn.good-btn i {
+    color: #FFEB3B;
+}
+
+.rating-btn.neutral-btn i {
+    color: #FFF59D;
+}
+
+.rating-btn.bad-btn i {
+    color: #FFCCBC;
 }
 
 .play-audio {
@@ -156,6 +219,46 @@ body {
     color: var(--primary-color);
     padding: 5px;
     margin-left: 10px;
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.play-audio:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.play-audio::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s;
+}
+
+.play-audio:hover::after {
+    opacity: 0.5;
+    transform: scale(1.2);
+}
+
+.audio-playing {
+    animation: audioPlaying 0.8s infinite alternate;
+}
+
+@keyframes audioPlaying {
+    0% { transform: scale(1); color: var(--primary-color); }
+    100% { transform: scale(1.2); color: #ffeb3b; }
 }
 
 /* Progress Section Styles */
@@ -394,20 +497,47 @@ body {
 
 /* Weekly Challenge Section */
 .weekly-challenge-container {
-    background-color: #fffdea;
+    background: var(--weekly-challenge-bg);
     border-radius: 12px;
     padding: 15px;
-    margin: 20px auto;
-    max-width: 90%;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border: 2px solid #ffc107;
+    margin: 0 0 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.weekly-challenge-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="20" y="50" font-family="Arial" font-size="20" fill="rgba(255,255,255,0.05)">🏆</text></svg>');
+    opacity: 0.2;
 }
 
 .weekly-challenge-container h3 {
-    color: #ff6b6b;
-    margin-top: 0;
-    text-align: center;
+    color: #fff;
     font-size: 1.4em;
+    margin-top: 0;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 3px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.weekly-challenge-container h3 i {
+    color: gold;
+    text-shadow: 0 0 5px rgba(255,215,0,0.5);
+}
+
+.challenge-description {
+    color: #fff;
+    margin-bottom: 15px;
+    font-size: 16px;
 }
 
 .progress-bar-container {
@@ -415,42 +545,94 @@ body {
 }
 
 .progress-bar {
-    height: 20px;
-    background-color: #e9ecef;
-    border-radius: 10px;
+    height: 16px;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 5px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FFC107, #FFD54F);
+    border-radius: 8px;
+    transition: width 1s ease;
+    position: relative;
     overflow: hidden;
 }
 
-#challenge-progress-fill {
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, #4CAF50, #8BC34A);
-    width: 0%;
-    transition: width 1s ease;
+    background: linear-gradient(
+        45deg,
+        rgba(255,255,255,0.2) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255,255,255,0.2) 50%,
+        rgba(255,255,255,0.2) 75%,
+        transparent 75%
+    );
+    background-size: 20px 20px;
+    animation: progressStripes 1s linear infinite;
+}
+
+@keyframes progressStripes {
+    0% { background-position: 0 0; }
+    100% { background-position: 20px 0; }
 }
 
 #challenge-progress-text {
-    text-align: center;
-    margin-top: 5px;
+    color: #fff;
     font-weight: bold;
-    color: #666;
+    text-align: center;
 }
 
 .challenge-reward-container {
-    background: #fff5e6;
+    background: rgba(255,255,255,0.15);
     border-radius: 8px;
     padding: 10px;
-    border: 1px dashed #ffab40;
     margin-top: 10px;
 }
 
-.challenge-reward-container h4 {
-    margin: 0;
-    color: #ff9800;
+.challenge-reward {
+    color: #FFF9C4;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-#challenge-reward-text {
-    margin: 5px 0 0;
-    font-style: italic;
+#reward-icon {
+    font-size: 24px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes waterDropEffect {
+    0% { transform: translateY(-50px); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(50px); opacity: 0; }
+}
+
+.water-drop {
+    position: absolute;
+    width: 10px;
+    height: 20px;
+    background: #2196F3;
+    border-radius: 50%;
+    animation: waterDropEffect 1.5s linear;
+    z-index: 5;
 }
 
 /* Admin Controls */
@@ -657,12 +839,19 @@ body {
     }
 
     .rating-buttons {
-        flex-direction: column;
+        flex-direction: row; /* Để đảm bảo là hiển thị theo hàng */
     }
 
     .rating-btn {
         width: 100%;
         padding: 15px;
+        font-size: 12px;
+        padding: 10px 5px;
+    }
+
+    .rating-btn i {
+        margin-right: 0;
+        font-size: 14px;
     }
 
     .progress-section {
@@ -687,6 +876,35 @@ body {
     .motivation-content {
         margin: 20px;
         max-width: none;
+    }
+
+    .task-time {
+        min-width: 50px;
+        padding: 5px 8px;
+        font-size: 14px;
+    }
+
+    .task-name {
+        font-size: 14px;
+    }
+
+    .weekly-challenge-container {
+        margin: 10px 0 15px;
+        padding: 12px;
+    }
+
+    .weekly-challenge-container h3 {
+        font-size: 1.2em;
+    }
+
+    .challenge-description {
+        font-size: 14px;
+    }
+
+    .stats-table th, 
+    .stats-table td {
+        padding: 8px 5px;
+        font-size: 12px;
     }
 }
 
@@ -828,4 +1046,110 @@ body {
     border: 1px solid #ddd;
     font-size: 18px;
     color: #555;
+}
+
+/* Thống kê kết quả */
+.stats-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.stats-title {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 1.2em;
+}
+
+.stats-week-selector {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.week-arrow {
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.week-arrow:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stats-table th {
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--primary-color);
+    font-weight: normal;
+}
+
+.stats-table td {
+    font-weight: bold;
+}
+
+.stats-table .good {
+    color: var(--btn-good);
+}
+
+.stats-table .neutral {
+    color: var(--btn-neutral);
+}
+
+.stats-table .bad {
+    color: var(--btn-bad);
+}
+
+/* Hiệu ứng nút tưới nước */
+.water-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.water-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150%;
+    height: 150%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.8s, opacity 0.8s;
+}
+
+.water-button:active::after {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    transition: 0s;
 }

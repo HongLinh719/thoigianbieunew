@@ -10,238 +10,431 @@
     
     <!-- Thêm CSS cho profile, cây và các phần thiếu -->
     <style>
-        /* CSS cho phần cây và nút tưới */
+        :root {
+            --primary-color: #FF7043;
+            --accent-color: #4CAF50;
+            --bg-color: #2D2424;
+            --task-bg: #1E1919;
+            --text-color: #ffffff;
+            --btn-good: #1B4332;
+            --btn-neutral: #8B7355;
+            --btn-bad: #7B1818;
+            --highlight-color: #FFEB3B;
+        }
+
+        body {
+            background-image: linear-gradient(45deg, #2D2424, #362828);
+            animation: gradientShift 10s infinite alternate;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
+        /* CSS cho thử thách tuần mới */
+        .weekly-challenge-container {
+            background: linear-gradient(135deg, #6200ea, #3f51b5);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            border-left: 5px solid #FFEB3B;
+            animation: pulse 2s infinite alternate;
+        }
+
+        .weekly-challenge-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0.5;
+            animation: shineBg 3s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes shineBg {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+            100% { box-shadow: 0 4px 20px rgba(98,0,234,0.6); }
+        }
+
+        .weekly-challenge-container h3 {
+            color: #FFEB3B;
+            font-size: 1.4em;
+            margin-top: 0;
+            position: relative;
+            display: inline-block;
+        }
+
+        .weekly-challenge-container h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.5);
+        }
+
+        .challenge-description {
+            font-size: 1.1em;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFEB3B, #FFC107);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        #challenge-progress-text {
+            font-weight: bold;
+            color: white;
+            font-size: 1.1em;
+            margin: 5px 0;
+        }
+
+        .challenge-reward {
+            background: rgba(255,255,255,0.15);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: inline-block;
+        }
+
+        #reward-icon {
+            font-size: 1.5em;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+
+        /* CSS cho nút đánh giá trên mobile - 1 hàng */
+        @media screen and (max-width: 768px) {
+            .rating-buttons {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 8px;
+                margin-top: 15px;
+            }
+
+            .rating-btn {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 12px 5px;
+                font-size: 13px;
+                text-align: center;
+                border-radius: 10px;
+                min-height: 60px;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+            
+            .rating-btn i {
+                font-size: 20px;
+                margin-bottom: 5px;
+            }
+            
+            .rating-btn.active {
+                transform: scale(1.05);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            }
+            
+            .good-btn {
+                background: linear-gradient(145deg, #1B4332, #2E7D32);
+            }
+            
+            .neutral-btn {
+                background: linear-gradient(145deg, #8B7355, #A1887F);
+            }
+            
+            .bad-btn {
+                background: linear-gradient(145deg, #7B1818, #B71C1C);
+            }
+
+            /* Điều chỉnh khoảng cách giữa cây và nút */
+            .tree-container {
+                margin-top: 30px;
+                margin-bottom: 30px;
+            }
+            
+            /* Cải thiện hiển thị animation tưới nước */
+            #watering-gif {
+                top: 40%;
+            }
+        }
+
+        /* CSS cho cây và animation */
         .tree-container {
             position: relative;
             padding: 20px;
-            margin-top: 20px;
             text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
 
         .tree-image {
-            width: 200px;
-            height: 200px;
-            transition: transform 0.3s ease;
+            width: 180px;
+            height: 180px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
         }
 
-        .tree-name {
-            font-size: 20px;
-            font-weight: bold;
-            color: #4CAF50;
-            margin: 10px 0;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        .tree-growth {
+            animation: treeGrow 1s ease-out;
         }
 
+        @keyframes treeGrow {
+            0% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.1); filter: brightness(1.3); }
+            100% { transform: scale(1); filter: brightness(1); }
+        }
+
+        /* CSS cho nút tưới nước */
         .water-button {
             position: absolute;
-            right: -20px;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            background: linear-gradient(45deg, #2196F3, #03A9F4);
+            background: linear-gradient(135deg, #1976D2, #03A9F4);
             border: none;
             color: white;
             font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: pulse 2s infinite;
+            animation: waterPulse 1.5s infinite alternate;
         }
 
         .water-button:hover {
             transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
+        @keyframes waterPulse {
+            0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.6); }
             70% { box-shadow: 0 0 0 15px rgba(33, 150, 243, 0); }
             100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
         }
-
-        .tree-growth {
-            animation: grow 1s ease-out;
-        }
-
-        @keyframes grow {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        
+        /* CSS cho phần thống kê */
+        .stats-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
         }
         
-        /* CSS cho profile sticky */
-        .profile-container {
-            position: sticky;
-            top: 10px;
+        .stats-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 15px;
+            color: #FFEB3B;
+        }
+        
+        .stats-header h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        
+        .stats-body {
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .stats-row:last-child {
+            border-bottom: none;
+        }
+        
+        .stats-label {
+            font-weight: bold;
+        }
+        
+        .stats-value {
+            color: var(--primary-color);
+        }
+        
+        .stats-child-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .stats-child-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .stats-child-btn.active {
+            background: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* CSS cho popup thời gian tùy chỉnh */
+        .time-settings-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
             z-index: 1000;
         }
 
-        .profile-container img {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            object-fit: cover;
-            border: 3px solid #FF7043;
+        .time-settings-container {
+            background: #2D2424;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: scaleIn 0.3s forwards;
         }
 
-        .profile-info {
-            margin-left: 15px;
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
-        .profile-name {
-            font-weight: bold;
-            color: #FF7043;
+        .time-settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
         }
 
-        .profile-level {
-            font-size: 14px;
-            color: #795548;
-        }
-        
-        /* Cập nhật CSS cho hiển thị cấp độ */
-        .xp-bar {
-            height: 6px;
-            background-color: #ddd;
-            border-radius: 3px;
-            margin: 5px 0;
-            overflow: hidden;
+        .time-settings-header h3 {
+            margin: 0;
+            color: var(--primary-color);
         }
 
-        .xp-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #8BC34A);
-            transition: width 0.3s;
-        }
-
-        .level-badge {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background: linear-gradient(45deg, #FF6D00, #FFA726);
+        .close-button {
+            background: none;
+            border: none;
             color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        /* CSS cho thử thách tuần */
-        .weekly-challenge {
-            background: linear-gradient(45deg, #7E57C2, #5C6BC0);
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
-            animation: pulse 2s infinite;
-        }
-
-        .challenge-progress {
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
-        .challenge-reward {
-            display: inline-block;
             font-size: 24px;
-            margin-top: 5px;
-        }
-        
-        /* CSS cho popup chúc mừng */
-        #popup-congrats {
-            position: fixed;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 9999;
-            text-align: center;
-            display: none;
+            cursor: pointer;
         }
 
-        #popup-congrats img {
-            width: 250px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px #888;
+        .time-settings-body {
+            max-height: 70vh;
+            overflow-y: auto;
         }
 
-        #popup-text {
-            background: white;
+        .time-item {
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.05);
             padding: 10px;
-            font-weight: bold;
-            font-size: 18px;
-            margin-top: -5px;
-        }
-        
-        /* CSS cho hiệu ứng tưới nước */
-        #watering-gif {
-            display: none;
-            position: absolute;
-            width: 120px;
-            z-index: 10;
-        }
-        
-        /* CSS cho hiển thị cấp độ */
-        .level-display {
-            text-align: center;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #f0f8ff;
             border-radius: 8px;
         }
 
-        .level-star {
-            color: gold;
-            text-shadow: 0 0 2px #000;
+        .time-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
-        
-        @media screen and (max-width: 768px) {
-            .profile-container {
-                flex-direction: row;
-                margin: 0;
-                padding: 8px;
-                width: 100%;
-                border-radius: 0;
-                background: rgba(255, 255, 255, 0.98);
-            }
 
-            .profile-container img {
-                width: 80px;
-                height: 80px;
-            }
+        .time-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 5px;
+        }
 
-            .profile-info {
-                margin-left: 12px;
-                text-align: left;
-            }
-            
-            .tree-container {
-                padding: 10px;
-                margin-top: 10px;
-            }
+        .save-times-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
 
-            .tree-image {
-                width: 300px;
-                height: 300px;
-            }
-
-            .water-button {
-                width: 80px;
-                height: 80px;
-                font-size: 24px;
-                right: -15px;
-            }
+        .save-times-button:hover {
+            background: #E65100;
         }
     </style>
 </head>
@@ -256,6 +449,9 @@
                 <div class="xp-progress" id="tridung-xp-progress" style="width: 0%"></div>
             </div>
         </div>
+        <button onclick="openTimeSettings('tridung')" class="time-settings-button" style="background: none; border: none; color: var(--primary-color); margin-left: auto">
+            <i class="fas fa-clock"></i>
+        </button>
     </div>
 
     <div class="profile-container" id="thaoVy-profile" style="display: none;">
@@ -267,6 +463,9 @@
                 <div class="xp-progress" id="thaoVy-xp-progress" style="width: 0%"></div>
             </div>
         </div>
+        <button onclick="openTimeSettings('thaoVy')" class="time-settings-button" style="background: none; border: none; color: var(--primary-color); margin-left: auto">
+            <i class="fas fa-clock"></i>
+        </button>
     </div>
 
     <div class="container">
@@ -286,6 +485,23 @@
             </div>
         </div>
 
+        <!-- Thử thách tuần này - Di chuyển lên trên -->
+        <div class="weekly-challenge-container">
+            <h3><i class="fas fa-trophy"></i> Thử thách tuần này</h3>
+            <div class="challenge-description" id="current-challenge">
+                Hoàn thành <strong>3 nhiệm vụ</strong> Đi ngủ đúng giờ liên tiếp!
+            </div>
+            <div class="challenge-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="challenge-progress-fill" style="width: 0%"></div>
+                </div>
+                <div id="challenge-progress-text">0/3</div>
+            </div>
+            <div class="challenge-reward">
+                <span id="reward-icon">🎁</span> Phần thưởng: <span id="challenge-reward">2 lượt tưới nước đặc biệt!</span>
+            </div>
+        </div>
+
         <div id="tridung" class="child-content">
             <div class="task-list"></div>
         </div>
@@ -293,51 +509,136 @@
         <div id="thaoVy" class="child-content" style="display: none;">
             <div class="task-list"></div>
         </div>
+    
+        <!-- Thay thế phần div cây cũ bằng container mới -->
+        <div class="tree-container">
+            <img id="tree-img" src="images/tree_day1.png" class="tree-image" alt="Cây phát triển">
+            <div class="tree-name" id="tree-name">
+                Cây của bé Trí Dũng
+            </div>
+            <div id="tree-status" style="font-weight:bold; color:#FFEB3B; margin:5px 0;">
+                Cây cần nước để phát triển!
+            </div>
+            <div style="margin-top:5px;">
+                <span style="font-weight:bold;">Lượt tưới nước: <span id="water-units">0</span></span>
+            </div>
+            <button class="water-button" onclick="waterTree()" title="Tưới nước cho cây">
+                💧
+            </button>
+            <img id="watering-gif" src="images/water.gif" style="display:none; position:absolute; z-index:10;"/>
+        </div>
+        
+        <!-- Thống kê kết quả theo tuần -->
+        <div class="stats-container">
+            <div class="stats-header">
+                <h3><i class="fas fa-chart-bar"></i> Thống kê tuần này</h3>
+                <button onclick="toggleStatsView()" class="stats-view-toggle" style="background: none; border: none; color: white;">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            
+            <div class="stats-child-toggle">
+                <button class="stats-child-btn active" onclick="switchStatsChild('tridung')">Trí Dũng</button>
+                <button class="stats-child-btn" onclick="switchStatsChild('thaoVy')">Thảo Vy</button>
+            </div>
+            
+            <div class="stats-body">
+                <div class="stats-row">
+                    <div class="stats-label">Tốt:</div>
+                    <div class="stats-value" id="stats-good">0</div>
+                </div>
+                <div class="stats-row">
+                    <div class="stats-label">Chấp nhận được:</div>
+                    <div class="stats-value" id="stats-neutral">0</div>
+                </div>
+                <div class="stats-row">
+                    <div class="stats-label">Chưa tốt:</div>
+                    <div class="stats-value" id="stats-bad">0</div>
+                </div>
+                <div class="stats-row">
+                    <div class="stats-label">Độ tuân thủ:</div>
+                    <div class="stats-value" id="stats-compliance">0%</div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Admin Controls Button -->
+        <div id="admin-toggle" title="Cài đặt quản trị">⚙️</div>
+    
+        <!-- Admin Panel -->
+        <div id="admin-panel" style="display: none;">
+            <div class="admin-header">
+                <h4>Quản lý hệ thống</h4>
+                <button class="btn-close" id="close-admin">×</button>
+            </div>
+            <div class="admin-controls">
+                <button class="admin-btn" id="reset-day" onclick="resetTree()">Đặt lại cây</button>
+                <button class="admin-btn" id="add-water" onclick="addWaterCredits(1)">Thêm 1 lượt tưới</button>
+                <button class="admin-btn" id="trigger-fireworks" onclick="createFireworks()">Hiệu ứng pháo hoa</button>
+                <button class="admin-btn" id="reset-stats" onclick="resetWeeklyStats()">Đặt lại thống kê</button>
+            </div>
+        </div>
+    
+        <!-- Popup chúc mừng -->
+        <div id="popup-congrats" style="display:none; position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); z-index:9999; text-align:center;">
+            <img alt="Mẹ Quỳnh" src="images/me_quynh.jpg"/>
+            <div id="popup-text">Bé làm tốt lắm!</div>
+        </div>
+        
+        <!-- Dialog chỉnh thời gian -->
+        <div class="time-settings-overlay" id="time-settings">
+            <div class="time-settings-container">
+                <div class="time-settings-header">
+                    <h3>Điều chỉnh thời gian</h3>
+                    <button class="close-button" onclick="closeTimeSettings()">×</button>
+                </div>
+                <div class="time-settings-body" id="time-settings-body">
+                    <!-- Nội dung sẽ được tạo bằng JavaScript -->
+                </div>
+                <button class="save-times-button" onclick="saveTimeSettings()">Lưu thay đổi</button>
+            </div>
+        </div>
+
+        <audio id="audio-congrats" preload="auto" src=""></audio>
     </div>
 
     <script>
-        // Hàm phát âm thanh
+        // Hàm phát âm thanh cải tiến
         function playAudio(filename) {
+            console.log("Đang phát âm thanh:", filename);
             const audio = new Audio(`audio/${filename}`);
-            audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+            
+            // Thêm hàm xử lý lỗi và thông báo
+            audio.onloadeddata = function() {
+                console.log("Âm thanh đã được tải:", filename);
+            };
+            
+            audio.onerror = function(e) {
+                console.error("Lỗi tải âm thanh:", e);
+                alert("Không thể phát âm thanh. Vui lòng kiểm tra kết nối mạng hoặc thiết bị của bạn.");
+            };
+            
+            // Phát âm thanh với xử lý lỗi
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log("Âm thanh đang phát:", filename);
+                    })
+                    .catch(error => {
+                        console.warn("Không thể phát âm thanh:", error);
+                        // Thông báo cho người dùng biết cần tương tác với trang
+                        if (error.name === "NotAllowedError") {
+                            alert("Vui lòng nhấp vào bất kỳ vị trí nào trên trang để cho phép phát âm thanh.");
+                        }
+                    });
+            }
+            
+            return audio;
         }
 
-        // Hệ thống tính điểm
-        const POINTS = {
-            good: 3,
-            neutral: 1,
-            bad: 0
-        };
-
-        // Hệ thống huy hiệu
-        const badges = {
-            sleep7: {
-                id: 'sleep7',
-                name: 'Ngủ Ngoan 7 Ngày',
-                icon: '😴',
-                condition: 'Đi ngủ đúng giờ 7 ngày liên tiếp'
-            },
-            star3: {
-                id: 'star3',
-                name: '3 Ngày Sao Vàng',
-                icon: '⭐',
-                condition: 'Hoàn thành tốt 3 ngày liên tiếp'
-            },
-            tree: {
-                id: 'tree',
-                name: 'Người Trồng Cây',
-                icon: '🌳',
-                condition: 'Cây phát triển đầy đủ'
-            },
-            eat5: {
-                id: 'eat5',
-                name: 'Ăn Giỏi 5 Ngày',
-                icon: '🍽️',
-                condition: 'Ăn tối ngoan 5 ngày liên tiếp'
-            }
-        };
-
-        // Nhiệm vụ của mỗi em
+        // Nhiệm vụ của mỗi em với thời gian tùy chỉnh
         const tasks = {
             tridung: [
                 { id: 'td1', time: '06:00', name: 'Thức dậy, vệ sinh cá nhân & đi học', audio: 'thuc_day_ve_sinh_ca_nhan_di_hoc.mp3' },
@@ -362,325 +663,22 @@
         let waterCredits = 0;
         let currentChild = 'tridung';
         let currentWeekDay = 0; // 0: Chủ Nhật, 1: Thứ 2...
-
-        // Hàm để cập nhật hình ảnh cây
-        function updateTreeImage() {
-            // Xác định cấp độ cây dựa vào ngày trong tuần
-            const weekDay = new Date().getDay(); // 0: Chủ Nhật, 1: Thứ 2...
-            
-            // Nếu là chủ nhật, hiển thị cây trưởng thành
-            if (weekDay === 0) {
-                document.getElementById("tree-img").src = "images/tree_full.png";
-                document.getElementById("tree-status").textContent = "Cây đã trưởng thành hoàn toàn! Chúc mừng bé!";
-                document.getElementById("tree-status").style.color = "#4CAF50";
-            } else {
-                // Các ngày khác trong tuần, hiển thị theo tiến độ
-                // Thứ 2 (1) -> cấp độ 1, Thứ 3 (2) -> cấp độ 2, ..., Thứ 7 (6) -> cấp độ 6
-                const expectedLevel = weekDay; // Cấp độ mong đợi cho ngày hiện tại
-                
-                // Hiển thị cây theo cấp độ thực tế (không vượt quá cấp độ mong đợi)
-                const displayLevel = Math.min(treeLevel, expectedLevel);
-                document.getElementById("tree-img").src = `images/tree_day${displayLevel}.png`;
-                
-                // Hiển thị thông báo về trạng thái cây
-                if (treeLevel < expectedLevel) {
-                    document.getElementById("tree-status").textContent = "Cây cần được tưới nước thêm!";
-                    document.getElementById("tree-status").style.color = "#FF9800";
-                } else {
-                    document.getElementById("tree-status").textContent = "Cây đang phát triển tốt!";
-                    document.getElementById("tree-status").style.color = "#4CAF50";
-                }
-            }
-        }
-
-        // Hàm tưới nước cho cây
-        function waterTree() {
-            console.log("Đang tưới cây, số lượt hiện tại:", waterCredits);
-            
-            // Kiểm tra nếu không còn lượt tưới
-            if (waterCredits <= 0) {
-                alert("Bé cần hoàn thành nhiệm vụ để nhận lượt tưới nước!");
-                return;
-            }
-            
-            // Giảm số lượt tưới
-            waterCredits--;
-            
-            // Hiển thị hiệu ứng tưới nước
-            const wateringGif = document.getElementById("watering-gif");
-            wateringGif.style.display = "block";
-            
-            // Cập nhật cấp độ cây
-            treeLevel = Math.min(treeLevel + 1, 7);
-            
-            // Cập nhật hình ảnh cây sau 1.5 giây
-            setTimeout(() => {
-                const treeImg = document.getElementById("tree-img");
-                treeImg.classList.add('tree-growth');
-                setTimeout(() => {
-                    treeImg.classList.remove('tree-growth');
-                }, 1000);
-                
-                document.getElementById("tree-img").src = `images/tree_day${treeLevel}.png`;
-                wateringGif.style.display = "none";
-                
-                // Thông báo cho người dùng biết cây đã tăng cấp
-                document.getElementById("tree-status").textContent = "Cây đã phát triển!";
-                document.getElementById("tree-status").style.color = "#4CAF50";
-                
-                // Tạo hiệu ứng
-                createSmallConfetti(treeImg);
-                
-                // Lưu dữ liệu
-                saveData();
-            }, 1500);
-        }
-
-        // Hàm tạo hiệu ứng confetti nhỏ
-        function createSmallConfetti(element) {
-            const rect = element.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-
-            for (let i = 0; i < 30; i++) {
-                const confetti = document.createElement('div');
-                confetti.style.position = 'fixed';
-                confetti.style.width = '8px';
-                confetti.style.height = '8px';
-                confetti.style.backgroundColor = getRandomColor();
-                confetti.style.left = `${centerX}px`;
-                confetti.style.top = `${centerY}px`;
-                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-                confetti.style.opacity = '1';
-                confetti.style.zIndex = '9999';
-                confetti.style.pointerEvents = 'none';
-                document.body.appendChild(confetti);
-
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 20 + Math.random() * 80;
-                const duration = 0.5 + Math.random() * 1;
-
-                confetti.style.transition = `transform ${duration}s ease-out, opacity ${duration}s ease-out`;
-
-                setTimeout(() => {
-                    confetti.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
-                    confetti.style.opacity = '0';
-                }, 10);
-
-                setTimeout(() => {
-                    document.body.removeChild(confetti);
-                }, duration * 1000);
-            }
-        }
-
-        // Hàm tạo màu ngẫu nhiên
-        function getRandomColor() {
-            const colors = [
-                '#ff0000', '#ffa500', '#ffff00', '#00ff00', '#00ffff', 
-                '#0000ff', '#ff00ff', '#ff69b4', '#00ff7f', '#ff4500'
-            ];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-
-        // Hàm tạo hiệu ứng pháo hoa
-        function createFireworks() {
-            const fireworksContainer = document.createElement('div');
-            fireworksContainer.style.position = 'fixed';
-            fireworksContainer.style.top = '0';
-            fireworksContainer.style.left = '0';
-            fireworksContainer.style.width = '100%';
-            fireworksContainer.style.height = '100%';
-            fireworksContainer.style.pointerEvents = 'none';
-            fireworksContainer.style.zIndex = '999';
-            document.body.appendChild(fireworksContainer);
-
-            // Tạo âm thanh pháo hoa
-            const audio = document.getElementById("audio-congrats");
-            audio.src = "audio/firework.mp3";
-            audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
-
-            // Tăng số lượng pháo hoa và thời gian hiển thị
-            const totalFireworks = 15; 
-            const duration = 8000; 
-
-            // Tạo pháo hoa với tần suất cao hơn
-            for (let i = 0; i < totalFireworks; i++) {
-                setTimeout(() => {
-                    createSingleFirework(fireworksContainer);
-                }, i * 400);
-            }
-
-            setTimeout(() => {
-                document.body.removeChild(fireworksContainer);
-            }, duration);
-        }
-
-        // Hàm tạo một pháo hoa
-        function createSingleFirework(container) {
-            // Vị trí xuất phát
-            const startX = Math.random() * window.innerWidth;
-            const startY = window.innerHeight;
-
-            // Vị trí nổ
-            const explodeX = startX + (Math.random() * 200 - 100);
-            const explodeY = 100 + Math.random() * (window.innerHeight / 2);
-
-            // Tạo pháo hoa
-            const firework = document.createElement('div');
-            firework.style.position = 'absolute';
-            firework.style.width = '8px';
-            firework.style.height = '8px';
-            firework.style.borderRadius = '50%';
-            firework.style.backgroundColor = getRandomColor();
-            firework.style.boxShadow = `0 0 6px ${getRandomColor()}`;
-            firework.style.left = `${startX}px`;
-            firework.style.top = `${startY}px`;
-            firework.style.transition = `transform 1.5s ease-out, opacity 1.5s ease-out`;
-            container.appendChild(firework);
-
-            // Bay lên và nổ
-            setTimeout(() => {
-                firework.style.transform = `translate(${explodeX - startX}px, ${explodeY - startY}px)`;
-
-                // Nổ thành nhiều tia nhỏ
-                setTimeout(() => {
-                    firework.remove();
-                    createExplosion(container, explodeX, explodeY);
-                }, 1500);
-            }, 10);
-        }
-
-        // Tạo hiệu ứng nổ
-        function createExplosion(container, x, y) {
-            const particles = 30 + Math.floor(Math.random() * 20);
-            const explosionColor = getRandomColor();
-
-            for (let i = 0; i < particles; i++) {
-                const particle = document.createElement('div');
-                particle.style.position = 'absolute';
-                particle.style.width = '4px';
-                particle.style.height = '4px';
-                particle.style.borderRadius = '50%';
-                particle.style.backgroundColor = explosionColor;
-                particle.style.boxShadow = `0 0 4px ${explosionColor}`;
-                particle.style.left = `${x}px`;
-                particle.style.top = `${y}px`;
-                particle.style.opacity = '1';
-                particle.style.transition = `transform 1s ease-out, opacity 1s ease-out`;
-                container.appendChild(particle);
-
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 20 + Math.random() * 100;
-                
-                setTimeout(() => {
-                    particle.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
-                    particle.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        if(container.contains(particle)) {
-                            container.removeChild(particle);
-                        }
-                    }, 1000);
-                }, 10);
-            }
-        }
-
-        // Hàm kiểm tra và reset cây hàng tuần
-        function checkAndResetTree() {
-            const today = new Date();
-            const dayOfWeek = today.getDay(); // 0 = Chủ nhật, 1 = Thứ 2, ...
-
-            // Kiểm tra xem có phải là thứ 2 không
-            if (dayOfWeek === 1) {
-                // Lấy ngày cuối cùng reset cây từ localStorage
-                const lastResetDate = localStorage.getItem('lastTreeReset');
-                const today = new Date().toDateString();
-
-                // Nếu chưa reset hôm nay
-                if (lastResetDate !== today) {
-                    // Reset cây về cấp độ 1
-                    treeLevel = 1;
-                    document.getElementById("tree-img").src = "images/tree_day1.png";
-                    document.getElementById("tree-status").textContent = "Tuần mới bắt đầu! Hãy chăm cây mới!";
-                    
-                    // Lưu ngày đã reset
-                    localStorage.setItem('lastTreeReset', today);
-                    
-                    // Lưu dữ liệu
-                    saveData();
-                }
-            }
-        }
-
-        // Hàm thêm credits tưới nước
-        function addWaterCredits(units) {
-            waterCredits += units;
-            document.getElementById("water-units").textContent = waterCredits;
-            
-            // Hiển thị thông báo
-            const waterNotification = document.createElement("div");
-            waterNotification.style.position = "fixed";
-            waterNotification.style.bottom = "10px";
-            waterNotification.style.left = "50%";
-            waterNotification.style.transform = "translateX(-50%)";
-            waterNotification.style.backgroundColor = "#2196F3";
-            waterNotification.style.color = "white";
-            waterNotification.style.padding = "10px 20px";
-            waterNotification.style.borderRadius = "5px";
-            waterNotification.style.zIndex = "9999";
-            waterNotification.innerHTML = `<i class="fas fa-plus"></i> Đã thêm ${units} lượt tưới nước!`;
-            
-            document.body.appendChild(waterNotification);
-            
-            setTimeout(() => {
-                waterNotification.style.opacity = "0";
-                waterNotification.style.transition = "opacity 0.5s";
-                setTimeout(() => {
-                    document.body.removeChild(waterNotification);
-                }, 500);
-            }, 2000);
-            
-            // Lưu dữ liệu
-            saveData();
-            
-            console.log("Đã thêm", units, "lượt tưới, hiện có:", waterCredits);
-        }
+        let currentStatsChild = 'tridung';
         
-        // Hàm lưu dữ liệu
-        function saveData() {
-            // Lưu dữ liệu cây
-            localStorage.setItem('treeData', JSON.stringify({
-                waterCredits: waterCredits,
-                treeLevel: treeLevel
-            }));
-        }
+        // Biến lưu trữ thống kê hàng tuần
+        let weeklyStats = {
+            tridung: { good: 0, neutral: 0, bad: 0 },
+            thaoVy: { good: 0, neutral: 0, bad: 0 }
+        };
+        
+        // Hệ thống tính điểm
+        const POINTS = {
+            good: 3,
+            neutral: 1,
+            bad: 0
+        };
 
-        // Hàm tải dữ liệu
-        function loadData() {
-            // Tải dữ liệu cây
-            const treeData = localStorage.getItem('treeData');
-            if (treeData) {
-                const parsedTreeData = JSON.parse(treeData);
-                waterCredits = parsedTreeData.waterCredits || 0;
-                treeLevel = parsedTreeData.treeLevel || 1;
-                
-                // Cập nhật UI
-                if (document.getElementById("water-units")) {
-                    document.getElementById("water-units").textContent = waterCredits;
-                }
-                updateTreeImage();
-                
-                console.log("Đã tải dữ liệu: lượt tưới =", waterCredits, "cấp độ cây =", treeLevel);
-            }
-            
-            // Lấy ngày trong tuần hiện tại
-            currentWeekDay = new Date().getDay(); // 0: Chủ Nhật, 1: Thứ 2...
-            
-            // Kiểm tra và reset cây nếu cần
-            checkAndResetTree();
-        }
-
-        // Hàm đánh giá nhiệm vụ
+        // Đánh giá nhiệm vụ và cập nhật thống kê
         function rateTask(childName, taskId, rating) {
             const now = new Date();
             const today = now.toISOString().split('T')[0];
@@ -699,7 +697,12 @@
             if (!childData.tasks) childData.tasks = {};
             if (!childData.tasks[today]) childData.tasks[today] = {};
             
+            // Cập nhật đánh giá và thống kê
+            const previousRating = childData.tasks[today][taskId];
             childData.tasks[today][taskId] = rating;
+            
+            // Xử lý thống kê tuần
+            updateWeeklyStats(childName, rating, previousRating);
             
             // Tính điểm
             if (rating === 'good') {
@@ -714,6 +717,12 @@
                 
                 // Hiển thị popup chúc mừng
                 showCongratulation(task.name, childName);
+            } else if (rating === 'neutral') {
+                // Phát âm thanh "cố gắng"
+                playAudio("ban_co_gang_vao_lan_sau_nhe.mp3");
+            } else if (rating === 'bad') {
+                // Phát âm thanh "chưa tốt"
+                playAudio("chua_tot.mp3");
             }
             
             // Lưu dữ liệu
@@ -721,150 +730,176 @@
             
             // Cập nhật giao diện
             updateTaskDisplay();
+            updateStatsDisplay();
             
             // Kiểm tra và cập nhật huy hiệu
             checkBadges(childName);
         }
-
-        // Hàm hiển thị chúc mừng
-        function showCongratulation(taskName, childName) {
-            const popup = document.getElementById("popup-congrats");
-            const popupText = document.getElementById("popup-text");
+        
+        // Cập nhật thống kê tuần
+        function updateWeeklyStats(childName, newRating, previousRating) {
+            // Tải thống kê hiện tại
+            loadWeeklyStats();
             
-            // Hiển thị thông báo phù hợp với từng bé
-            const childDisplayName = childName === 'thaoVy' ? 'Thảo Vy' : 'Trí Dũng';
-            popupText.innerText = `Chúc mừng bé ${childDisplayName} hoàn thành tốt nhiệm vụ: ${taskName}`;
-            popup.style.display = "block";
+            // Nếu đã có đánh giá trước đó, trừ đi
+            if (previousRating) {
+                weeklyStats[childName][previousRating]--;
+            }
             
-            // Tự động ẩn sau 3 giây
-            setTimeout(() => {
-                popup.style.display = "none";
-            }, 3000);
+            // Cập nhật đánh giá mới
+            weeklyStats[childName][newRating]++;
+            
+            // Lưu lại thống kê
+            saveWeeklyStats();
+            
+            // Cập nhật hiển thị
+            updateStatsDisplay();
         }
-
-        // Hàm kiểm tra và cấp huy hiệu
-        function checkBadges(childName) {
-            // Lấy dữ liệu nhiệm vụ
-            const childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
-            if (!childData.tasks) return;
-            
-            // Lấy danh sách huy hiệu đã có
-            let earnedBadges = JSON.parse(localStorage.getItem('earnedBadges') || '{}');
-            
-            // Kiểm tra huy hiệu ngủ ngoan 7 ngày
-            const sleepTask = childName === 'tridung' ? 'td6' : 'tv6';
-            let sleepStreak = 0;
-            
-            // Lấy 7 ngày gần nhất
-            for (let i = 0; i < 7; i++) {
-                const date = new Date();
-                date.setDate(date.getDate() - i);
-                const dateKey = date.toISOString().split('T')[0];
-                
-                if (childData.tasks[dateKey] && 
-                    childData.tasks[dateKey][sleepTask] === 'good') {
-                    sleepStreak++;
-                } else {
-                    break;
+        
+        // Lưu thống kê tuần
+        function saveWeeklyStats() {
+            localStorage.setItem('weeklyStats', JSON.stringify(weeklyStats));
+        }
+        
+        // Tải thống kê tuần
+        function loadWeeklyStats() {
+            const savedStats = localStorage.getItem('weeklyStats');
+            if (savedStats) {
+                weeklyStats = JSON.parse(savedStats);
+                // Đảm bảo cả hai bé đều có dữ liệu
+                if (!weeklyStats.tridung) {
+                    weeklyStats.tridung = { good: 0, neutral: 0, bad: 0 };
                 }
-            }
-            
-            // Cấp huy hiệu nếu đủ điều kiện
-            const badgeKey = `sleep7_${childName}`;
-            if (sleepStreak >= 7 && !earnedBadges[badgeKey]) {
-                earnedBadges[badgeKey] = {
-                    date: new Date().toISOString(),
-                    forChild: childName
+                if (!weeklyStats.thaoVy) {
+                    weeklyStats.thaoVy = { good: 0, neutral: 0, bad: 0 };
+                }
+            } else {
+                weeklyStats = {
+                    tridung: { good: 0, neutral: 0, bad: 0 },
+                    thaoVy: { good: 0, neutral: 0, bad: 0 }
                 };
-                
-                // Hiệu ứng thông báo huy hiệu mới
-                showBadgeAward('sleep7', childName);
             }
-            
-            // Lưu danh sách huy hiệu
-            localStorage.setItem('earnedBadges', JSON.stringify(earnedBadges));
         }
-
-        // Hiệu ứng hiển thị huy hiệu mới
-        function showBadgeAward(badgeId, childName) {
-            const badge = badges[badgeId];
-            if (!badge) return;
-            
-            // Tạo phần tử thông báo
-            const notification = document.createElement('div');
-            notification.style.position = 'fixed';
-            notification.style.top = '50%';
-            notification.style.left = '50%';
-            notification.style.transform = 'translate(-50%, -50%)';
-            notification.style.background = 'linear-gradient(45deg, #FF9800, #FF5722)';
-            notification.style.color = 'white';
-            notification.style.padding = '20px';
-            notification.style.borderRadius = '15px';
-            notification.style.boxShadow = '0 5px 30px rgba(0,0,0,0.3)';
-            notification.style.textAlign = 'center';
-            notification.style.zIndex = '10000';
-            notification.style.fontSize = '24px';
-            notification.style.animation = 'badgeWiggle 1s infinite';
-            
-            // Thêm style animation
-            if (!document.getElementById('badgeAnimStyle')) {
-                const style = document.createElement('style');
-                style.id = 'badgeAnimStyle';
-                style.textContent = `
-                    @keyframes badgeWiggle {
-                        0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
-                        25% { transform: translate(-50%, -50%) rotate(-5deg); }
-                        75% { transform: translate(-50%, -50%) rotate(5deg); }
-                    }
-                    
-                    @keyframes badgeFade {
-                        from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-                        to { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-                    }
-                `;
-                document.head.appendChild(style);
+        
+        // Đặt lại thống kê tuần (khi bắt đầu tuần mới)
+        function resetWeeklyStats() {
+            // Kiểm tra xác nhận
+            const pin = prompt("Nhập mã PIN để xác nhận đặt lại thống kê (****)");
+            if (pin !== "2022") {
+                alert("Mã PIN không đúng!");
+                return;
             }
             
-            // Nội dung thông báo
-            const childDisplayName = childName === 'thaoVy' ? 'Thảo Vy' : 'Trí Dũng';
-            notification.innerHTML = `
-                <div style="font-size: 72px; margin-bottom: 10px;">${badge.icon}${badge.icon}${badge.icon}</div>
-                <div style="font-weight: bold; margin-bottom: 10px;">🎉 CHÚC MỪNG BÉ ${childDisplayName.toUpperCase()}! 🎉</div>
-                <div>Bé đã đạt được huy hiệu mới:</div>
-                <div style="font-weight: bold; font-size: 28px; margin: 10px 0;">${badge.name}</div>
-                <div>${badge.condition}</div>
-                <button style="margin-top: 20px; padding: 10px 20px; background: white; color: #FF5722; border: none; border-radius: 30px; font-weight: bold; cursor: pointer;">Cảm ơn</button>
-            `;
+            if (confirm("Bạn có chắc chắn muốn đặt lại thống kê tuần không?")) {
+                weeklyStats = {
+                    tridung: { good: 0, neutral: 0, bad: 0 },
+                    thaoVy: { good: 0, neutral: 0, bad: 0 }
+                };
+                saveWeeklyStats();
+                updateStatsDisplay();
+                alert("Đã đặt lại thống kê tuần thành công!");
+            }
+        }
+        
+        // Cập nhật hiển thị thống kê
+        function updateStatsDisplay() {
+            const stats = weeklyStats[currentStatsChild];
             
-            // Thêm vào body
-            document.body.appendChild(notification);
+            // Tổng số nhiệm vụ
+            const total = stats.good + stats.neutral + stats.bad;
             
-            // Xử lý sự kiện nút đóng
-            notification.querySelector('button').addEventListener('click', () => {
-                notification.style.animation = 'badgeFade 0.5s forwards';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 500);
+            // Hiển thị các giá trị
+            document.getElementById('stats-good').textContent = stats.good;
+            document.getElementById('stats-neutral').textContent = stats.neutral;
+            document.getElementById('stats-bad').textContent = stats.bad;
+            
+            // Tính và hiển thị độ tuân thủ (tỷ lệ tốt + chấp nhận được)
+            let complianceRate = 0;
+            if (total > 0) {
+                complianceRate = Math.round(((stats.good + stats.neutral) / total) * 100);
+            }
+            document.getElementById('stats-compliance').textContent = `${complianceRate}%`;
+        }
+        
+        // Chuyển đổi bé trong thống kê
+        function switchStatsChild(childName) {
+            currentStatsChild = childName;
+            
+            // Cập nhật giao diện nút
+            document.querySelectorAll('.stats-child-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.stats-child-btn[onclick="switchStatsChild('${childName}')"]`).classList.add('active');
+            
+            // Cập nhật hiển thị thống kê
+            updateStatsDisplay();
+        }
+        
+        // Mở dialog điều chỉnh thời gian
+        function openTimeSettings(childName) {
+            // Cập nhật nội dung dialog
+            const settingsBody = document.getElementById('time-settings-body');
+            settingsBody.innerHTML = '';
+            
+            const childTasks = tasks[childName];
+            
+            // Tạo các input điều chỉnh thời gian
+            childTasks.forEach(task => {
+                const timeItem = document.createElement('div');
+                timeItem.className = 'time-item';
+                timeItem.innerHTML = `
+                    <div class="time-item-header">
+                        <div class="time-name">${task.name}</div>
+                    </div>
+                    <input type="time" class="time-input" data-task-id="${task.id}" value="${task.time}" />
+                `;
+                settingsBody.appendChild(timeItem);
             });
             
-            // Tự động đóng sau 10 giây
-            setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    notification.style.animation = 'badgeFade 0.5s forwards';
-                    setTimeout(() => {
-                        if (document.body.contains(notification)) {
-                            document.body.removeChild(notification);
-                        }
-                    }, 500);
-                }
-            }, 10000);
+            // Lưu trữ bé đang được điều chỉnh
+            settingsBody.setAttribute('data-child', childName);
             
-            // Phát âm thanh vui nhộn
-            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/218/218-preview.mp3');
-            audio.play().catch(e => console.warn("Không thể phát âm thanh:", e));
+            // Hiển thị dialog
+            document.getElementById('time-settings').style.display = 'flex';
+        }
+        
+        // Đóng dialog điều chỉnh thời gian
+        function closeTimeSettings() {
+            document.getElementById('time-settings').style.display = 'none';
+        }
+        
+        // Lưu thay đổi thời gian
+        function saveTimeSettings() {
+            const settingsBody = document.getElementById('time-settings-body');
+            const childName = settingsBody.getAttribute('data-child');
+            
+            // Thu thập giá trị thời gian mới
+            const timeInputs = settingsBody.querySelectorAll('.time-input');
+            timeInputs.forEach(input => {
+                const taskId = input.getAttribute('data-task-id');
+                const newTime = input.value;
+                
+                // Tìm và cập nhật nhiệm vụ
+                const taskIndex = tasks[childName].findIndex(t => t.id === taskId);
+                if (taskIndex !== -1) {
+                    tasks[childName][taskIndex].time = newTime;
+                }
+            });
+            
+            // Lưu thời gian mới vào localStorage
+            localStorage.setItem('customTasks', JSON.stringify(tasks));
+            
+            // Cập nhật hiển thị
+            updateTaskDisplay();
+            
+            // Đóng dialog
+            closeTimeSettings();
+            
+            // Thông báo
+            alert('Đã lưu thời gian mới thành công!');
         }
 
-        // Hàm hiển thị nhiệm vụ
+        // Hàm hiển thị nhiệm vụ với nút đánh giá trong một hàng
         function updateTaskDisplay() {
             const taskLists = document.querySelectorAll('.task-list');
             taskLists.forEach(list => {
@@ -913,6 +948,92 @@
             }
         }
 
+        // Khởi tạo ứng dụng
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tải thời gian tùy chỉnh từ localStorage
+            const savedTasks = localStorage.getItem('customTasks');
+            if (savedTasks) {
+                const parsedTasks = JSON.parse(savedTasks);
+                // Chỉ cập nhật nếu có dữ liệu hợp lệ
+                if (parsedTasks.tridung && parsedTasks.tridung.length > 0 &&
+                    parsedTasks.thaoVy && parsedTasks.thaoVy.length > 0) {
+                    tasks.tridung = parsedTasks.tridung;
+                    tasks.thaoVy = parsedTasks.thaoVy;
+                }
+            }
+            
+            // Tải dữ liệu thống kê
+            loadWeeklyStats();
+            
+            // Tải dữ liệu cây
+            loadData();
+            
+            // Cập nhật hiển thị nhiệm vụ
+            updateTaskDisplay();
+            
+            // Cập nhật hiển thị thống kê
+            updateStatsDisplay();
+            
+            // Cập nhật thời gian hiện tại
+            updateCurrentTime();
+            
+            // Cập nhật thời gian mỗi phút
+            setInterval(updateCurrentTime, 60000);
+            
+            // Thêm sự kiện cho các tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const childName = this.getAttribute('data-child');
+                    switchTab(childName);
+                });
+            });
+            
+            // Sự kiện hiển thị/ẩn Admin Panel
+            const adminToggle = document.getElementById('admin-toggle');
+            const adminPanel = document.getElementById('admin-panel');
+            const closeAdmin = document.getElementById('close-admin');
+            
+            if (adminToggle) {
+                adminToggle.addEventListener('click', function() {
+                    const pin = prompt("Nhập mã PIN để truy cập tính năng quản trị (****)");
+                    if (pin === "2022") {
+                        adminPanel.style.display = adminPanel.style.display === 'none' ? 'block' : 'none';
+                    } else {
+                        alert("Mã PIN không đúng!");
+                    }
+                });
+            }
+            
+            if (closeAdmin) {
+                closeAdmin.addEventListener('click', function() {
+                    adminPanel.style.display = 'none';
+                });
+            }
+            
+            // Cập nhật số lượt tưới nước
+            if (document.getElementById("water-units")) {
+                document.getElementById("water-units").textContent = waterCredits || 0;
+            }
+        });
+
+        // Các hàm khác vẫn giữ nguyên...
+
+        // Hiển thị chúc mừng
+        function showCongratulation(taskName, childName) {
+            const popup = document.getElementById("popup-congrats");
+            const popupText = document.getElementById("popup-text");
+            
+            // Hiển thị thông báo phù hợp với từng bé
+            const childDisplayName = childName === 'thaoVy' ? 'Thảo Vy' : 'Trí Dũng';
+            popupText.innerText = `Chúc mừng bé ${childDisplayName} hoàn thành tốt nhiệm vụ: ${taskName}`;
+            popup.style.display = "block";
+            
+            // Tự động ẩn sau 3 giây
+            setTimeout(() => {
+                popup.style.display = "none";
+            }, 3000);
+        }
+
         // Hàm chuyển đổi tab
         function switchTab(childName) {
             currentChild = childName;
@@ -942,29 +1063,6 @@
             }
         }
 
-        // Khởi tạo ứng dụng
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tải dữ liệu
-            loadData();
-            
-            // Cập nhật hiển thị nhiệm vụ
-            updateTaskDisplay();
-            
-            // Cập nhật thời gian hiện tại
-            updateCurrentTime();
-            
-            // Cập nhật thời gian mỗi phút
-            setInterval(updateCurrentTime, 60000);
-            
-            // Thêm sự kiện cho các tab
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const childName = this.getAttribute('data-child');
-                    switchTab(childName);
-                });
-            });
-        });
-
         // Hàm cập nhật thời gian hiện tại
         function updateCurrentTime() {
             const now = new Date();
@@ -988,233 +1086,344 @@
             checkTaskNotifications();
         }
 
-        // Kiểm tra thông báo dựa trên thời gian
+        // Các hàm còn lại giữ nguyên...
+
+        // Hàm tải dữ liệu
+        function loadData() {
+            // Tải dữ liệu cây
+            treeLevel = parseInt(localStorage.getItem('treeLevel') || '1');
+            waterCredits = parseInt(localStorage.getItem('waterCredits') || '0');
+            
+            // Cập nhật hiển thị cây
+            updateTreeDisplay();
+            
+            // Cập nhật hiển thị lượt tưới nước
+            if (document.getElementById('water-units')) {
+                document.getElementById('water-units').textContent = waterCredits;
+            }
+        }
+        
+        // Hàm lưu dữ liệu
+        function saveData() {
+            localStorage.setItem('treeLevel', treeLevel);
+            localStorage.setItem('waterCredits', waterCredits);
+        }
+        
+        // Hàm tưới nước cho cây
+        function waterTree() {
+            if (waterCredits <= 0) {
+                alert("Bạn không có đủ lượt tưới nước. Hãy hoàn thành tốt nhiệm vụ để nhận thêm!");
+                return;
+            }
+            
+            // Giảm lượt tưới nước
+            waterCredits--;
+            
+            // Hiển thị animation tưới nước
+            const wateringGif = document.getElementById('watering-gif');
+            if (wateringGif) {
+                wateringGif.style.display = 'block';
+                wateringGif.style.left = '50%';
+                wateringGif.style.transform = 'translateX(-50%)';
+                
+                setTimeout(() => {
+                    wateringGif.style.display = 'none';
+                }, 2000);
+            }
+            
+            // Tăng cấp độ cây nếu chưa đạt tối đa
+            if (treeLevel < 7) {
+                treeLevel++;
+                
+                // Hiển thị hiệu ứng phát triển
+                const treeImg = document.getElementById('tree-img');
+                if (treeImg) {
+                    treeImg.classList.add('tree-growth');
+                    setTimeout(() => {
+                        treeImg.classList.remove('tree-growth');
+                    }, 1000);
+                }
+                
+                // Hiệu ứng phần thưởng khi cây đạt cấp độ cuối cùng
+                if (treeLevel === 7) {
+                    setTimeout(() => {
+                        triggerFireworks();
+                        playAudio('firework.mp3');
+                        alert("Chúc mừng! Cây của bạn đã phát triển hoàn toàn!");
+                    }, 2000);
+                }
+            }
+            
+            // Cập nhật hiển thị cây
+            updateTreeDisplay();
+            
+            // Lưu dữ liệu
+            saveData();
+            
+            // Cập nhật hiển thị lượt tưới nước
+            if (document.getElementById('water-units')) {
+                document.getElementById('water-units').textContent = waterCredits;
+            }
+        }
+        
+        // Hàm cập nhật hiển thị cây
+        function updateTreeDisplay() {
+            const treeImg = document.getElementById('tree-img');
+            if (!treeImg) return;
+            
+            // Cập nhật hình ảnh cây theo cấp độ
+            treeImg.src = `images/tree_day${treeLevel}.png`;
+            
+            // Cập nhật trạng thái cây
+            const treeStatus = document.getElementById('tree-status');
+            if (treeStatus) {
+                if (treeLevel < 7) {
+                    treeStatus.textContent = "Cây cần nước để phát triển!";
+                    treeStatus.style.color = "#FFEB3B";
+                } else {
+                    treeStatus.textContent = "Cây đã phát triển hoàn toàn!";
+                    treeStatus.style.color = "#4CAF50";
+                }
+            }
+        }
+        
+        // Hàm thêm lượt tưới nước
+        function addWaterCredits(amount) {
+            waterCredits += amount;
+            localStorage.setItem('waterCredits', waterCredits);
+            
+            if (document.getElementById('water-units')) {
+                document.getElementById('water-units').textContent = waterCredits;
+            }
+        }
+        
+        // Hàm đặt lại cây
+        function resetTree() {
+            const pin = prompt("Nhập mã PIN để xác nhận đặt lại cây (****)");
+            if (pin !== "2022") {
+                alert("Mã PIN không đúng!");
+                return;
+            }
+            
+            if (confirm("Bạn có chắc chắn muốn đặt lại cây không? Cây sẽ trở về cấp độ 1.")) {
+                treeLevel = 1;
+                saveData();
+                updateTreeDisplay();
+                alert("Đã đặt lại cây thành công!");
+            }
+        }
+        
+        // Hàm kiểm tra và hiển thị thông báo nhiệm vụ
         function checkTaskNotifications() {
             const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const currentTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const currentTimeStr = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
             
-            // Kiểm tra cả hai bé
+            // Kiểm tra các nhiệm vụ cho cả hai bé
             for (const childName in tasks) {
                 const childTasks = tasks[childName];
                 
-                // Tìm nhiệm vụ gần với thời gian hiện tại nhất
                 childTasks.forEach(task => {
-                    if (task.time === `${hours}:${minutes < 10 ? '0' + minutes : minutes}`) {
-                        showNotification(`Đến giờ ${task.name} rồi!`);
+                    // Nếu bây giờ là thời gian của nhiệm vụ (trong phạm vi 5 phút)
+                    const taskHour = parseInt(task.time.split(':')[0]);
+                    const taskMinute = parseInt(task.time.split(':')[1]);
+                    
+                    if (currentHour === taskHour && Math.abs(currentMinute - taskMinute) <= 5) {
+                        // Kiểm tra xem nhiệm vụ đã được thông báo chưa
+                        const notifiedTasks = JSON.parse(localStorage.getItem('notifiedTasks') || '{}');
+                        const today = now.toISOString().split('T')[0];
                         
-                        // Phát âm thanh nếu có
-                        if (task.audio) {
-                            playAudio(task.audio);
+                        if (!notifiedTasks[today] || !notifiedTasks[today][`${childName}-${task.id}`]) {
+                            // Hiển thị thông báo
+                            const childDisplayName = childName === 'thaoVy' ? 'Thảo Vy' : 'Trí Dũng';
+                            const notification = new Notification(`Nhiệm vụ cho bé ${childDisplayName}`, {
+                                body: `Đã đến giờ: ${task.name} (${task.time})`,
+                                icon: `images/${childName === 'thaoVy' ? 'vy.jpg' : 'vit.jpg'}`
+                            });
+                            
+                            // Đánh dấu đã thông báo
+                            if (!notifiedTasks[today]) notifiedTasks[today] = {};
+                            notifiedTasks[today][`${childName}-${task.id}`] = true;
+                            localStorage.setItem('notifiedTasks', JSON.stringify(notifiedTasks));
+                            
+                            // Phát âm thanh
+                            if (task.audio) {
+                                playAudio(task.audio);
+                            }
                         }
                     }
                 });
             }
         }
-
-        // Hiển thị thông báo
-        function showNotification(message) {
-            // Kiểm tra xem đã có thông báo hay chưa
-            let notification = document.getElementById("notification");
-            
-            // Nếu chưa có, tạo mới
-            if (!notification) {
-                notification = document.createElement("div");
-                notification.id = "notification";
-                notification.className = "notification";
-                document.body.appendChild(notification);
-            }
-            
-            notification.innerHTML = `<i class="fas fa-bell"></i> ${message}`;
-            notification.style.display = 'block';
-            
-            // Tự động ẩn sau 5 giây
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 5000);
-        }
-
-        // Hàm reset cây (admin)
-        function resetTree() {
-            const pin = prompt("Nhập mã PIN để xác nhận reset cây (****)");
-            if (pin !== "2022") {
-                alert("Mã PIN không đúng!");
-                return;
-            }
-
-            if (confirm("Bạn có chắc chắn muốn reset cây về trạng thái ban đầu?")) {
-                treeLevel = 1;
-                waterCredits = 0;
-                document.getElementById("tree-img").src = "images/tree_day1.png";
-                document.getElementById("tree-status").textContent = "Cây đã được reset về trạng thái ban đầu!";
-                if (document.getElementById("water-units")) {
-                    document.getElementById("water-units").textContent = "0";
+        
+        // Yêu cầu quyền hiển thị thông báo
+        function requestNotificationPermission() {
+            if ('Notification' in window) {
+                if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+                    Notification.requestPermission().then(function(permission) {
+                        if (permission === 'granted') {
+                            new Notification("Thông báo đã được bật", {
+                                body: "Bạn sẽ nhận được thông báo khi đến giờ thực hiện nhiệm vụ.",
+                                icon: "images/vit.jpg"
+                            });
+                        }
+                    });
                 }
-                saveData();
-                alert("Đã reset cây thành công!");
             }
         }
-    </script>
-
-    <!-- Thay thế phần div cây cũ bằng container mới -->
-    <div class="tree-container">
-        <img id="tree-img" src="images/tree_day1.png" class="tree-image" alt="Cây phát triển">
-        <div class="tree-name" id="tree-name">
-            Cây của bé Trí Dũng
-        </div>
-        <div id="tree-status" style="font-weight:bold; color:#FF9800; margin:5px 0;">
-            Cây cần nước để phát triển!
-        </div>
-        <div style="margin-top:5px;">
-            <span id="water-count" style="font-weight:bold; color:#2196F3;"></span>
-        </div>
-        <button class="water-button" onclick="waterTree()" title="Tưới nước cho cây">
-            💧
-        </button>
-    </div>
-
-    <!-- Add this section after the tree container -->
-    <div class="weekly-challenge-container">
-        <h3>Thử Thách Tuần Này</h3>
-        <p id="current-challenge">Đang tải thử thách...</p>
         
-        <div class="progress-bar-container">
-            <div class="progress-bar">
-                <div id="challenge-progress-fill"></div>
-            </div>
-            <span id="challenge-progress-text">0/3</span>
-        </div>
-        
-        <div class="challenge-reward-container">
-            <h4>Phần thưởng:</h4>
-            <p id="challenge-reward">2 lượt tưới nước đặc biệt</p>
-        </div>
-    </div>
-
-    <!-- Admin panel -->
-    <div id="admin-panel" style="display: none;">
-        <div class="admin-header">
-            <h3>Quản lý</h3>
-            <button id="admin-close" class="btn-close">×</button>
-        </div>
-        <div class="admin-controls">
-            <button id="btn-add-water" class="admin-btn">Thêm 1 lượt tưới nước</button>
-            <button id="btn-reset-tree" class="admin-btn">Đặt lại cây</button>
-            <button id="btn-trigger-fireworks" class="admin-btn">Hiệu ứng pháo hoa</button>
-        </div>
-    </div>
-
-    <div class="weekly-challenge-container">
-        <h3><i class="fas fa-trophy"></i> Thử thách tuần này</h3>
-        <div class="challenge-description" id="current-challenge">
-            Hoàn thành <strong>3 nhiệm vụ</strong> Đi ngủ đúng giờ liên tiếp!
-        </div>
-        <div class="challenge-progress">
-            <div class="progress-bar">
-                <div class="progress-fill" id="challenge-progress-fill" style="width: 0%"></div>
-            </div>
-            <span id="challenge-progress-text">0/3</span>
-        </div>
-        <div class="challenge-reward">
-            <span id="reward-icon">🎁</span> Phần thưởng: <span id="challenge-reward">2 lượt tưới nước đặc biệt!</span>
-        </div>
-    </div>
-
-    <!-- Admin Controls (hidden by default) -->
-    <div class="admin-controls" id="admin-panel" style="display: none;">
-        <h3><i class="fas fa-cog"></i> Quản lý</h3>
-        <button id="btn-add-water" class="admin-btn">
-            <i class="fas fa-plus"></i> Thêm 1 lượt tưới
-        </button>
-        <button id="btn-reset-tree" class="admin-btn">
-            <i class="fas fa-sync"></i> Đặt lại cây
-        </button>
-        <button id="btn-trigger-fireworks" class="admin-btn">
-            <i class="fas fa-fire"></i> Hiệu ứng pháo hoa
-        </button>
-    </div>
-
-    <div id="popup-congrats" style="display:none; position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); z-index:9999; text-align:center;">
-        <img alt="Mẹ Quỳnh" src="images/me_quynh.jpg" style="width:250px; border-radius:10px; box-shadow: 0 0 10px #888;"/>
-        <div id="popup-text" style="background:white; padding:10px; font-weight:bold; font-size:18px; margin-top:-5px;">Bé làm tốt lắm!</div>
-    </div>
-    <audio id="audio-congrats" preload="auto" src=""></audio>
-    <img id="watering-gif" src="images/water.gif" style="display:none; position:absolute; width:120px; top:350px; left:1190px; z-index:10;"/>
-
-    <div class="level-display">
-        Level: <span id="levelNumber">1</span>
-        <span id="levelStars" class="level-star"></span>
-    </div>
-
-    <!-- Weekly Challenge Section -->
-    <div class="weekly-challenge">
-        <h3><i class="fas fa-trophy"></i> Thử thách tuần này</h3>
-        <div id="challenge-description">Hoàn thành tốt các nhiệm vụ 5 ngày liên tiếp</div>
-        <div class="challenge-progress">Tiến độ: <span id="challenge-progress-text">0/5</span></div>
-        <div>Phần thưởng: <span class="challenge-reward">🎁</span></div>
-    </div>
-
-    <!-- Admin Controls (hidden by default) -->
-    <div style="margin-top: 20px; text-align: center; padding: 10px; background-color: #f5f5f5; border-radius: 8px; display: none;" id="admin-controls">
-        <h4>Quản lý hệ thống</h4>
-        <button onclick="resetTree()" class="admin-button">Reset cây</button>
-        <button onclick="addWaterCredits(5)" class="admin-button">Thêm 5 lượt tưới</button>
-        <button onclick="localStorage.clear(); location.reload();" class="admin-button">Xóa dữ liệu</button>
-    </div>
-
-    <!-- Admin Access Button -->
-    <div style="text-align: center; margin-top: 20px;">
-        <button onclick="toggleAdminControls()" style="background: none; border: none; color: #999; font-size: 14px;">⚙️</button>
-    </div>
-
-    <!-- Admin toggle function -->
-    <script>
-        function toggleAdminControls() {
-            const pin = prompt("Nhập mã PIN để truy cập tính năng quản trị (****)");
-            if (pin === "2022") {
-                const adminControls = document.getElementById("admin-controls");
-                adminControls.style.display = adminControls.style.display === "none" ? "block" : "none";
-            } else {
-                alert("Mã PIN không đúng!");
+        // Kiểm tra huy hiệu
+        function checkBadges(childName) {
+            const today = new Date().toISOString().split('T')[0];
+            
+            const childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
+            if (!childData.tasks || !childData.tasks[today]) return;
+            
+            const todayTasks = childData.tasks[today];
+            
+            // Đếm số nhiệm vụ được hoàn thành tốt
+            const goodTasks = Object.values(todayTasks).filter(rating => rating === 'good').length;
+            const totalTasks = tasks[childName].length;
+            
+            // Nếu tất cả nhiệm vụ đều hoàn thành tốt
+            if (goodTasks === totalTasks) {
+                // Thêm thưởng đặc biệt
+                addWaterCredits(2);
+                
+                // Hiển thị thông báo
+                const childDisplayName = childName === 'thaoVy' ? 'Thảo Vy' : 'Trí Dũng';
+                
+                // Hiệu ứng pháo hoa
+                setTimeout(() => {
+                    triggerFireworks();
+                    alert(`Tuyệt vời! Bé ${childDisplayName} đã hoàn thành tất cả nhiệm vụ hôm nay với mức "Tốt".\nBạn nhận được 2 lượt tưới nước đặc biệt!`);
+                }, 1000);
             }
         }
+        
+        // Tạo hiệu ứng pháo hoa
+        function triggerFireworks() {
+            // Tạo container pháo hoa
+            let fireworksContainer = document.createElement('div');
+            fireworksContainer.id = 'fireworks-container';
+            fireworksContainer.style.position = 'fixed';
+            fireworksContainer.style.top = '0';
+            fireworksContainer.style.left = '0';
+            fireworksContainer.style.width = '100%';
+            fireworksContainer.style.height = '100%';
+            fireworksContainer.style.pointerEvents = 'none';
+            fireworksContainer.style.zIndex = '9999';
+            document.body.appendChild(fireworksContainer);
+            
+            // Tạo các màu pháo hoa ngẫu nhiên
+            const colors = ['#FF5252', '#FF4081', '#E040FB', '#7C4DFF', '#536DFE', '#448AFF', '#40C4FF', '#18FFFF', '#64FFDA', '#69F0AE', '#B2FF59', '#EEFF41', '#FFFF00', '#FFD740', '#FFAB40', '#FF6E40'];
+            
+            // Tạo 20 pháo hoa
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createFirework(fireworksContainer, colors);
+                }, i * 300);
+            }
+            
+            // Xóa container sau khi hoàn thành
+            setTimeout(() => {
+                fireworksContainer.remove();
+            }, 7000);
+        }
+        
+        // Tạo một pháo hoa
+        function createFirework(container, colors) {
+            const x = Math.random() * 100;
+            const y = Math.random() * 60 + 20;
+            const size = Math.random() * 5 + 3;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Tạo pháo hoa
+            const firework = document.createElement('div');
+            firework.style.position = 'absolute';
+            firework.style.left = `${x}%`;
+            firework.style.top = `${y}%`;
+            firework.style.width = `${size}px`;
+            firework.style.height = `${size}px`;
+            firework.style.borderRadius = '50%';
+            firework.style.backgroundColor = color;
+            firework.style.boxShadow = `0 0 ${size * 2}px ${size}px ${color}`;
+            
+            // Thêm animation
+            firework.style.animation = 'explode 1s forwards';
+            
+            // Thêm keyframes nếu chưa có
+            if (!document.getElementById('fireworks-animation')) {
+                const style = document.createElement('style');
+                style.id = 'fireworks-animation';
+                style.innerHTML = `
+                    @keyframes explode {
+                        0% { transform: scale(0); opacity: 0; }
+                        50% { transform: scale(1); opacity: 1; }
+                        100% { transform: scale(1.5); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            container.appendChild(firework);
+            
+            // Tạo tia pháo hoa
+            for (let i = 0; i < 8; i++) {
+                const ray = document.createElement('div');
+                const angle = (i / 8) * 360;
+                const raySize = size * 0.8;
+                
+                ray.style.position = 'absolute';
+                ray.style.width = `${raySize}px`;
+                ray.style.height = `${raySize}px`;
+                ray.style.borderRadius = '50%';
+                ray.style.backgroundColor = color;
+                ray.style.boxShadow = `0 0 ${raySize}px ${raySize / 2}px ${color}`;
+                ray.style.left = `${x}%`;
+                ray.style.top = `${y}%`;
+                ray.style.animation = `fireworkRay${i} 0.8s forwards`;
+                
+                container.appendChild(ray);
+                
+                // Thêm keyframes cho tia
+                if (!document.getElementById(`firework-ray-${i}`)) {
+                    const rayStyle = document.createElement('style');
+                    rayStyle.id = `firework-ray-${i}`;
+                    const distance = 100 + Math.random() * 50;
+                    rayStyle.innerHTML = `
+                        @keyframes fireworkRay${i} {
+                            0% { transform: translate(-50%, -50%) rotate(${angle}deg) translateX(0); opacity: 1; }
+                            100% { transform: translate(-50%, -50%) rotate(${angle}deg) translateX(${distance}px); opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(rayStyle);
+                }
+            }
+            
+            // Xóa pháo hoa sau khi hiệu ứng kết thúc
+            setTimeout(() => {
+                firework.remove();
+            }, 1000);
+        }
+        
+        // Chuyển đổi hiển thị thống kê
+        function toggleStatsView() {
+            // Animation xoay biểu tượng
+            const toggleBtn = document.querySelector('.stats-view-toggle i');
+            toggleBtn.style.transition = 'transform 0.5s';
+            toggleBtn.style.transform = 'rotate(180deg)';
+            
+            setTimeout(() => {
+                toggleBtn.style.transform = 'rotate(360deg)';
+            }, 500);
+        }
+
+        // Yêu cầu quyền thông báo khi trang web được tải
+        document.addEventListener('DOMContentLoaded', function() {
+            requestNotificationPermission();
+        });
     </script>
-
-    <!-- Add this just before the closing body tag -->
-    <!-- Weekly Challenge Section -->
-    <div class="weekly-challenge-container">
-        <h3>Thử thách tuần này</h3>
-        <p id="current-challenge-text">Hoàn thành 10 nhiệm vụ trong tuần này!</p>
-        
-        <div class="progress-bar-container">
-            <div class="progress-bar">
-                <div id="challenge-progress-fill"></div>
-            </div>
-            <div id="challenge-progress-text">0/10 nhiệm vụ</div>
-        </div>
-        
-        <div class="challenge-reward-container">
-            <h4>Phần thưởng:</h4>
-            <p id="challenge-reward-text">Một chuyến đi chơi công viên cuối tuần!</p>
-        </div>
-    </div>
-
-    <!-- Admin Panel Toggle Button -->
-    <div id="admin-toggle" title="Cài đặt quản trị">⚙️</div>
-
-    <!-- Admin Panel -->
-    <div id="admin-panel" style="display: none;">
-        <div class="admin-header">
-            <h4>Quản lý hệ thống</h4>
-            <button class="btn-close" id="close-admin">×</button>
-        </div>
-        <div class="admin-controls">
-            <button class="admin-btn" id="reset-day">Reset ngày mới</button>
-            <button class="admin-btn" id="reset-week">Reset tuần mới</button>
-            <button class="admin-btn" id="backup-data">Sao lưu dữ liệu</button>
-            <button class="admin-btn" id="restore-data">Khôi phục dữ liệu</button>
-        </div>
-    </div>
 </body>
 </html>

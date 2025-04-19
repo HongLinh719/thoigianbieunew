@@ -747,3 +747,140 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Cải thiện chức năng phát âm thanh
+function playAudio(filename) {
+    console.log("Đang phát âm thanh:", filename);
+    
+    // Tạo đường dẫn đầy đủ đến file âm thanh
+    const audioPath = `audio/${filename}`;
+    
+    // Kiểm tra xem file âm thanh có tồn tại không
+    const audio = new Audio(audioPath);
+    
+    // Theo dõi quá trình tải âm thanh
+    audio.onloadeddata = function() {
+        console.log("Âm thanh đã được tải:", filename);
+    };
+    
+    // Xử lý lỗi khi tải âm thanh
+    audio.onerror = function(e) {
+        console.error("Lỗi tải âm thanh:", e);
+        console.warn("Không thể tải:", audioPath);
+        alert(`Không thể phát âm thanh "${filename}". Vui lòng kiểm tra kết nối mạng hoặc thiết bị của bạn.`);
+    };
+    
+    // Phát âm thanh và xử lý lỗi với Promise
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            console.log("Âm thanh đang phát:", filename);
+        }).catch(error => {
+            console.warn("Không thể phát âm thanh:", error);
+            
+            // Thông báo theo loại lỗi cụ thể
+            if (error.name === "NotAllowedError") {
+                // Lỗi phát sinh do chính sách bảo mật của trình duyệt
+                alert("Bạn cần tương tác với trang web trước khi phát âm thanh. Vui lòng nhấp vào bất kỳ vị trí nào trên trang.");
+            } else if (error.name === "AbortError") {
+                console.log("Phát âm thanh bị hủy bỏ");
+            } else {
+                // Các lỗi khác
+                alert("Không thể phát âm thanh. Vui lòng kiểm tra kết nối mạng và thiết lập âm thanh trên thiết bị của bạn.");
+            }
+        });
+    }
+    
+    return audio;
+}
+
+// Hàm phát âm thanh khi nhấp vào nút Play
+function playTaskAudio(filename) {
+    // Kiểm tra xem đã có tương tác người dùng chưa
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Kiểm tra trạng thái của AudioContext
+    if (audioContext.state === "suspended") {
+        audioContext.resume().then(() => {
+            playAudio(filename);
+        });
+    } else {
+        playAudio(filename);
+    }
+    
+    // Thêm hiệu ứng chớp nháy cho nút
+    const button = event.currentTarget;
+    button.classList.add('audio-playing');
+    
+    setTimeout(() => {
+        button.classList.remove('audio-playing');
+    }, 500);
+}
+
+// Khởi tạo âm thanh khi trang web được tải
+window.addEventListener('DOMContentLoaded', function() {
+    // Tương tác với AudioContext để "mở khóa" âm thanh trên iOS
+    document.addEventListener('click', function initAudio() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        audioContext.resume().then(() => {
+            console.log('AudioContext đã được kích hoạt thành công!');
+        });
+        
+        // Chỉ cần thực hiện một lần
+        document.removeEventListener('click', initAudio);
+    });
+    
+    // Thêm nút phát âm thanh cho mỗi nhiệm vụ
+    addAudioButtonsToTasks();
+});
+
+// Thêm nút âm thanh cho các nhiệm vụ
+function addAudioButtonsToTasks() {
+    // Thêm nút phát âm thanh cho mỗi nhiệm vụ
+    document.querySelectorAll('.task').forEach(task => {
+        const taskHeader = task.querySelector('.task-header');
+        if (!taskHeader) return;
+        
+        // Tìm tên nhiệm vụ
+        const taskNameElement = taskHeader.querySelector('.task-name');
+        if (!taskNameElement) return;
+        
+        // Xác định file âm thanh dựa trên nhiệm vụ
+        // (Đây là phương pháp tạm thời, lý tưởng nhất là nên lấy từ cấu trúc dữ liệu)
+        const taskName = taskNameElement.textContent.trim();
+        let audioFile = '';
+        
+        if (taskName.includes('Thức dậy')) {
+            audioFile = 'thuc_day_ve_sinh_ca_nhan_di_hoc.mp3';
+        } else if (taskName.includes('Đọc sách')) {
+            audioFile = 'doc_sach_to_mau_hoac_lam_toan.mp3';
+        } else if (taskName.includes('Chơi tự do')) {
+            audioFile = 'choi_tu_do.mp3';
+        } else if (taskName.includes('Ăn tối')) {
+            audioFile = 'an_toi_tai_nha.mp3';
+        } else if (taskName.includes('Vệ sinh')) {
+            audioFile = 've_sinh_ca_nhan_buoi_toi.mp3';
+        } else if (taskName.includes('Đi ngủ')) {
+            audioFile = 'di_ngu.mp3';
+        }
+        
+        if (audioFile) {
+            // Tạo nút phát âm thanh
+            const audioButton = document.createElement('button');
+            audioButton.className = 'play-audio';
+            audioButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+            audioButton.setAttribute('aria-label', 'Phát âm thanh');
+            audioButton.setAttribute('title', 'Nghe hướng dẫn bằng giọng nói');
+            
+            // Thêm sự kiện click
+            audioButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                playTaskAudio(audioFile);
+            });
+            
+            // Thêm vào giao diện
+            taskNameElement.appendChild(audioButton);
+        }
+    });
+}
