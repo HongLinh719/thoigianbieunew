@@ -1186,20 +1186,20 @@ if (typeof switchTab !== 'undefined') {
             
             taskElement.innerHTML = `
                 <div class="task-header">
-                    <div class="task-time">${task.time}</div>
-                    <div class="task-name">${task.name}</div>
+                    <div class="task-time">${template.time}</div>
+                    <div class="task-name">${template.name}</div>
                 </div>
                 <div class="rating-buttons">
                     <button class="rating-btn good-btn ${task.rating === 'good' ? 'active' : ''}" 
-                            onclick="rateTask('${childName}', ${task.id}, 'good')">
+                            onclick="rateTask('${childName}', '${task.id}', 'good')">
                         <i class="fas fa-smile"></i> ${template.ratings[0]}
                     </button>
                     <button class="rating-btn neutral-btn ${task.rating === 'neutral' ? 'active' : ''}" 
-                            onclick="rateTask('${childName}', ${task.id}, 'neutral')">
+                            onclick="rateTask('${childName}', '${task.id}', 'neutral')">
                         <i class="fas fa-meh"></i> ${template.ratings[1]}
                     </button>
                     <button class="rating-btn bad-btn ${task.rating === 'bad' ? 'active' : ''}" 
-                            onclick="rateTask('${childName}', ${task.id}, 'bad')">
+                            onclick="rateTask('${childName}', '${task.id}', 'bad')">
                         <i class="fas fa-frown"></i> ${template.ratings[2]}
                     </button>
                 </div>
@@ -1210,7 +1210,6 @@ if (typeof switchTab !== 'undefined') {
             
             return taskElement;
         }
-        
         
         // Tính lại tổng điểm
         function recalculateTotalPoints(childName, dateKey) {
@@ -1973,50 +1972,51 @@ loadData = function() {
 
 // Cập nhật hàm rateTask
 function rateTask(childName, taskId, rating) {
-    const now = new Date();
-    const currentTime = now.getHours() * 60 + now.getMinutes();
-    
-    // Lấy thời gian của task từ lịch
-    const task = scheduleData[childName][displayedDate].tasks.find(t => t.id === taskId);
-    const taskTime = parseInt(task.time.split(':')[0]) * 60 + parseInt(task.time.split(':')[1]);
-    
-    // Kiểm tra xem có phải ngày hiện tại không
-    const today = getDateKey(now);
-    if (displayedDate === today && currentTime < taskTime) {
-        alert('Chưa đến giờ thực hiện nhiệm vụ này!');
-        return;
-    }
-    
-    // Kiểm tra xem có phải đang cố gắng đánh giá ngày trong tương lai không
-    if (new Date(displayedDate) > now) {
-        alert('Không thể đánh giá nhiệm vụ trong tương lai!');
-        return;
+    const dateKey = getDateKey();
+    if (!scheduleData[childName][dateKey]) {
+        scheduleData[childName][dateKey] = {
+            tasks: [],
+            totalPoints: 0
+        };
     }
 
-    // ...existing code...
-    if (scheduleData[childName][displayedDate]) {
-        const taskIndex = scheduleData[childName][displayedDate].tasks.findIndex(t => t.id === taskId);
-        if (taskIndex !== -1) {
-            scheduleData[childName][displayedDate].tasks[taskIndex].rating = rating;
-            updateChallenges(childName, taskId, rating === 2);
-            saveData();
-            displaySchedule();
-        }
+    // Tìm task trong danh sách
+    let taskIndex = scheduleData[childName][dateKey].tasks.findIndex(t => t.id === taskId);
+    if (taskIndex === -1) {
+        // Nếu chưa có task, thêm mới
+        scheduleData[childName][dateKey].tasks.push({
+            id: taskId,
+            rating: rating
+        });
+    } else {
+        // Nếu đã có task, cập nhật rating
+        scheduleData[childName][dateKey].tasks[taskIndex].rating = rating;
     }
-    // Nếu đánh giá tốt, tạo hiệu ứng
+
+    // Tính lại điểm
+    recalculateTotalPoints(childName, dateKey);
+    
+    // Lưu dữ liệu và cập nhật giao diện
+    saveData();
+    displaySchedule();
+    updateProgress();
+
+    // Kiểm tra và tạo hiệu ứng nếu đánh giá tốt
     if (rating === 'good') {
         const taskTemplate = taskTemplates[childName].find(t => t.id === taskId);
         if (taskTemplate) {
-           playCongrats(taskTemplate.name.toLowerCase());
+            playCongrats(taskTemplate.name.toLowerCase());
             addWater(1);
         }
-        createFireworks(); // Gọi hiệu ứng pháo hoa
+        createFireworks();
     }
 
     // Kiểm tra và nâng cấp
     checkAndUpgradeLevel();
     // Kiểm tra và cấp huy hiệu
     checkAndAwardBadges();
+    // Cập nhật tiến độ thử thách
+    updateChallenges(childName, taskId, rating === 'good');
 }
 
 // Thêm cấu trúc dữ liệu cho các thử thách
@@ -2282,20 +2282,20 @@ function createTaskElement(task, childName) {
     
     taskElement.innerHTML = `
         <div class="task-header">
-            <div class="task-time">${task.time}</div>
-            <div class="task-name">${task.name}</div>
+            <div class="task-time">${template.time}</div>
+            <div class="task-name">${template.name}</div>
         </div>
         <div class="rating-buttons">
             <button class="rating-btn good-btn ${task.rating === 'good' ? 'active' : ''}" 
-                    onclick="rateTask('${childName}', ${task.id}, 'good')">
+                    onclick="rateTask('${childName}', '${task.id}', 'good')">
                 <i class="fas fa-smile"></i> ${template.ratings[0]}
             </button>
             <button class="rating-btn neutral-btn ${task.rating === 'neutral' ? 'active' : ''}" 
-                    onclick="rateTask('${childName}', ${task.id}, 'neutral')">
+                    onclick="rateTask('${childName}', '${task.id}', 'neutral')">
                 <i class="fas fa-meh"></i> ${template.ratings[1]}
             </button>
             <button class="rating-btn bad-btn ${task.rating === 'bad' ? 'active' : ''}" 
-                    onclick="rateTask('${childName}', ${task.id}, 'bad')">
+                    onclick="rateTask('${childName}', '${task.id}', 'bad')">
                 <i class="fas fa-frown"></i> ${template.ratings[2]}
             </button>
         </div>
