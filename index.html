@@ -827,6 +827,19 @@
     font-weight: bold;
     color: #FF5722;
 }
+.admin-btn {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background: #FF5722;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 1000;
+}
 </style>
 </head>
 <body>
@@ -1167,6 +1180,7 @@ if (typeof switchTab !== 'undefined') {
         function createTaskElement(task, childName) {
             const taskElement = document.createElement('div');
             taskElement.className = `task ${task.rating ? 'completed-' + task.rating : ''}`;
+            taskElement.setAttribute('data-task-id', task.id);
             
             const template = taskTemplates[childName].find(t => t.id === task.id);
             
@@ -1190,6 +1204,9 @@ if (typeof switchTab !== 'undefined') {
                     </button>
                 </div>
             `;
+            
+            // Kiểm tra và hiển thị streak
+            setTimeout(() => checkIterativeProgress(childName, task.id), 0);
             
             return taskElement;
         }
@@ -2307,19 +2324,6 @@ rateTask = function(childName, taskId, rating) {
 function waterTree() {
     console.log("Đang tưới cây, số lượt hiện tại:", waterCredits);
     
-    // Debug thông báo
-    if (waterCredits <= 0) {
-        alert("Không đủ lượt tưới nước! Hãy hoàn thành nhiệm vụ tốt để có thêm lượt tưới.");
-        return;
-    }
-    
-    // Giảm số lượt tưới và cập nhật ngay lập tức
-    waterCredits--;
-    document.getElementById("water-units").textContent = waterCredits;
-    
-    // Hiển thị hiệu ứng tưới nước
-    const wateringGif = document.getElementById("watering-gif");
-    wateringGif.style.display = "block";
     
     // Cập nhật cấp độ cây
     treeLevel = Math.min(treeLevel + 1, 7);
@@ -2846,6 +2850,111 @@ styleSheet.textContent = `
     }
 `;
 document.head.appendChild(styleSheet);
+
+// Thêm hàm kiểm tra và cập nhật tiến trình lặp lại
+function checkIterativeProgress(childName, taskId) {
+    const dateKey = getDateKey();
+    const lastWeek = [];
+    
+    // Lấy dữ liệu 7 ngày gần nhất
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(currentDate);
+        date.setDate(date.getDate() - i);
+        const key = getDateKey(date);
+        if (scheduleData[childName][key] && scheduleData[childName][key].tasks) {
+            const task = scheduleData[childName][key].tasks.find(t => t.id === taskId);
+            if (task) {
+                lastWeek.push(task.rating);
+            }
+        }
+    }
+    
+    // Tính số ngày liên tiếp hoàn thành tốt
+    let streak = 0;
+    for (const rating of lastWeek) {
+        if (rating === 'good') {
+            streak++;
+        } else {
+            break;
+        }
+    }
+    
+    // Cập nhật hiển thị streak
+    const taskElement = document.querySelector(`#${childName} .task[data-task-id="${taskId}"]`);
+    if (taskElement) {
+        let streakBadge = taskElement.querySelector('.streak-badge');
+        if (!streakBadge) {
+            streakBadge = document.createElement('div');
+            streakBadge.className = 'streak-badge';
+            taskElement.querySelector('.task-header').appendChild(streakBadge);
+        }
+        
+        if (streak > 0) {
+            streakBadge.innerHTML = `🔥 ${streak} ngày`;
+            streakBadge.style.display = 'block';
+        } else {
+            streakBadge.style.display = 'none';
+        }
+    }
+    
+    return streak;
+}
+
+// Thêm style cho streak badge
+const streakStyle = document.createElement('style');
+streakStyle.textContent = `
+    .streak-badge {
+        background: linear-gradient(45deg, #FF9800, #FF5722);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        margin-left: 10px;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.8; }
+        100% { opacity: 1; }
+    }
+`;
+document.head.appendChild(streakStyle);
+
+// Cập nhật hàm createTaskElement để thêm data-task-id
+function createTaskElement(task, childName) {
+    const taskElement = document.createElement('div');
+    taskElement.className = `task ${task.rating ? 'completed-' + task.rating : ''}`;
+    taskElement.setAttribute('data-task-id', task.id);
+    
+    const template = taskTemplates[childName].find(t => t.id === task.id);
+    
+    taskElement.innerHTML = `
+        <div class="task-header">
+            <div class="task-time">${task.time}</div>
+            <div class="task-name">${task.name}</div>
+        </div>
+        <div class="rating-buttons">
+            <button class="rating-btn good-btn ${task.rating === 'good' ? 'active' : ''}" 
+                    onclick="rateTask('${childName}', ${task.id}, 'good')">
+                <i class="fas fa-smile"></i> ${template.ratings[0]}
+            </button>
+            <button class="rating-btn neutral-btn ${task.rating === 'neutral' ? 'active' : ''}" 
+                    onclick="rateTask('${childName}', ${task.id}, 'neutral')">
+                <i class="fas fa-meh"></i> ${template.ratings[1]}
+            </button>
+            <button class="rating-btn bad-btn ${task.rating === 'bad' ? 'active' : ''}" 
+                    onclick="rateTask('${childName}', ${task.id}, 'bad')">
+                <i class="fas fa-frown"></i> ${template.ratings[2]}
+            </button>
+        </div>
+    `;
+    
+    // Kiểm tra và hiển thị streak
+    setTimeout(() => checkIterativeProgress(childName, task.id), 0);
+    
+    return taskElement;
+}
 </script>
 </body>
 </html>
