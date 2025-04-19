@@ -1,0 +1,24 @@
+:root {
+    --primary-color: #FF7043;
+    --secondary-color: #FFAB91;
+    --neutral-color: #FBE9E7;
+    --text-color: #3E2723;
+    --light-text: #795548;
+    --success-color: #66BB6A;
+    --warning-color: #FFCA28;
+    --danger-color: #EF5350;
+}
+
+body {
+    font-family: 'Baloo 2', cursive;
+    margin: 0;
+    padding: 0;
+    background-color: var(--neutral-color);
+    color: var(--text-color);
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 15px;
+}
