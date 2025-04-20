@@ -987,18 +987,6 @@ function addAudioButtonsToTasks() {
 }
 
 // Hệ thống tăng cấp cho cả hai bé
-const LEVEL_THRESHOLDS = {
-    1: 0,    // Cấp 1: 0 điểm
-    2: 50,   // Cấp 2: 50 điểm
-    3: 150,  // Cấp 3: 150 điểm
-    4: 300,  // Cấp 4: 300 điểm
-    5: 500,  // Cấp 5: 500 điểm
-    6: 750,  // Cấp 6: 750 điểm
-    7: 1000, // Cấp 7: 1000 điểm
-    8: 1500, // Cấp 8: 1500 điểm
-    9: 2000, // Cấp 9: 2000 điểm
-    10: 3000 // Cấp 10: 3000 điểm
-};
 
 // Tính toán cấp độ dựa trên điểm
 function calculateLevel(points) {
