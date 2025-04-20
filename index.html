@@ -1282,6 +1282,81 @@
             color: rgba(255,255,255,0.5);
             margin-top: 5px;
         }
+
+        /* CSS cho các khối nội dung (làm trong suốt để thấy hình nền) */
+        .weekly-challenge-container, .weekly-competition, .task, .stats-container, .tree-modal-content, .level-up-notification {
+            background-color: rgba(33, 33, 33, 0.7) !important; /* Màu nền tối với độ trong suốt */
+            backdrop-filter: blur(5px); /* Hiệu ứng mờ phía sau */
+            -webkit-backdrop-filter: blur(5px); /* Hỗ trợ Safari */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Viền mỏng */
+        }
+        
+        /* CSS cho thử thách tuần mới */
+        .weekly-challenge-container {
+            background: linear-gradient(135deg, rgba(98, 0, 234, 0.7), rgba(63, 81, 181, 0.7)) !important;
+            border-left: 5px solid #FFEB3B;
+        }
+        
+        /* CSS cho thi đua tuần này */
+        .weekly-competition {
+            background: linear-gradient(135deg, rgba(33, 33, 33, 0.7), rgba(66, 66, 66, 0.7)) !important;
+        }
+        
+        /* Tối ưu hóa giao diện cho thiết bị di động */
+        @media screen and (max-width: 576px) {
+            body {
+                /* Đảm bảo hình nền hiển thị tốt trên thiết bị nhỏ */
+                background-position: center center;
+                background-size: cover;
+                background-attachment: fixed;
+            }
+            
+            /* Tăng kích thước font chữ cho dễ đọc */
+            .task-time {
+                font-size: 18px !important;
+                font-weight: bold;
+            }
+            
+            .task-name {
+                font-size: 16px !important;
+            }
+            
+            .rating-btn {
+                padding: 12px 5px !important;
+                font-size: 14px !important;
+            }
+            
+            /* Cây chiếm ít không gian hơn trên màn hình nhỏ */
+            .tree-image {
+                width: 180px !important;
+                height: 180px !important;
+            }
+            
+            /* Điều chỉnh kích thước ảnh đại diện */
+            .profile-container img {
+                width: 100px !important;
+                height: 100px !important;
+            }
+            
+            /* Điều chỉnh tiêu đề cho vừa màn hình */
+            .header h1 {
+                font-size: 1.5rem !important;
+            }
+        }
+        
+        /* CSS cho giao diện mobile */
+        @media screen and (max-width: 480px) {
+            /* Điều chỉnh các nút đánh giá */
+            .rating-buttons {
+                display: flex;
+                flex-wrap: wrap;
+            }
+            
+            .rating-btn {
+                flex: 0 0 100%; /* Mỗi nút chiếm một hàng */
+                margin-bottom: 5px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1481,39 +1556,48 @@
         <div class="tree-modal" id="tree-modal">
             <div class="tree-modal-content">
                 <div class="tree-modal-header">
-                    <h2>Cây của bé</h2>
+                    <h2 id="tree-name" style="margin: 0; color: #FF7043; font-size: 18px; font-weight: bold;">
+                        Cây của bé Trí Dũng
+                    </h2>
                     <button class="tree-modal-close" id="close-tree-modal">&times;</button>
                 </div>
-                <div class="tree-display">
-                    <div class="tree-container">
-                        <img id="tree-img" src="images/tree_day1.png" class="tree-image" alt="Cây phát triển">
-                        <div id="tree-status" style="font-weight:bold; color:#FFEB3B; margin:5px 0;">
-                            Cây cần nước để phát triển!
+                <div class="tree-display" style="text-align: center;">
+                    <!-- Cây và giọt nước: xếp ngang, cây ở giữa, nút nước riêng biệt bên phải -->
+                    <div class="tree-container" style="display: flex; align-items: center; justify-content: space-between; position: relative;">
+                        <!-- Ảnh cây ở giữa với margin bên trái để cân đối -->
+                        <div style="flex: 1;"></div>
+                        <img id="tree-img" src="images/tree_day1.png" class="tree-image"
+                             alt="Cây phát triển"
+                             style="width: 300px; height: 300px;"/>
+                        
+                        <!-- Giọt nước riêng biệt bên phải -->
+                        <div style="flex: 1; display: flex; justify-content: center; margin-left: 15px;">
+                            <button class="water-button" onclick="waterTree()" title="Tưới nước cho cây"
+                                style="position: static; width: 60px; height: 60px; font-size: 30px;">
+                                💧
+                            </button>
                         </div>
-                        <div style="margin-top:5px;">
-                            <span style="font-weight:bold;">Lượt tưới nước: <span id="water-units">0</span></span>
-                        </div>
-                        <button class="water-button" onclick="waterTree()" title="Tưới nước cho cây">
-                            💧
-                        </button>
-                        <img id="watering-gif" src="images/water.gif" style="display:none; position:absolute; width: 80px; height: 120px; top: 40%; left: 50%; transform: translateX(-50%); z-index: 10;"/>
+                        
+                        <!-- Hiệu ứng tưới nước ở giữa ảnh cây -->
+                        <img id="watering-gif" src="images/water.gif"
+                             style="display:none; position:absolute; width: 100px; height: 140px; top: 40%; left: 50%; transform: translateX(-50%); z-index: 10;"/>
                     </div>
-                    <div class="tree-name" id="tree-name">
-                        Cây của bé Trí Dũng
-                    </div>
-                    <div class="tree-info">
-                        <div class="points">
-                            <span id="tree-points">0</span> điểm
+                
+                    <!-- Thông tin cấp và lượt tưới nước (bỏ điểm) -->
+                    <div class="tree-info" style="margin-top: 20px; line-height: 1.6; clear: both;">
+                        <div id="tree-status" style="font-weight:bold; color:#4CAF50; margin:5px 0;">
+                            Cây đã phát triển hoàn toàn!
                         </div>
-                        <div class="level">
-                            Cấp <span id="tree-level-display">1</span>
+                        <div class="level" style="font-size: 18px; color: #FFEB3B; font-weight: bold; margin-top: 5px;">
+                            Cấp <span id="tree-level-display">7</span>
                         </div>
                         <div class="progress-to-next-level">
                             <div class="level-bar">
                                 <div class="level-progress" id="tree-level-progress" style="width: 0%"></div>
                             </div>
                             <div class="level-markers">
-                                <span>0%</                                <span>100%</span>
+                                <span>0%</span>
+                                <span>100%</span>
                             </div>
                         </div>
                     </div>
