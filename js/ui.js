@@ -58,13 +58,71 @@ export class UI {
     static updateLevelDisplay(childName) {
         const child = document.querySelector(`#${childName}`);
         if (child) {
-            const profile = child.querySelector('child-profile');
-            if (profile) {
-                const data = JSON.parse(localStorage.getItem('kidScheduleData') || '{}');
-                const childData = data[childName] || { level: 1, experience: 0 };
-                profile.setAttribute('level', childData.level);
-                profile.setAttribute('points', childData.experience);
+            // Tìm hoặc tạo profile container
+            let profile = child.querySelector('.profile-container');
+            if (!profile) {
+                profile = document.createElement('div');
+                profile.className = 'profile-container';
+                child.prepend(profile);
             }
+            
+            const data = JSON.parse(localStorage.getItem('kidScheduleData') || '{}');
+            const childData = data[childName] || { level: 1, experience: 0 };
+            
+            // Reset nội dung và style
+            profile.innerHTML = '';
+            profile.style.display = 'flex';
+            profile.style.flexDirection = 'row';
+            profile.style.alignItems = 'center';
+            profile.style.justifyContent = 'center';
+            profile.style.gap = '12px';
+            profile.style.background = 'transparent';
+            profile.style.padding = '10px';
+            
+            // Tạo phần tử ảnh
+            const profileImg = document.createElement('img');
+            profileImg.src = `images/${childName}.jpg`;
+            profileImg.alt = childName === 'tridung' ? 'Trí Dũng' : 'Thảo Vy';
+            profileImg.style.width = '80px';
+            profileImg.style.height = '80px';
+            profileImg.style.borderRadius = '50%';
+            profileImg.style.objectFit = 'cover';
+            profileImg.style.border = '3px solid #FF7043';
+            profileImg.style.boxShadow = '0 3px 10px rgba(0,0,0,0.3)';
+            profile.appendChild(profileImg);
+            
+            // Tạo phần tử div chứa thông tin
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'profile-info';
+            infoDiv.style.display = 'flex';
+            infoDiv.style.flexDirection = 'column';
+            infoDiv.style.alignItems = 'flex-start';
+            infoDiv.style.textAlign = 'left';
+            
+            // Hiển thị tên đầy đủ và cấp độ
+            const displayName = childName === 'tridung' ? 'Trí Dũng' : 'Thảo Vy';
+            
+            // Thêm tên và cấp độ
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'profile-name';
+            nameDiv.textContent = displayName;
+            nameDiv.style.fontWeight = 'bold';
+            nameDiv.style.color = '#FF7043';
+            nameDiv.style.fontSize = '18px';
+            nameDiv.style.marginBottom = '5px';
+            nameDiv.style.textShadow = '1px 1px 3px rgba(0,0,0,0.8)';
+            
+            const levelDiv = document.createElement('div');
+            levelDiv.className = 'profile-level';
+            levelDiv.textContent = `Cấp ${childData.level}`;
+            levelDiv.style.fontSize = '16px';
+            levelDiv.style.color = 'white';
+            levelDiv.style.textShadow = '1px 1px 3px rgba(0,0,0,0.8)';
+            
+            // Thêm các phần tử vào DOM
+            infoDiv.appendChild(nameDiv);
+            infoDiv.appendChild(levelDiv);
+            profile.appendChild(infoDiv);
         }
     }
 
@@ -945,7 +1003,7 @@ const LEVEL_THRESHOLDS = {
 // Tính toán cấp độ dựa trên điểm
 function calculateLevel(points) {
     let level = 1;
-    for (const [lvl, threshold] of Object.entries(LEVEL_THRESHOLDS)) {
+    for (const [lvl, threshold] of Object.entries(levelThresholds)) {
         if (points >= threshold) {
             level = parseInt(lvl);
         } else {
