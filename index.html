@@ -28,29 +28,9 @@
             --pastel-purple: #CE93D8;
         }
 
-        body {
-            background-image: url('images/hinhnen.jpg');
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center;
-            font-family: 'Baloo 2', cursive;
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            position: relative;
-        }
 
-        /* Điều chỉnh overlay cho nền trong suốt hơn */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(45, 36, 36, 0.2); /* Giảm xuống từ 0.7 xuống 0.5 */
-            z-index: -1;
-        }
+
+
 
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
@@ -361,7 +341,7 @@
             align-items: center;
             justify-content: center;
             margin: 10px 0;
-            background: rgba(255, 102, 0, 0.932);
+            background: rgba(245, 86, 12, 0.932);
             border-radius: 20px;
             padding: 8px 15px;
             width: 100%; /* Kéo dài khung ra */
@@ -396,7 +376,7 @@
         }
         
         .current-time {
-            color: #FFC107;
+            color: #fdfdfd;
             font-weight: bold;
             font-size: 16px;
         }
@@ -1291,10 +1271,10 @@
 
         /* CSS cho các khối nội dung (làm trong suốt để thấy hình nền) */
         .weekly-challenge-container, .weekly-competition, .task, .stats-container, .tree-modal-content, .level-up-notification {
-            background-color: rgba(189, 241, 194, 0.3) !important; /* Màu nền tối với độ trong suốt */
+            background-color: rgba(3, 82, 11, 0.5) !important; /* Màu nền tối với độ trong suốt */
             backdrop-filter: blur(5px); /* Hiệu ứng mờ phía sau */
             -webkit-backdrop-filter: blur(5px); /* Hỗ trợ Safari */
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Viền mỏng */
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Viền mỏng */
         }
         
         /* CSS cho thử thách tuần mới */
