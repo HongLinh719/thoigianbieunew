@@ -3,11 +3,9 @@
     --primary-color: #FF7043;
     --text-color: #ffffff;
     --task-bg: #1E1919;
-    --btn-good: #1B8A34;  /* Màu xanh tươi hơn */
-    --btn-neutral: #DB8A27;  /* Màu cam vàng */
-    --btn-bad: #BA2525;  /* Màu đỏ tươi hơn */
-    --header-gradient: linear-gradient(45deg, #ff5722, #ff9800);
-    --weekly-challenge-bg: linear-gradient(135deg, #6A3DE8, #8A56FF);
+    --btn-good: #1B4332;
+    --btn-neutral: #8B7355;
+    --btn-bad: #7B1818;
 }
 
 body {
@@ -25,25 +23,19 @@ body {
 }
 
 .header {
-    background: var(--header-gradient);
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 20px;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
 }
 
 .header h1 {
+    color: var(--primary-color);
     margin: 0;
-    color: white;
     font-size: 24px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .current-time {
     margin-top: 10px;
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: bold;
+    opacity: 0.8;
 }
 
 .current-time .time {
@@ -92,37 +84,6 @@ body {
     padding: 15px;
     border-radius: 12px;
     margin-bottom: 15px;
-    transition: transform 0.3s, box-shadow 0.3s;
-    position: relative;
-    overflow: hidden;
-}
-
-.task:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--primary-color);
-    opacity: 0.7;
-}
-
-.task:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.task.good:before {
-    background: var(--btn-good);
-}
-
-.task.neutral:before {
-    background: var(--btn-neutral);
-}
-
-.task.bad:before {
-    background: var(--btn-bad);
 }
 
 .task-header {
@@ -133,21 +94,17 @@ body {
 
 .task-time {
     background: var(--bg-color);
-    padding: 6px 10px;
+    padding: 5px 10px;
     border-radius: 8px;
     font-weight: 600;
     margin-right: 10px;
     min-width: 60px;
     text-align: center;
-    font-size: 16px;
 }
 
 .task-name {
     flex: 1;
     font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 }
 
 .rating-buttons {
@@ -168,13 +125,14 @@ body {
     justify-content: center;
     gap: 8px;
     transition: all 0.3s;
-    opacity: 0.9;
+    opacity: 0.7;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
 .rating-btn:hover {
     opacity: 1;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .good-btn {
@@ -192,24 +150,38 @@ body {
 .rating-btn.active {
     opacity: 1;
     transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(255,255,255,0.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border: 2px solid white;
+    z-index: 2;
 }
 
-.rating-btn i {
-    font-size: 18px;
-    margin-right: 5px;
+.rating-btn.active::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+    animation: pulse-glow 1.5s infinite;
 }
 
-.rating-btn.good-btn i {
-    color: #FFEB3B;
+@keyframes pulse-glow {
+    0% { opacity: 0.3; transform: scale(0.8) rotate(0deg); }
+    50% { opacity: 0.6; transform: scale(1.0) rotate(180deg); }
+    100% { opacity: 0.3; transform: scale(0.8) rotate(360deg); }
 }
 
-.rating-btn.neutral-btn i {
-    color: #FFF59D;
+.good-btn.active {
+    background: linear-gradient(145deg, #2E7D32, #66BB6A);
 }
 
-.rating-btn.bad-btn i {
-    color: #FFCCBC;
+.neutral-btn.active {
+    background: linear-gradient(145deg, #A1887F, #BCAAA4);
+}
+
+.bad-btn.active {
+    background: linear-gradient(145deg, #B71C1C, #E57373);
 }
 
 .play-audio {
@@ -219,46 +191,6 @@ body {
     color: var(--primary-color);
     padding: 5px;
     margin-left: 10px;
-    font-size: 20px;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s;
-    position: relative;
-}
-
-.play-audio:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.1);
-}
-
-.play-audio::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 2px solid var(--primary-color);
-    opacity: 0;
-    transform: scale(0.8);
-    transition: all 0.3s;
-}
-
-.play-audio:hover::after {
-    opacity: 0.5;
-    transform: scale(1.2);
-}
-
-.audio-playing {
-    animation: audioPlaying 0.8s infinite alternate;
-}
-
-@keyframes audioPlaying {
-    0% { transform: scale(1); color: var(--primary-color); }
-    100% { transform: scale(1.2); color: #ffeb3b; }
 }
 
 /* Progress Section Styles */
@@ -497,47 +429,20 @@ body {
 
 /* Weekly Challenge Section */
 .weekly-challenge-container {
-    background: var(--weekly-challenge-bg);
+    background-color: #fffdea;
     border-radius: 12px;
     padding: 15px;
-    margin: 0 0 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    border: none;
-    position: relative;
-    overflow: hidden;
-}
-
-.weekly-challenge-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="20" y="50" font-family="Arial" font-size="20" fill="rgba(255,255,255,0.05)">🏆</text></svg>');
-    opacity: 0.2;
+    margin: 20px auto;
+    max-width: 90%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: 2px solid #ffc107;
 }
 
 .weekly-challenge-container h3 {
-    color: #fff;
-    font-size: 1.4em;
+    color: #ff6b6b;
     margin-top: 0;
-    margin-bottom: 10px;
-    text-shadow: 0 2px 3px rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.weekly-challenge-container h3 i {
-    color: gold;
-    text-shadow: 0 0 5px rgba(255,215,0,0.5);
-}
-
-.challenge-description {
-    color: #fff;
-    margin-bottom: 15px;
-    font-size: 16px;
+    text-align: center;
+    font-size: 1.4em;
 }
 
 .progress-bar-container {
@@ -545,94 +450,42 @@ body {
 }
 
 .progress-bar {
-    height: 16px;
-    background-color: rgba(255,255,255,0.2);
-    border-radius: 8px;
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 5px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
 }
 
-.progress-fill {
+#challenge-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #FFC107, #FFD54F);
-    border-radius: 8px;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    width: 0%;
     transition: width 1s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.progress-fill::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        45deg,
-        rgba(255,255,255,0.2) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgba(255,255,255,0.2) 50%,
-        rgba(255,255,255,0.2) 75%,
-        transparent 75%
-    );
-    background-size: 20px 20px;
-    animation: progressStripes 1s linear infinite;
-}
-
-@keyframes progressStripes {
-    0% { background-position: 0 0; }
-    100% { background-position: 20px 0; }
 }
 
 #challenge-progress-text {
-    color: #fff;
-    font-weight: bold;
     text-align: center;
+    margin-top: 5px;
+    font-weight: bold;
+    color: #666;
 }
 
 .challenge-reward-container {
-    background: rgba(255,255,255,0.15);
+    background: #fff5e6;
     border-radius: 8px;
     padding: 10px;
+    border: 1px dashed #ffab40;
     margin-top: 10px;
 }
 
-.challenge-reward {
-    color: #FFF9C4;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.challenge-reward-container h4 {
+    margin: 0;
+    color: #ff9800;
 }
 
-#reward-icon {
-    font-size: 24px;
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-@keyframes waterDropEffect {
-    0% { transform: translateY(-50px); opacity: 0; }
-    50% { opacity: 1; }
-    100% { transform: translateY(50px); opacity: 0; }
-}
-
-.water-drop {
-    position: absolute;
-    width: 10px;
-    height: 20px;
-    background: #2196F3;
-    border-radius: 50%;
-    animation: waterDropEffect 1.5s linear;
-    z-index: 5;
+#challenge-reward-text {
+    margin: 5px 0 0;
+    font-style: italic;
 }
 
 /* Admin Controls */
@@ -839,19 +692,12 @@ body {
     }
 
     .rating-buttons {
-        flex-direction: row; /* Để đảm bảo là hiển thị theo hàng */
+        flex-direction: column;
     }
 
     .rating-btn {
         width: 100%;
         padding: 15px;
-        font-size: 12px;
-        padding: 10px 5px;
-    }
-
-    .rating-btn i {
-        margin-right: 0;
-        font-size: 14px;
     }
 
     .progress-section {
@@ -876,35 +722,6 @@ body {
     .motivation-content {
         margin: 20px;
         max-width: none;
-    }
-
-    .task-time {
-        min-width: 50px;
-        padding: 5px 8px;
-        font-size: 14px;
-    }
-
-    .task-name {
-        font-size: 14px;
-    }
-
-    .weekly-challenge-container {
-        margin: 10px 0 15px;
-        padding: 12px;
-    }
-
-    .weekly-challenge-container h3 {
-        font-size: 1.2em;
-    }
-
-    .challenge-description {
-        font-size: 14px;
-    }
-
-    .stats-table th, 
-    .stats-table td {
-        padding: 8px 5px;
-        font-size: 12px;
     }
 }
 
@@ -1048,108 +865,642 @@ body {
     color: #555;
 }
 
-/* Thống kê kết quả */
-.stats-container {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 15px;
-    margin: 20px 0;
+/* Cải thiện hiệu ứng pháo hoa */
+.firework {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(0.5px);
+    opacity: 0;
+    animation: explode 1s forwards;
+    z-index: 9999;
 }
 
-.stats-header {
+@keyframes explode {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+.firework-ray {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(0.5px);
+    opacity: 1;
+    z-index: 9999;
+}
+
+/* Hiệu ứng cho cấp độ tăng lên */
+.level-up-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.9);
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+    z-index: 1000;
+    animation: level-up-appear 0.5s ease-out;
+}
+
+@keyframes level-up-appear {
+    from { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+.level-up-notification h2 {
+    color: #FFC107;
+    margin-top: 10px;
+}
+
+.level-up-notification .level {
+    font-size: 3em;
+    margin: 15px 0;
+    color: #FF5722;
+    text-shadow: 0 0 10px rgba(255,87,34,0.5);
+}
+
+.level-up-notification .message {
+    font-size: 1.1em;
+    margin: 10px 0;
+}
+
+/* CSS cho bảng so sánh thống kê */
+.stats-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.stats-comparison-column {
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.stats-comparison-column h4 {
+    text-align: center;
+    margin-top: 0;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 5px;
+}
+
+.comparison-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+.comparison-stat-value {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.stats-winner {
+    margin-top: 10px;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    background: rgba(76,175,80,0.3);
+}
+
+/* Weekly Challenge - Redesigned Compact Version */
+.weekly-challenges-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.weekly-challenge {
+    background: var(--task-bg);
+    border-radius: 12px;
+    padding: 15px;
+    flex: 1;
+    max-width: 48%;
+    transition: all 0.3s ease;
+}
+
+.weekly-challenge h3 {
+    margin-top: 0;
+    font-size: 16px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.challenge-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.weekly-challenge .challenge-content {
+    font-size: 14px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.weekly-challenge.expanded .challenge-content {
+    max-height: 300px;
+}
+
+.progress-bar {
+    height: 10px;
+    background-color: var(--bg-color);
+    border-radius: 5px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    transition: width 0.5s ease;
+}
+
+/* Tree Container and Viewing */
+.trees-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.tree-view-btn {
+    display: inline-block;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    margin: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.tree-view-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.trees-hidden .tree-container {
+    display: none;
+}
+
+.tree-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.tree-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.tree-modal-content {
+    position: relative;
+    text-align: center;
+}
+
+.tree-modal img {
+    max-height: 80vh;
+    max-width: 90vw;
+    object-fit: contain;
+}
+
+.tree-modal .close-btn {
+    position: absolute;
+    top: -40px;
+    right: -20px;
+    background: var(--primary-color);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.tree-modal .tree-details {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+    color: white;
+    font-weight: bold;
+}
+
+/* Level PIN Bar */
+.level-bar {
+    height: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    margin: 10px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.level-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #FF7043, #FF9800);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.level-pins {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px;
+}
+
+.level-pin {
+    width: 4px;
+    height: 12px;
+    background: white;
+    border-radius: 2px;
+    margin-top: 4px;
+    position: relative;
+}
+
+.level-pin::after {
+    content: attr(data-level);
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.level-pin:hover::after {
+    opacity: 1;
+}
+
+/* Animations for fireworks */
+@keyframes firework-core {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    20% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+.fireworks-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 480px) {
+    .weekly-challenges-container {
+        flex-direction: column;
+    }
+    
+    .weekly-challenge {
+        max-width: 100%;
+    }
+    
+    .trees-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tree icon button */
+.tree-icon-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(76, 175, 80, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    border: 2px solid #fff;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.tree-icon-button:hover {
+    transform: scale(1.1);
+    background-color: rgba(76, 175, 80, 1);
+}
+
+.tree-icon-button i {
+    font-size: 24px;
+    color: white;
+}
+
+/* Tree Modal */
+.tree-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.tree-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tree-modal-content {
+    background-color: var(--bg-color);
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: auto;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.tree-modal.active .tree-modal-content {
+    transform: scale(1);
+}
+
+.tree-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.tree-modal-header h2 {
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.tree-modal-close {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.tree-display {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.tree-modal .tree-container {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+}
+
+.tree-info {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.tree-info .points {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.tree-info .level {
+    font-size: 20px;
+    margin-top: 5px;
+    opacity: 0.9;
+}
+
+.progress-to-next-level {
+    width: 100%;
+    max-width: 300px;
+    margin: 15px auto;
+}
+
+.level-bar {
+    height: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 7px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.level-progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), #FF9800);
+    border-radius: 7px;
+    transition: width 0.5s ease;
+}
+
+.level-markers {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Hide the original progress section in the main UI */
+.progress-section {
+    display: none;
+}
+
+/* Biểu tượng cây */
+.tree-icon-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    transition: transform 0.3s ease;
+}
+
+.tree-icon-button:hover {
+    transform: scale(1.1);
+}
+
+.tree-icon-button i {
+    color: white;
+    font-size: 24px;
+}
+
+/* Modal hiển thị cây */
+.tree-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.tree-modal.active {
+    display: flex;
+}
+
+.tree-modal-content {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.tree-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
 }
 
-.stats-title {
-    font-weight: bold;
+.tree-modal-header h2 {
+    margin: 0;
     color: var(--primary-color);
-    font-size: 1.2em;
 }
 
-.stats-week-selector {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.week-arrow {
-    cursor: pointer;
+.tree-modal-close {
     background: none;
     border: none;
-    color: var(--text-color);
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    transition: all 0.3s;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
 }
 
-.week-arrow:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.stats-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.stats-table th,
-.stats-table td {
-    padding: 10px;
+.tree-display {
     text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.stats-table th {
-    background: rgba(0, 0, 0, 0.2);
-    color: var(--primary-color);
-    font-weight: normal;
-}
-
-.stats-table td {
-    font-weight: bold;
-}
-
-.stats-table .good {
-    color: var(--btn-good);
-}
-
-.stats-table .neutral {
-    color: var(--btn-neutral);
-}
-
-.stats-table .bad {
-    color: var(--btn-bad);
-}
-
-/* Hiệu ứng nút tưới nước */
-.water-button {
+.tree-container {
     position: relative;
+    margin-bottom: 15px;
+}
+
+.tree-image {
+    width: 150px;
+    height: auto;
+}
+
+.water-button {
+    padding: 8px 15px;
+    background-color: #2196F3;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    margin-top: 10px;
+    transition: transform 0.2s ease;
+}
+
+.water-button:hover {
+    transform: scale(1.1);
+}
+
+.tree-name {
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--primary-color);
+    margin: 10px 0;
+}
+
+.tree-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.level-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
     overflow: hidden;
+    margin: 5px 0;
 }
 
-.water-button::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 150%;
-    height: 150%;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
-    transition: transform 0.8s, opacity 0.8s;
+.level-progress {
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.5s ease;
 }
 
-.water-button:active::after {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    transition: 0s;
+.level-markers {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 12px;
+    color: #666;
 }

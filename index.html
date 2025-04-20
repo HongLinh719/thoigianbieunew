@@ -25,11 +25,365 @@
         body {
             background-image: linear-gradient(45deg, #2D2424, #362828);
             animation: gradientShift 10s infinite alternate;
+            font-family: 'Baloo 2', cursive;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
         }
 
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             100% { background-position: 100% 50%; }
+        }
+        
+        /* Cải thiện header */
+        .header {
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin: 10px 0 5px;
+            background: linear-gradient(45deg, #FF7043, #FF9800);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0px 2px 4px rgba(0,0,0,0.3);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        /* CSS cho thử thách tuần mới - nhỏ lại và xinh hơn */
+        .weekly-challenge-container {
+            background: linear-gradient(135deg, #6200ea, #3f51b5);
+            color: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            border-left: 3px solid #FFEB3B;
+        }
+
+        .weekly-challenge-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0.5;
+            animation: shineBg 3s infinite linear;
+            pointer-events: none;
+        }
+
+        .weekly-challenge-container h3 {
+            color: #FFEB3B;
+            font-size: 1.2em;
+            margin-top: 0;
+            margin-bottom: 5px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .challenge-description {
+            font-size: 1em;
+            margin: 8px 0;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            margin: 8px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFEB3B, #FFC107);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        #challenge-progress-text {
+            font-weight: bold;
+            color: white;
+            font-size: 0.9em;
+            margin: 3px 0;
+        }
+
+        .challenge-reward {
+            background: rgba(255,255,255,0.15);
+            padding: 5px 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+            display: inline-block;
+            font-size: 0.9em;
+        }
+
+        #reward-icon {
+            font-size: 1.2em;
+            animation: bounce 1s infinite alternate;
+        }
+        
+        /* Thi đua tuần này */
+        .weekly-competition {
+            background: linear-gradient(135deg, #212121, #424242);
+            color: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .weekly-competition h3 {
+            color: #FFC107;
+            font-size: 1.2em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .competition-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .competitor {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .competitor-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #FF7043;
+            object-fit: cover;
+            position: relative;
+        }
+        
+        .competitor-level {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FF7043;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .competitor-score {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0 5px;
+        }
+        
+        .score-bar {
+            height: 5px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            margin-top: 5px;
+            position: relative;
+        }
+        
+        .score-fill {
+            height: 100%;
+            background: #FF7043;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .vs-label {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF5722;
+        }
+        
+        /* CSS cho nút đánh giá - icon to hơn */
+        @media screen and (max-width: 768px) {
+            .rating-btn {
+                padding: 15px 5px;
+                min-height: 70px;
+            }
+            
+            .rating-btn i {
+                font-size: 28px;
+                margin-bottom: 8px;
+            }
+            
+            .task-header {
+                padding: 10px;
+            }
+            
+            .task-time {
+                font-size: 16px;
+                font-weight: bold;
+            }
+            
+            .task-name {
+                font-size: 16px;
+            }
+        }
+
+        /* CSS cho profile container cải tiến - hình đại diện to hơn ở giữa */
+        .profile-container {
+            text-align: center;
+            padding: 15px 10px 10px;
+            background: #212121;
+            border-radius: 0;
+            margin-bottom: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .profile-container img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #FF7043;
+            margin-bottom: 8px;
+        }
+
+        .profile-info {
+            text-align: center;
+        }
+
+        .profile-name {
+            font-weight: bold;
+            color: #FF7043;
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        .profile-level {
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        .xp-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            margin: 5px auto;
+            width: 80%;
+            max-width: 200px;
+            overflow: hidden;
+        }
+        
+        .xp-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #FF7043, #FF9800);
+            border-radius: 3px;
+            width: 0%;
+        }
+        
+        /* CSS cho tab cải tiến */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0;
+        }
+        
+        .tab {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .tab img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 8px;
+            object-fit: cover;
+            border: 1px solid white;
+        }
+        
+        .tab.active {
+            background: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        /* Thứ ngày style đẹp hơn */
+        .date-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+            background: rgba(187, 1, 1, 0.2);
+            border-radius: 20px;
+            padding: 8px 15px;
+            width: 100%; /* Kéo dài khung ra */
+            max-width: 570px; /* Giới hạn chiều rộng tối đa */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .date-nav-button {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            font-size: 18px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .date-nav-button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        #current-date {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .current-time {
+            color: #FFC107;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        /* Cài đặt chung */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+            overflow-x: hidden;
         }
         
         /* CSS cho thử thách tuần mới */
@@ -436,34 +790,507 @@
         .save-times-button:hover {
             background: #E65100;
         }
+
+        /* CSS cho profile container cải tiến */
+        .profile-container {
+            position: sticky;
+            top: 0;
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            z-index: 1000;
+        }
+
+        .profile-container img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #FF7043;
+        }
+
+        .profile-info {
+            margin-left: 10px;
+            flex: 1;
+        }
+
+        .profile-name {
+            font-weight: bold;
+            color: #FF7043;
+            font-size: 14px;
+        }
+
+        .profile-level {
+            font-size: 12px;
+            color: #795548;
+        }
+        
+        /* CSS cho tab nhỏ hơn */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .tab {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 8px;
+            object-fit: cover;
+            border: 1px solid white;
+        }
+        
+        .tab.active {
+            background: var(--primary-color);
+        }
+        
+        /* CSS cho cây lớn hơn và vị trí nút tưới nước */
+        .tree-container {
+            position: relative;
+            padding: 20px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .tree-image {
+            width: 240px;
+            height: 240px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+        }
+        
+        /* Điều chỉnh vị trí nút tưới nước sang bên phải */
+        .water-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+        }
+        
+        /* Cập nhật vị trí hiệu ứng tưới nước */
+        #watering-gif {
+            position: absolute;
+            width: 80px;
+            height: 120px;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        
+        /* CSS cho popup chúc mừng */
+        #popup-congrats img {
+            width: 120px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        
+        /* CSS cho thống kê thu gọn */
+        .stats-container {
+            position: relative;
+        }
+        
+        .stats-toggle-button {
+            position: absolute;
+            top: -5px;
+            right: 0;
+            background: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+        
+        .stats-content {
+            display: none;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* CSS cho điều hướng ngày */
+        .date-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px 0;
+        }
+        
+        .date-nav-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        .current-time {
+            margin-top: 5px;
+            padding: 5px 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Responsive CSS */
+        @media screen and (max-width: 768px) {
+            .profile-container {
+                padding: 5px 8px;
+            }
+            
+            .profile-container img {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .tab img {
+                width: 25px;
+                height: 25px;
+            }
+            
+            .tree-image {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .water-button {
+                width: 50px;
+                height: 50px;
+                right: 5px;
+            }
+        }
+
+        /* CSS cho hiệu ứng pháo hoa khi vote good */
+        .fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        
+        .firework {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            animation: firework-core 3s forwards;
+        }
+        
+        .firework-ray {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        
+        @keyframes firework-core {
+            0% { transform: translate(-50%, -50%) scale(0.1); opacity: 1; }
+            5% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            10% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.2; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+        
+        /* CSS cho hệ thống cấp độ */
+        .level-up-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #8A2387, #E94057, #F27121);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            z-index: 10000;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            max-width: 300px;
+            animation: levelUpPop 0.5s ease-out forwards;
+        }
+        
+        @keyframes levelUpPop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            70% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        .level-up-notification h2 {
+            color: #FFEB3B;
+            margin: 10px 0;
+        }
+        
+        .level-up-notification .level {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #FFEB3B;
+            margin: 10px 0;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        
+        .level-up-notification .message {
+            font-size: 0.9em;
+            margin-top: 15px;
+        }
+        
+        .level-up-notification .close-button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .level-up-notification .close-button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* CSS cho hệ thống đề xuất mục tiêu */
+        .goal-suggestion {
+            background: linear-gradient(135deg, #2980b9, #2c3e50);
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            border-left: 3px solid #3498db;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .goal-suggestion h3 {
+            color: #3498db;
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+        
+        .goal-description {
+            margin: 10px 0;
+        }
+        
+        .goal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .goal-actions button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .goal-actions button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .goal-actions .accept-goal {
+            background: #2ecc71;
+        }
+        
+        .goal-actions .decline-goal {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* CSS cho biểu tượng cây và modal */
+        .tree-icon-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 1000;
+        }
+        
+        .tree-icon-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            animation: pulse 2s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+            100% { box-shadow: 0 4px 20px rgba(76, 175, 80, 0.6); }
+        }
+        
+        .tree-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .tree-modal.active {
+            display: flex;
+        }
+        
+        .tree-modal-content {
+            background: #2D2424;
+            border-radius: 15px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: scaleIn 0.3s forwards;
+        }
+        
+        .tree-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+        
+        .tree-modal-header h2 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+        
+        .tree-modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .tree-display {
+            text-align: center;
+        }
+        
+        .tree-info {
+            margin-top: 20px;
+        }
+        
+        .points {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .level {
+            font-size: 1.1em;
+            color: #FFEB3B;
+            margin-top: 5px;
+        }
+        
+        .progress-to-next-level {
+            margin-top: 10px;
+        }
+        
+        .level-bar {
+            height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .level-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #FFEB3B, #FFC107);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 1s ease;
+        }
+        
+        .level-markers {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: rgba(255,255,255,0.5);
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
     <!-- Thêm profile của 2 em -->
     <div class="profile-container" id="tridung-profile">
-        <img src="images/vit.jpg" alt="Trí Dũng">
-        <div class="profile-info">
+        <div class="profile-info" style="text-align: center; width: 100%;">
+            <img src="images/vit.jpg" alt="Trí Dũng" style="width: 160px; height: 160px;">
             <div class="profile-name">Trí Dũng</div>
             <div class="profile-level">Cấp <span id="tridung-level">1</span></div>
             <div class="xp-bar">
                 <div class="xp-progress" id="tridung-xp-progress" style="width: 0%"></div>
             </div>
         </div>
-        <button onclick="openTimeSettings('tridung')" class="time-settings-button" style="background: none; border: none; color: var(--primary-color); margin-left: auto">
+        <button onclick="openTimeSettings('tridung')" class="time-settings-button" style="background: none; border: none; color: var(--primary-color); position: absolute; right: 10px; top: 10px;">
             <i class="fas fa-clock"></i>
         </button>
     </div>
 
     <div class="profile-container" id="thaoVy-profile" style="display: none;">
-        <img src="images/vy.jpg" alt="Thảo Vy">
-        <div class="profile-info">
+        <div class="profile-info" style="text-align: center; width: 100%;">
+            <img src="images/vy.jpg" alt="Thảo Vy" style="width: 80px; height: 80px;">
             <div class="profile-name">Thảo Vy</div>
             <div class="profile-level">Cấp <span id="thaoVy-level">1</span></div>
             <div class="xp-bar">
                 <div class="xp-progress" id="thaoVy-xp-progress" style="width: 0%"></div>
             </div>
         </div>
-        <button onclick="openTimeSettings('thaoVy')" class="time-settings-button" style="background: none; border: none; color: var(--primary-color); margin-left: auto">
+        <button onclick="openTimeSettings('thaoVy')" class="time-settings-button" style="background: none; border: none; color: var(--primary-color); position: absolute; right: 10px; top: 10px;">
             <i class="fas fa-clock"></i>
         </button>
     </div>
@@ -471,7 +1298,19 @@
     <div class="container">
         <div class="header">
             <h1>Thời gian biểu cho bé</h1>
-            <div class="current-time"></div>
+            
+            <!-- Thêm điều hướng ngày -->
+            <div class="date-navigation">
+                <button class="date-nav-button" onclick="navigateDate(-1)" title="Ngày trước đó">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div id="current-date">
+                    <span class="current-time"></span>
+                </div>
+                <button class="date-nav-button" onclick="navigateDate(1)" title="Ngày tiếp theo">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
         </div>
 
         <div class="tabs">
@@ -485,7 +1324,37 @@
             </div>
         </div>
 
-        <!-- Thử thách tuần này - Di chuyển lên trên -->
+        <!-- Thi đua tuần này - Đặt lên trên thử thách tuần -->
+        <div class="weekly-competition">
+            <h3><i class="fas fa-medal"></i> Thi đua tuần này</h3>
+            <div class="competition-content">
+                <div class="competitor">
+                    <div style="position: relative; display: inline-block;">
+                        <img src="images/vit.jpg" class="competitor-img" alt="Trí Dũng">
+                        <div class="competitor-level" id="competition-tridung-level">1</div>
+                    </div>
+                    <div class="competitor-score" id="competition-tridung-score">0</div>
+                    <div class="score-bar">
+                        <div class="score-fill" id="competition-tridung-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="vs-label">VS</div>
+                
+                <div class="competitor">
+                    <div style="position: relative; display: inline-block;">
+                        <img src="images/vy.jpg" class="competitor-img" alt="Thảo Vy">
+                        <div class="competitor-level" id="competition-thaoVy-level">1</div>
+                    </div>
+                    <div class="competitor-score" id="competition-thaoVy-score">0</div>
+                    <div class="score-bar">
+                        <div class="score-fill" id="competition-thaoVy-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thử thách tuần này - Di chuyển xuống dưới thi đua -->
         <div class="weekly-challenge-container">
             <h3><i class="fas fa-trophy"></i> Thử thách tuần này</h3>
             <div class="challenge-description" id="current-challenge">
@@ -510,54 +1379,44 @@
             <div class="task-list"></div>
         </div>
     
-        <!-- Thay thế phần div cây cũ bằng container mới -->
-        <div class="tree-container">
-            <img id="tree-img" src="images/tree_day1.png" class="tree-image" alt="Cây phát triển">
-            <div class="tree-name" id="tree-name">
-                Cây của bé Trí Dũng
-            </div>
-            <div id="tree-status" style="font-weight:bold; color:#FFEB3B; margin:5px 0;">
-                Cây cần nước để phát triển!
-            </div>
-            <div style="margin-top:5px;">
-                <span style="font-weight:bold;">Lượt tưới nước: <span id="water-units">0</span></span>
-            </div>
-            <button class="water-button" onclick="waterTree()" title="Tưới nước cho cây">
-                💧
-            </button>
-            <img id="watering-gif" src="images/water.gif" style="display:none; position:absolute; z-index:10;"/>
+        <!-- Biểu tượng cây khi click vào sẽ hiển thị modal cây -->
+        <div class="tree-icon-button" id="tree-icon">
+            <i class="fas fa-tree"></i>
         </div>
         
-        <!-- Thống kê kết quả theo tuần -->
+        <!-- Thống kê kết quả thu gọn -->
         <div class="stats-container">
-            <div class="stats-header">
-                <h3><i class="fas fa-chart-bar"></i> Thống kê tuần này</h3>
-                <button onclick="toggleStatsView()" class="stats-view-toggle" style="background: none; border: none; color: white;">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
-            </div>
+            <button onclick="toggleStatsView()" class="stats-toggle-button" title="Xem thống kê">
+                <i class="fas fa-chart-bar"></i>
+            </button>
             
-            <div class="stats-child-toggle">
-                <button class="stats-child-btn active" onclick="switchStatsChild('tridung')">Trí Dũng</button>
-                <button class="stats-child-btn" onclick="switchStatsChild('thaoVy')">Thảo Vy</button>
-            </div>
-            
-            <div class="stats-body">
-                <div class="stats-row">
-                    <div class="stats-label">Tốt:</div>
-                    <div class="stats-value" id="stats-good">0</div>
+            <div id="stats-content" class="stats-content">
+                <div class="stats-header">
+                    <h3>Thống kê tuần này</h3>
                 </div>
-                <div class="stats-row">
-                    <div class="stats-label">Chấp nhận được:</div>
-                    <div class="stats-value" id="stats-neutral">0</div>
+                
+                <div class="stats-child-toggle">
+                    <button class="stats-child-btn active" onclick="switchStatsChild('tridung')">Trí Dũng</button>
+                    <button class="stats-child-btn" onclick="switchStatsChild('thaoVy')">Thảo Vy</button>
                 </div>
-                <div class="stats-row">
-                    <div class="stats-label">Chưa tốt:</div>
-                    <div class="stats-value" id="stats-bad">0</div>
-                </div>
-                <div class="stats-row">
-                    <div class="stats-label">Độ tuân thủ:</div>
-                    <div class="stats-value" id="stats-compliance">0%</div>
+                
+                <div class="stats-body">
+                    <div class="stats-row">
+                        <div class="stats-label">Tốt:</div>
+                        <div class="stats-value" id="stats-good">0</div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stats-label">Chấp nhận được:</div>
+                        <div class="stats-value" id="stats-neutral">0</div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stats-label">Chưa tốt:</div>
+                        <div class="stats-value" id="stats-bad">0</div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stats-label">Độ tuân thủ:</div>
+                        <div class="stats-value" id="stats-compliance">0%</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -596,6 +1455,51 @@
                     <!-- Nội dung sẽ được tạo bằng JavaScript -->
                 </div>
                 <button class="save-times-button" onclick="saveTimeSettings()">Lưu thay đổi</button>
+            </div>
+        </div>
+
+        <!-- Modal hiển thị cây -->
+        <div class="tree-modal" id="tree-modal">
+            <div class="tree-modal-content">
+                <div class="tree-modal-header">
+                    <h2>Cây của bé</h2>
+                    <button class="tree-modal-close" id="close-tree-modal">&times;</button>
+                </div>
+                <div class="tree-display">
+                    <div class="tree-container">
+                        <img id="tree-img" src="images/tree_day1.png" class="tree-image" alt="Cây phát triển">
+                        <div id="tree-status" style="font-weight:bold; color:#FFEB3B; margin:5px 0;">
+                            Cây cần nước để phát triển!
+                        </div>
+                        <div style="margin-top:5px;">
+                            <span style="font-weight:bold;">Lượt tưới nước: <span id="water-units">0</span></span>
+                        </div>
+                        <button class="water-button" onclick="waterTree()" title="Tưới nước cho cây">
+                            💧
+                        </button>
+                        <img id="watering-gif" src="images/water.gif" style="display:none; position:absolute; width: 80px; height: 120px; top: 40%; left: 50%; transform: translateX(-50%); z-index: 10;"/>
+                    </div>
+                    <div class="tree-name" id="tree-name">
+                        Cây của bé Trí Dũng
+                    </div>
+                    <div class="tree-info">
+                        <div class="points">
+                            <span id="tree-points">0</span> điểm
+                        </div>
+                        <div class="level">
+                            Cấp <span id="tree-level-display">1</span>
+                        </div>
+                        <div class="progress-to-next-level">
+                            <div class="level-bar">
+                                <div class="level-progress" id="tree-level-progress" style="width: 0%"></div>
+                            </div>
+                            <div class="level-markers">
+                                <span>0%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -680,8 +1584,33 @@
 
         // Đánh giá nhiệm vụ và cập nhật thống kê
         function rateTask(childName, taskId, rating) {
+            // Format ngày đang xem để lưu đánh giá
+            const dateString = viewDate.toISOString().split('T')[0];
             const now = new Date();
             const today = now.toISOString().split('T')[0];
+            
+            // Kiểm tra không cho đánh giá nhiệm vụ trong tương lai
+            if (dateString > today) {
+                alert("Không thể đánh giá nhiệm vụ trong tương lai!");
+                return;
+            }
+            
+            // Nếu là ngày hiện tại, kiểm tra không cho đánh giá nhiệm vụ chưa đến giờ
+            if (dateString === today) {
+                const task = tasks[childName].find(t => t.id === taskId);
+                if (task) {
+                    const currentHour = now.getHours();
+                    const currentMinute = now.getMinutes();
+                    const taskHour = parseInt(task.time.split(':')[0]);
+                    const taskMinute = parseInt(task.time.split(':')[1]);
+                    
+                    // Nếu thời gian hiện tại chưa đến giờ của nhiệm vụ
+                    if (currentHour < taskHour || (currentHour === taskHour && currentMinute < taskMinute)) {
+                        alert(`Chưa đến giờ thực hiện nhiệm vụ "${task.name}" (${task.time})!`);
+                        return;
+                    }
+                }
+            }
             
             // Kiểm tra mật khẩu nếu không phải là môi trường phát triển
             if (!window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
@@ -692,22 +1621,34 @@
                 }
             }
             
-            // Lưu đánh giá
+            // Lưu đánh giá cho ngày đang xem
             let childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
             if (!childData.tasks) childData.tasks = {};
-            if (!childData.tasks[today]) childData.tasks[today] = {};
+            if (!childData.tasks[dateString]) childData.tasks[dateString] = {};
             
             // Cập nhật đánh giá và thống kê
-            const previousRating = childData.tasks[today][taskId];
-            childData.tasks[today][taskId] = rating;
+            const previousRating = childData.tasks[dateString][taskId];
+            childData.tasks[dateString][taskId] = rating;
             
-            // Xử lý thống kê tuần
-            updateWeeklyStats(childName, rating, previousRating);
+            // Xử lý thống kê tuần nếu đang xem ngày hiện tại
+            if (dateOffset === 0) {
+                updateWeeklyStats(childName, rating, previousRating);
+            }
             
-            // Tính điểm
+            // Tính điểm và cập nhật cấp độ
+            let pointsEarned = 0;
+            
             if (rating === 'good') {
-                // Thêm lượt tưới nước khi hoàn thành tốt
-                addWaterCredits(1);
+                // Thêm điểm cho đánh giá tốt
+                pointsEarned = POINTS.good;
+                
+                // Thêm lượt tưới nước nếu đang xem ngày hiện tại
+                if (dateOffset === 0) {
+                    addWaterCredits(1);
+                    
+                    // Tạo hiệu ứng pháo hoa khi được vote good
+                    createFireworks();
+                }
                 
                 // Phát âm thanh khen ngợi
                 const task = tasks[childName].find(t => t.id === taskId);
@@ -715,9 +1656,14 @@
                     playAudio(task.audio);
                 }
                 
-                // Hiển thị popup chúc mừng
-                showCongratulation(task.name, childName);
+                // Hiển thị popup chúc mừng nếu đang xem ngày hiện tại
+                if (dateOffset === 0) {
+                    showCongratulation(task.name, childName);
+                }
             } else if (rating === 'neutral') {
+                // Thêm điểm cho đánh giá trung bình
+                pointsEarned = POINTS.neutral;
+                
                 // Phát âm thanh "cố gắng"
                 playAudio("ban_co_gang_vao_lan_sau_nhe.mp3");
             } else if (rating === 'bad') {
@@ -725,17 +1671,35 @@
                 playAudio("chua_tot.mp3");
             }
             
+            // Nếu đang xem ngày hiện tại, thêm điểm kinh nghiệm
+            if (dateOffset === 0 && pointsEarned > 0) {
+                addExperiencePoints(childName, pointsEarned);
+            }
+            
             // Lưu dữ liệu
             localStorage.setItem(`${childName}Data`, JSON.stringify(childData));
             
             // Cập nhật giao diện
             updateTaskDisplay();
+            
+            // Cập nhật hiển thị thống kê
             updateStatsDisplay();
             
-            // Kiểm tra và cập nhật huy hiệu
-            checkBadges(childName);
+            // Cập nhật tiến độ thử thách tuần nếu đây là nhiệm vụ đi ngủ
+            if ((childName === 'tridung' && taskId === 'td6') || 
+                (childName === 'thaoVy' && taskId === 'tv6')) {
+                updateWeeklyChallengeProgress();
+            }
+            
+            // Kiểm tra và cập nhật huy hiệu nếu đang xem ngày hiện tại
+            if (dateOffset === 0) {
+                checkBadges(childName);
+            }
+            
+            // Cập nhật điểm thi đua
+            updateCompetitionScores(childName, rating);
         }
-        
+
         // Cập nhật thống kê tuần
         function updateWeeklyStats(childName, newRating, previousRating) {
             // Tải thống kê hiện tại
@@ -906,8 +1870,8 @@
                 list.innerHTML = '';
             });
             
-            // Lấy ngày hiện tại
-            const today = new Date().toISOString().split('T')[0];
+            // Format ngày theo chuẩn ISO để so sánh với dữ liệu lưu trữ
+            const viewDateString = viewDate.toISOString().split('T')[0];
             
             // Hiển thị nhiệm vụ cho từng bé
             for (const childName in tasks) {
@@ -917,8 +1881,9 @@
                 if (!taskList) continue;
                 
                 tasks[childName].forEach(task => {
-                    const rating = childData.tasks && childData.tasks[today] ? 
-                                   childData.tasks[today][task.id] : null;
+                    // Lấy đánh giá của ngày đang xem
+                    const rating = childData.tasks && childData.tasks[viewDateString] ? 
+                                   childData.tasks[viewDateString][task.id] : null;
                     
                     const taskElement = document.createElement('div');
                     taskElement.className = `task ${rating ? 'completed-' + rating : ''}`;
@@ -946,8 +1911,11 @@
                     taskList.appendChild(taskElement);
                 });
             }
+            
+            // Cập nhật tiến độ thử thách tuần
+            updateWeeklyChallengeProgress();
         }
-
+        
         // Khởi tạo ứng dụng
         document.addEventListener('DOMContentLoaded', function() {
             // Tải thời gian tùy chỉnh từ localStorage
@@ -967,6 +1935,9 @@
             
             // Tải dữ liệu cây
             loadData();
+            
+            // Cập nhật hiển thị ngày đang xem
+            updateViewDateDisplay();
             
             // Cập nhật hiển thị nhiệm vụ
             updateTaskDisplay();
@@ -1014,6 +1985,49 @@
             if (document.getElementById("water-units")) {
                 document.getElementById("water-units").textContent = waterCredits || 0;
             }
+            
+            // Cập nhật tiến độ thử thách tuần
+            updateWeeklyChallengeProgress();
+            
+            // Yêu cầu quyền thông báo khi trang web được tải
+            requestNotificationPermission();
+            
+            // Cập nhật hiển thị cây
+            updateTreeDisplay();
+            
+            // Cập nhật hiển thị lượt tưới nước
+            if (document.getElementById('water-units')) {
+                document.getElementById('water-units').textContent = waterCredits;
+            }
+            
+            // Thêm sự kiện cho biểu tượng cây và nút đóng modal
+            const treeIcon = document.getElementById('tree-icon');
+            const treeModal = document.getElementById('tree-modal');
+            const closeTreeModal = document.getElementById('close-tree-modal');
+            
+            if (treeIcon) {
+                treeIcon.addEventListener('click', function() {
+                    treeModal.classList.add('active');
+                    // Cập nhật hiển thị cây khi mở modal
+                    updateTreeDisplay();
+                });
+            }
+            
+            if (closeTreeModal) {
+                closeTreeModal.addEventListener('click', function() {
+                    treeModal.classList.remove('active');
+                });
+            }
+            
+            // Đóng modal khi click ra ngoài
+            treeModal.addEventListener('click', function(e) {
+                if (e.target === treeModal) {
+                    treeModal.classList.remove('active');
+                }
+            });
+            
+            // Cập nhật hiển thị cây chỉ trong modal
+            updateTreeDisplay();
         });
 
         // Các hàm khác vẫn giữ nguyên...
@@ -1061,26 +2075,26 @@
             if (treeName) {
                 treeName.textContent = `Cây của bé ${childName === 'tridung' ? 'Trí Dũng' : 'Thảo Vy'}`;
             }
+            
+            // Cập nhật tiến độ thử thách tuần cho bé được chọn
+            updateWeeklyChallengeProgress();
+            
+            // Cập nhật hiển thị thống kê
+            updateStatsDisplay();
+            
+            // Cập nhật thông tin cây trong modal
+            updateTreeDisplay();
         }
 
         // Hàm cập nhật thời gian hiện tại
         function updateCurrentTime() {
             const now = new Date();
-            const options = { 
-                weekday: 'long', 
-                day: 'numeric', 
-                month: 'numeric', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
-            const timeString = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-            const dateString = now.toLocaleDateString('vi-VN', options);
             
-            const timeElements = document.querySelectorAll('.current-time');
-            timeElements.forEach(el => {
-                el.textContent = `${timeString}, ${dateString.charAt(0).toUpperCase() + dateString.slice(1)}`;
-            });
+            // Nếu đang xem ngày hiện tại, cập nhật viewDate
+            if (dateOffset === 0) {
+                viewDate = now;
+                updateViewDateDisplay();
+            }
             
             // Kiểm tra thông báo nhiệm vụ
             checkTaskNotifications();
@@ -1184,6 +2198,29 @@
                     treeStatus.textContent = "Cây đã phát triển hoàn toàn!";
                     treeStatus.style.color = "#4CAF50";
                 }
+            }
+            
+            // Cập nhật thông tin cấp độ trong modal
+            const treeLevelDisplay = document.getElementById('tree-level-display');
+            if (treeLevelDisplay) {
+                treeLevelDisplay.textContent = treeLevel;
+            }
+            
+            // Cập nhật tiến trình cấp độ
+            const treeLevelProgress = document.getElementById('tree-level-progress');
+            if (treeLevelProgress) {
+                const progressPercent = ((treeLevel - 1) / 6) * 100;
+                treeLevelProgress.style.width = `${progressPercent}%`;
+            }
+            
+            // Cập nhật điểm trong modal
+            const currentChild = document.querySelector('.tab.active').getAttribute('data-child');
+            const childData = JSON.parse(localStorage.getItem(`${currentChild}Data`) || '{}');
+            const points = childData.points || 0;
+            
+            const treePoints = document.getElementById('tree-points');
+            if (treePoints) {
+                treePoints.textContent = points;
             }
         }
         
@@ -1410,20 +2447,391 @@
         
         // Chuyển đổi hiển thị thống kê
         function toggleStatsView() {
-            // Animation xoay biểu tượng
-            const toggleBtn = document.querySelector('.stats-view-toggle i');
-            toggleBtn.style.transition = 'transform 0.5s';
-            toggleBtn.style.transform = 'rotate(180deg)';
+            const statsContent = document.getElementById('stats-content');
             
-            setTimeout(() => {
-                toggleBtn.style.transform = 'rotate(360deg)';
-            }, 500);
+            if (statsContent.style.display === 'none' || !statsContent.style.display) {
+                statsContent.style.display = 'block';
+                
+                // Animation xoay biểu tượng
+                const toggleBtn = document.querySelector('.stats-toggle-button i');
+                toggleBtn.style.transition = 'transform 0.3s';
+                toggleBtn.style.transform = 'rotate(180deg)';
+                
+                setTimeout(() => {
+                    toggleBtn.style.transform = '';
+                }, 300);
+            } else {
+                statsContent.style.display = 'none';
+            }
+            
+            // Cập nhật hiển thị thống kê
+            updateStatsDisplay();
         }
+        
+        // Biến lưu trữ ngày hiện tại đang xem
+        let viewDate = new Date();
+        let dateOffset = 0; // Offset từ ngày hiện tại
 
-        // Yêu cầu quyền thông báo khi trang web được tải
-        document.addEventListener('DOMContentLoaded', function() {
-            requestNotificationPermission();
-        });
+        // Hàm điều hướng ngày để xem/sửa dữ liệu ngày khác
+        function navigateDate(offset) {
+            dateOffset += offset;
+            // Giới hạn chỉ xem trong phạm vi ±7 ngày
+            if (dateOffset < -7) dateOffset = -7;
+            if (dateOffset > 7) dateOffset = 7;
+            
+            // Tính ngày mới
+            viewDate = new Date();
+            viewDate.setDate(viewDate.getDate() + dateOffset);
+            
+            // Cập nhật hiển thị ngày và dữ liệu
+            updateViewDateDisplay();
+            updateTaskDisplay();
+        }
+        
+        // Cập nhật hiển thị ngày đang xem
+        function updateViewDateDisplay() {
+            const options = { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'numeric', 
+                year: 'numeric'
+            };
+            
+            // Định dạng ngày
+            let dateString = viewDate.toLocaleDateString('vi-VN', options);
+            dateString = dateString.charAt(0).toUpperCase() + dateString.slice(1);
+            
+            // Thêm thông tin thời gian
+            const timeString = viewDate.toLocaleTimeString('vi-VN', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            // Đánh dấu nếu đang xem ngày khác với hôm nay
+            let displayText = `${timeString}, ${dateString}`;
+            if (dateOffset !== 0) {
+                const dayWord = dateOffset < 0 ? "trước" : "sau";
+                const absDays = Math.abs(dateOffset);
+                displayText += ` (${absDays} ngày ${dayWord})`;
+            }
+            
+            // Cập nhật hiển thị
+            document.querySelector('.current-time').textContent = displayText;
+        }
+        
+        // Biến lưu trữ thử thách tuần
+        let weeklyChallenge = {
+            target: 3,
+            progress: 0,
+            taskType: 'di_ngu',  // ID của nhiệm vụ đi ngủ
+            completed: false
+        };
+        
+        // Cập nhật tiến độ thử thách tuần
+        function updateWeeklyChallengeProgress() {
+            // Tải dữ liệu thử thách từ localStorage
+            const savedChallenge = localStorage.getItem('weeklyChallenge');
+            if (savedChallenge) {
+                weeklyChallenge = JSON.parse(savedChallenge);
+            }
+            
+            // Nếu thử thách đã hoàn thành, chỉ cập nhật hiển thị
+            if (weeklyChallenge.completed) {
+                document.getElementById('challenge-progress-fill').style.width = '100%';
+                document.getElementById('challenge-progress-text').textContent = `${weeklyChallenge.target}/${weeklyChallenge.target}`;
+                return;
+            }
+            
+            // Tính tiến độ nhiệm vụ đi ngủ đã hoàn thành tốt
+            let progress = 0;
+            
+            // Kiểm tra nhiệm vụ ngủ trong cả dữ liệu của Trí Dũng và Thảo Vy
+            const children = ['tridung', 'thaoVy'];
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+            
+            // ID nhiệm vụ đi ngủ
+            const sleepTaskIds = {
+                'tridung': 'td6',  // ID nhiệm vụ đi ngủ của Trí Dũng
+                'thaoVy': 'tv6'    // ID nhiệm vụ đi ngủ của Thảo Vy
+            };
+            
+            // Kiểm tra dữ liệu trong khoảng 7 ngày gần đây
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - 6);
+            
+            // Duyệt qua từng ngày trong 7 ngày gần đây
+            for (let d = new Date(startDate); d <= now; d.setDate(d.getDate() + 1)) {
+                const dateStr = d.toISOString().split('T')[0];
+                
+                // Kiểm tra dữ liệu của mỗi bé
+                children.forEach(child => {
+                    const childData = JSON.parse(localStorage.getItem(`${child}Data`) || '{}');
+                    if (childData.tasks && childData.tasks[dateStr]) {
+                        // Kiểm tra nhiệm vụ đi ngủ
+                        const sleepTask = childData.tasks[dateStr][sleepTaskIds[child]];
+                        if (sleepTask === 'good') {
+                            progress++;
+                        }
+                    }
+                });
+            }
+            
+            // Giới hạn tiến độ không vượt quá mục tiêu
+            if (progress > weeklyChallenge.target) {
+                progress = weeklyChallenge.target;
+            }
+            
+            // Cập nhật biến thử thách
+            weeklyChallenge.progress = progress;
+            
+            // Kiểm tra hoàn thành
+            if (progress >= weeklyChallenge.target) {
+                weeklyChallenge.completed = true;
+                completeWeeklyChallenge();
+            }
+            
+            // Lưu thử thách
+            localStorage.setItem('weeklyChallenge', JSON.stringify(weeklyChallenge));
+            
+            // Cập nhật hiển thị
+            const progressPercentage = (progress / weeklyChallenge.target) * 100;
+            document.getElementById('challenge-progress-fill').style.width = `${progressPercentage}%`;
+            document.getElementById('challenge-progress-text').textContent = `${progress}/${weeklyChallenge.target}`;
+        }
+        
+        // Hoàn thành thử thách tuần
+        function completeWeeklyChallenge() {
+            // Thêm phần thưởng
+            addWaterCredits(2);
+            
+            // Hiệu ứng
+            setTimeout(() => {
+                triggerFireworks();
+                playAudio('firework.mp3');
+                
+                // Thông báo
+                alert("Chúc mừng! Bé đã hoàn thành thử thách tuần này và nhận được 2 lượt tưới nước đặc biệt!");
+            }, 1000);
+        }
+        
+        // Đặt lại thử thách tuần
+        function resetWeeklyChallenge() {
+            // Kiểm tra xác nhận
+            const pin = prompt("Nhập mã PIN để xác nhận đặt lại thử thách (****)");
+            if (pin !== "2022") {
+                alert("Mã PIN không đúng!");
+                return;
+            }
+            
+            if (confirm("Bạn có chắc chắn muốn đặt lại thử thách tuần không?")) {
+                weeklyChallenge = {
+                    target: 3,
+                    progress: 0,
+                    taskType: 'di_ngu',
+                    completed: false
+                };
+                
+                // Lưu thử thách mới
+                localStorage.setItem('weeklyChallenge', JSON.stringify(weeklyChallenge));
+                
+                // Cập nhật hiển thị
+                updateWeeklyChallengeProgress();
+                
+                alert("Đã đặt lại thử thách tuần thành công!");
+            }
+        }
+        
+        // Biến lưu trữ điểm thi đua tuần này
+        let competitionScores = {
+            tridung: 0,
+            thaoVy: 0
+        };
+        
+        // Cập nhật điểm thi đua
+        function updateCompetitionScores(childName, rating) {
+            // Tải điểm hiện tại
+            loadCompetitionScores();
+            
+            // Cộng điểm dựa trên đánh giá
+            if (rating === 'good') {
+                competitionScores[childName] += 2; // 2 điểm cho đánh giá tốt
+            } else if (rating === 'neutral') {
+                competitionScores[childName] += 1; // 1 điểm cho đánh giá chấp nhận được
+            }
+            
+            // Lưu điểm
+            saveCompetitionScores();
+            
+            // Cập nhật hiển thị
+            updateCompetitionDisplay();
+        }
+        
+        // Lưu điểm thi đua
+        function saveCompetitionScores() {
+            localStorage.setItem('competitionScores', JSON.stringify(competitionScores));
+        }
+        
+        // Tải điểm thi đua
+        function loadCompetitionScores() {
+            const savedScores = localStorage.getItem('competitionScores');
+            if (savedScores) {
+                competitionScores = JSON.parse(savedScores);
+            } else {
+                competitionScores = {
+                    tridung: 0,
+                    thaoVy: 0
+                };
+            }
+        }
+        
+        // Cập nhật hiển thị điểm thi đua
+        function updateCompetitionDisplay() {
+            // Hiển thị điểm
+            document.getElementById('competition-tridung-score').textContent = competitionScores.tridung;
+            document.getElementById('competition-thaoVy-score').textContent = competitionScores.thaoVy;
+            
+            // Cập nhật cấp độ hiển thị
+            const tridungData = JSON.parse(localStorage.getItem('tridungData') || '{}');
+            const thaoVyData = JSON.parse(localStorage.getItem('thaoVyData') || '{}');
+            
+            const tridungLevel = calculateLevel(tridungData.points || 0);
+            const thaoVyLevel = calculateLevel(thaoVyData.points || 0);
+            
+            document.getElementById('competition-tridung-level').textContent = tridungLevel;
+            document.getElementById('competition-thaoVy-level').textContent = thaoVyLevel;
+            
+            // Cập nhật thanh điểm
+            const maxScore = Math.max(competitionScores.tridung, competitionScores.thaoVy, 10);
+            document.getElementById('competition-tridung-bar').style.width = `${(competitionScores.tridung / maxScore) * 100}%`;
+            document.getElementById('competition-thaoVy-bar').style.width = `${(competitionScores.thaoVy / maxScore) * 100}%`;
+        }
+        
+        // Đặt lại điểm thi đua
+        function resetCompetitionScores() {
+            // Kiểm tra xác nhận
+            const pin = prompt("Nhập mã PIN để xác nhận đặt lại điểm thi đua (****)");
+            if (pin !== "2022") {
+                alert("Mã PIN không đúng!");
+                return;
+            }
+            
+            if (confirm("Bạn có chắc chắn muốn đặt lại điểm thi đua tuần này không?")) {
+                competitionScores = {
+                    tridung: 0,
+                    thaoVy: 0
+                };
+                saveCompetitionScores();
+                updateCompetitionDisplay();
+                alert("Đã đặt lại điểm thi đua tuần thành công!");
+            }
+        }
+        
+        // Tạo hiệu ứng pháo hoa
+        function createFireworks() {
+            // Tạo container pháo hoa
+            let fireworksContainer = document.createElement('div');
+            fireworksContainer.id = 'fireworks-container';
+            fireworksContainer.style.position = 'fixed';
+            fireworksContainer.style.top = '0';
+            fireworksContainer.style.left = '0';
+            fireworksContainer.style.width = '100%';
+            fireworksContainer.style.height = '100%';
+            fireworksContainer.style.pointerEvents = 'none';
+            fireworksContainer.style.zIndex = '9999';
+            document.body.appendChild(fireworksContainer);
+            
+            // Tạo các màu pháo hoa ngẫu nhiên
+            const colors = ['#FF5252', '#FF4081', '#E040FB', '#7C4DFF', '#536DFE', '#448AFF', '#40C4FF', '#18FFFF', '#64FFDA', '#69F0AE', '#B2FF59', '#EEFF41', '#FFFF00', '#FFD740', '#FFAB40', '#FF6E40'];
+            
+            // Tạo nhiều pháo hoa với các vị trí khác nhau
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    createFirework(fireworksContainer, colors);
+                }, i * 100);
+            }
+            
+            // Xóa container sau 3 giây
+            setTimeout(() => {
+                fireworksContainer.remove();
+            }, 3000);
+        }
+        
+        // Tạo một pháo hoa
+        function createFirework(container, colors) {
+            const x = Math.random() * 100;
+            const y = Math.random() * 60 + 20;
+            const size = Math.random() * 5 + 3;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Tạo pháo hoa
+            const firework = document.createElement('div');
+            firework.style.position = 'absolute';
+            firework.style.left = `${x}%`;
+            firework.style.top = `${y}%`;
+            firework.style.width = `${size}px`;
+            firework.style.height = `${size}px`;
+            firework.style.borderRadius = '50%';
+            firework.style.backgroundColor = color;
+            firework.style.boxShadow = `0 0 ${size * 2}px ${size}px ${color}`;
+            
+            // Thêm animation
+            firework.style.animation = 'explode 1s forwards';
+            
+            // Thêm keyframes nếu chưa có
+            if (!document.getElementById('fireworks-animation')) {
+                const style = document.createElement('style');
+                style.id = 'fireworks-animation';
+                style.innerHTML = `
+                    @keyframes explode {
+                        0% { transform: scale(0); opacity: 0; }
+                        50% { transform: scale(1); opacity: 1; }
+                        100% { transform: scale(1.5); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            container.appendChild(firework);
+            
+            // Tạo tia pháo hoa
+            for (let i = 0; i < 12; i++) {
+                const ray = document.createElement('div');
+                const angle = (i / 12) * 360;
+                const raySize = size * 0.8;
+                
+                ray.style.position = 'absolute';
+                ray.style.width = `${raySize}px`;
+                ray.style.height = `${raySize}px`;
+                ray.style.borderRadius = '50%';
+                ray.style.backgroundColor = color;
+                ray.style.boxShadow = `0 0 ${raySize}px ${raySize / 2}px ${color}`;
+                ray.style.left = `${x}%`;
+                ray.style.top = `${y}%`;
+                ray.style.animation = `fireworkRay${i} 0.8s forwards`;
+                
+                container.appendChild(ray);
+                
+                // Thêm keyframes cho tia
+                if (!document.getElementById(`firework-ray-${i}`)) {
+                    const rayStyle = document.createElement('style');
+                    rayStyle.id = `firework-ray-${i}`;
+                    const distance = 100 + Math.random() * 50;
+                    rayStyle.innerHTML = `
+                        @keyframes fireworkRay${i} {
+                            0% { transform: translate(-50%, -50%) rotate(${angle}deg) translateX(0); opacity: 1; }
+                            100% { transform: translate(-50%, -50%) rotate(${angle}deg) translateX(${distance}px); opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(rayStyle);
+                }
+            }
+            
+            // Xóa pháo hoa sau khi hiệu ứng kết thúc
+            setTimeout(() => {
+                firework.remove();
+            }, 1000);
+        }
     </script>
 </body>
 </html>

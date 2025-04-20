@@ -26,38 +26,72 @@ export class ProfileComponent extends HTMLElement {
         const imagePath = childName === 'tridung' ? './images/vit.jpg' : './images/vy.jpg';
 
         this.shadowRoot.innerHTML = `
-            <style>
-                .profile-container {
-                    display: flex;
-                    align-items: center;
-                    background: white;
-                    padding: 15px;
-                    border-radius: 10px;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        <!-- Cập nhật CSS để điều chỉnh kích thước hình ảnh -->
+        <style>
+            /* CSS cho profile container (cập nhật kích thước hình ảnh) */
+            .profile-container img {
+                width: 50px;  /* Giảm kích thước từ 100px xuống 50px */
+                height: 50px; /* Giảm kích thước từ 100px xuống 50px */
+                border-radius: 10px;
+                object-fit: cover;
+                border: 3px solid #FF7043;
+            }
+            
+            /* CSS cho tab (cập nhật kích thước hình ảnh) */
+            .tabs {
+                display: flex;
+                justify-content: center;
+                margin: 20px 0;
+            }
+            
+            .tab {
+                display: flex;
+                align-items: center;
+                padding: 10px 15px;
+                margin: 0 5px;
+                background-color: rgba(0, 0, 0, 0.3);
+                border-radius: 10px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            
+            .tab.active {
+                background-color: var(--primary-color);
+            }
+            
+            .tab img {
+                width: 30px;  /* Giảm kích thước từ mặc định xuống 30px */
+                height: 30px; /* Giảm kích thước từ mặc định xuống 30px */
+                border-radius: 50%;
+                margin-right: 8px;
+                object-fit: cover;
+                border: 2px solid white;
+            }
+            
+            /* CSS cho popup chúc mừng (chỉnh kích thước hình ảnh) */
+            #popup-congrats img {
+                width: 150px;  /* Giảm kích thước từ 250px xuống 150px */
+                border-radius: 10px;
+                box-shadow: 0 0 10px #888;
+            }
+            
+            /* Thêm CSS responsive cho mobile */
+            @media screen and (max-width: 768px) {
+                .profile-container img {
+                    width: 40px;  /* Giảm kích thước hơn nữa trên mobile */
+                    height: 40px;
                 }
-
-                .profile-image {
-                    width: 60px;
-                    height: 60px;
-                    border-radius: 50%;
-                    margin-right: 15px;
+                
+                .tab img {
+                    width: 25px;  /* Giảm kích thước hơn nữa trên mobile */
+                    height: 25px;
                 }
-
-                .profile-info {
-                    flex: 1;
+                
+                #popup-congrats img {
+                    width: 120px;  /* Giảm kích thước hơn nữa trên mobile */
                 }
-
-                .profile-name {
-                    font-size: 18px;
-                    font-weight: bold;
-                    color: var(--primary-color, #FF7043);
-                }
-
-                .profile-stats {
-                    font-size: 14px;
-                    color: var(--light-text, #795548);
-                }
-            </style>
+            }
+        </style>
 
             <div class="profile-container">
                 <img src="${imagePath}" alt="${displayName}" class="profile-image">

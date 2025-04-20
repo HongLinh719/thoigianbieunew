@@ -655,82 +655,125 @@ function initAdminControls() {
 }
 
 // Fireworks effect
-function triggerFireworks() {
-    // Create container for fireworks
-    let fireworksContainer = document.getElementById('fireworks-container');
-    if (!fireworksContainer) {
-        fireworksContainer = document.createElement('div');
-        fireworksContainer.id = 'fireworks-container';
-        fireworksContainer.style.position = 'fixed';
-        fireworksContainer.style.top = '0';
-        fireworksContainer.style.left = '0';
-        fireworksContainer.style.width = '100%';
-        fireworksContainer.style.height = '100%';
-        fireworksContainer.style.pointerEvents = 'none';
-        fireworksContainer.style.zIndex = '9999';
-        document.body.appendChild(fireworksContainer);
+function triggerFireworks(count = 200) {  // Tăng số lượng pháo hoa mặc định lên 200 (gấp 10 lần so với trước đó)
+    // Tạo container cho pháo hoa
+    let container = document.getElementById('fireworks-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'fireworks-container';
+        container.id = 'fireworks-container';
+        document.body.appendChild(container);
     }
     
-    // Create 10 random fireworks
-    for (let i = 0; i < 10; i++) {
+    // Phát âm thanh pháo hoa
+    const audio = new Audio('audio/firework.mp3');
+    audio.volume = 0.8;  // Đảm bảo âm lượng phù hợp
+    audio.play().catch(e => console.log("Lỗi phát âm thanh:", e));
+    
+    // Màu sắc pháo hoa - thêm nhiều màu hơn
+    const colors = [
+        '#FF5252', '#FF4081', '#E040FB', '#7C4DFF', '#536DFE', 
+        '#448AFF', '#40C4FF', '#18FFFF', '#64FFDA', '#69F0AE', 
+        '#B2FF59', '#EEFF41', '#FFFF00', '#FFD740', '#FFAB40', '#FF6E40',
+        '#FF1744', '#F50057', '#D500F9', '#651FFF', '#3D5AFE',
+        '#2979FF', '#00B0FF', '#00E5FF', '#1DE9B6', '#00E676',
+        '#76FF03', '#C6FF00', '#FFEA00', '#FFC400', '#FF9100', '#FF3D00'
+    ];
+    
+    // Tạo pháo hoa với số lượng lớn hơn và tần suất nhanh hơn
+    for (let i = 0; i < count; i++) {
         setTimeout(() => {
-            createFirework(fireworksContainer);
-        }, i * 300);
+            createFirework(container, colors);
+        }, i * 20); // Giảm thời gian giữa mỗi pháo hoa để tạo hiệu ứng dày đặc hơn
     }
     
-    // Play sound
-    const audio = document.getElementById('audio-congrats');
-    audio.src = 'audio/firework.mp3';
-    audio.play();
-    
-    // Remove container after animation completes
+    // Xóa container sau khi hiệu ứng kết thúc
     setTimeout(() => {
-        if (fireworksContainer.parentNode) {
-            fireworksContainer.parentNode.removeChild(fireworksContainer);
+        if (container && container.parentNode) {
+            container.parentNode.removeChild(container);
         }
-    }, 5000);
+    }, count * 20 + 3000); // Điều chỉnh thời gian hiển thị
 }
 
-function createFirework(container) {
-    const firework = document.createElement('div');
+// Cải tiến hàm tạo pháo hoa
+function createFirework(container, colors) {
+    // Vị trí xuất hiện ngẫu nhiên trên toàn màn hình
     const x = Math.random() * 100;
-    const y = 30 + Math.random() * 40;
+    const y = Math.random() * 80 + 10;
     
+    // Kích thước ngẫu nhiên - tăng kích thước
+    const size = Math.random() * 10 + 5; // Tăng kích thước pháo hoa
+    
+    // Màu ngẫu nhiên
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    
+    // Tạo pháo hoa
+    const firework = document.createElement('div');
+    firework.className = 'firework';
     firework.style.position = 'absolute';
     firework.style.left = `${x}%`;
     firework.style.top = `${y}%`;
-    firework.style.width = '5px';
-    firework.style.height = '5px';
+    firework.style.width = `${size}px`;
+    firework.style.height = `${size}px`;
+    firework.style.backgroundColor = color;
     firework.style.borderRadius = '50%';
-    firework.style.boxShadow = '0 0 10px 5px rgba(255, 165, 0, 0.8)';
-    
-    // Random color
-    const hue = Math.floor(Math.random() * 360);
-    firework.style.backgroundColor = `hsl(${hue}, 100%, 60%)`;
-    
-    // Animation
-    firework.style.animation = 'firework 1s forwards';
-    
-    // Add keyframe animation if it doesn't exist
-    if (!document.getElementById('fireworks-keyframes')) {
-        const style = document.createElement('style');
-        style.id = 'fireworks-keyframes';
-        style.innerHTML = `
-            @keyframes firework {
-                0% { transform: scale(1); opacity: 1; }
-                20% { transform: scale(30); opacity: 0.8; }
-                100% { transform: scale(40); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-    }
+    firework.style.boxShadow = `0 0 ${size * 2}px ${size}px ${color}`;
+    firework.style.zIndex = '9999';
+    firework.style.opacity = '0';
+    firework.style.animation = 'firework-core 3s forwards';
     
     container.appendChild(firework);
     
-    // Remove after animation
+    // Số lượng tia pháo hoa - tăng số lượng
+    const rayCount = Math.floor(Math.random() * 20) + 20; // 20-40 tia (tăng so với trước đó)
+    
+    // Tạo các tia
+    for (let i = 0; i < rayCount; i++) {
+        const angle = (i / rayCount) * 360;
+        const distance = 70 + Math.random() * 200; // 70-270px (tăng khoảng cách)
+        const duration = 0.5 + Math.random() * 1.5; // 0.5-2s (tăng thời gian)
+        
+        const ray = document.createElement('div');
+        ray.className = 'firework-ray';
+        ray.style.position = 'absolute';
+        
+        // Đặt vị trí và style
+        ray.style.left = `${x}%`;
+        ray.style.top = `${y}%`;
+        ray.style.width = `${size * 0.7}px`;
+        ray.style.height = `${size * 0.7}px`;
+        ray.style.backgroundColor = color;
+        ray.style.borderRadius = '50%';
+        ray.style.boxShadow = `0 0 ${size}px ${size / 2}px ${color}`;
+        ray.style.transform = `translate(-50%, -50%)`;
+        ray.style.opacity = '1';
+        ray.style.zIndex = '9999';
+        
+        // Thiết lập animation với CSS
+        ray.style.transition = `transform ${duration}s ease-out, opacity ${duration}s ease-out`;
+        
+        container.appendChild(ray);
+        
+        // Kích hoạt animation
+        setTimeout(() => {
+            ray.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateX(${distance}px)`;
+            ray.style.opacity = '0';
+        }, 10);
+        
+        // Xóa tia sau khi animation kết thúc
+        setTimeout(() => {
+            if (ray && ray.parentNode) {
+                ray.parentNode.removeChild(ray);
+            }
+        }, duration * 1000);
+    }
+    
+    // Xóa pháo hoa gốc
     setTimeout(() => {
-        container.removeChild(firework);
-    }, 1000);
+        if (firework && firework.parentNode) {
+            firework.parentNode.removeChild(firework);
+        }
+    }, 2000);
 }
 
 // Initialize admin controls and weekly challenge when the document is loaded
@@ -883,4 +926,694 @@ function addAudioButtonsToTasks() {
             taskNameElement.appendChild(audioButton);
         }
     });
+}
+
+// Hệ thống tăng cấp cho cả hai bé
+const LEVEL_THRESHOLDS = {
+    1: 0,    // Cấp 1: 0 điểm
+    2: 50,   // Cấp 2: 50 điểm
+    3: 150,  // Cấp 3: 150 điểm
+    4: 300,  // Cấp 4: 300 điểm
+    5: 500,  // Cấp 5: 500 điểm
+    6: 750,  // Cấp 6: 750 điểm
+    7: 1000, // Cấp 7: 1000 điểm
+    8: 1500, // Cấp 8: 1500 điểm
+    9: 2000, // Cấp 9: 2000 điểm
+    10: 3000 // Cấp 10: 3000 điểm
+};
+
+// Tính toán cấp độ dựa trên điểm
+function calculateLevel(points) {
+    let level = 1;
+    for (const [lvl, threshold] of Object.entries(LEVEL_THRESHOLDS)) {
+        if (points >= threshold) {
+            level = parseInt(lvl);
+        } else {
+            break;
+        }
+    }
+    return level;
+}
+
+// Tính toán tiến độ phần trăm đến cấp độ tiếp theo
+function calculateLevelProgress(points) {
+    const currentLevel = calculateLevel(points);
+    const nextLevel = currentLevel + 1;
+    
+    // Nếu đã đạt cấp độ tối đa
+    if (!LEVEL_THRESHOLDS[nextLevel]) {
+        return 100;
+    }
+    
+    const currentThreshold = LEVEL_THRESHOLDS[currentLevel] || 0;
+    const nextThreshold = LEVEL_THRESHOLDS[nextLevel] || currentThreshold + 100;
+    
+    const pointsNeeded = nextThreshold - currentThreshold;
+    const pointsEarned = points - currentThreshold;
+    
+    return Math.min(100, Math.floor((pointsEarned / pointsNeeded) * 100));
+}
+
+// Hiển thị thông báo tăng cấp
+function showLevelUpNotification(childName, newLevel) {
+    // Tạo phần tử thông báo
+    const notification = document.createElement('div');
+    notification.className = 'level-up-notification';
+    
+    // Xác định tên hiển thị
+    const displayName = childName === 'tridung' ? 'Trí Dũng' : 'Thảo Vy';
+    
+    // Tạo nội dung thông báo
+    notification.innerHTML = `
+        <img src="images/gift.png" alt="Level Up" width="80">
+        <h2>Chúc mừng!</h2>
+        <p>Bé ${displayName} đã đạt</p>
+        <div class="level">CẤP ${newLevel}</div>
+        <p class="message">Hãy tiếp tục hoàn thành tốt các nhiệm vụ để đạt cấp độ cao hơn!</p>
+        <button class="close-button" onclick="this.parentNode.remove()">Đóng</button>
+    `;
+    
+    // Thêm vào trang
+    document.body.appendChild(notification);
+    
+    // Hiệu ứng pháo hoa
+    triggerFireworks(50); // 50 pháo hoa
+    
+    // Phát âm thanh
+    playAudio('firework.mp3');
+    
+    // Tự động đóng sau 5 giây
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Cập nhật hiển thị cấp độ
+function updateLevelDisplay(childName) {
+    // Lấy dữ liệu của bé
+    const childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
+    const points = childData.points || 0;
+    
+    // Tính cấp độ và tiến độ
+    const level = calculateLevel(points);
+    const progress = calculateLevelProgress(points);
+    
+    // Cập nhật hiển thị cấp độ
+    const levelElement = document.getElementById(`${childName}-level`);
+    if (levelElement) {
+        levelElement.textContent = level;
+    }
+    
+    // Cập nhật thanh tiến độ
+    const progressElement = document.getElementById(`${childName}-xp-progress`);
+    if (progressElement) {
+        progressElement.style.width = `${progress}%`;
+    }
+}
+
+// Cải tiến hiệu ứng pháo hoa
+function triggerFireworks(count = 200) {  // Tăng số lượng pháo hoa mặc định lên 200 (gấp 10 lần so với trước đó)
+    // Tạo container cho pháo hoa
+    let container = document.getElementById('fireworks-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'fireworks-container';
+        container.id = 'fireworks-container';
+        document.body.appendChild(container);
+    }
+    
+    // Phát âm thanh pháo hoa
+    const audio = new Audio('audio/firework.mp3');
+    audio.volume = 0.8;  // Đảm bảo âm lượng phù hợp
+    audio.play().catch(e => console.log("Lỗi phát âm thanh:", e));
+    
+    // Màu sắc pháo hoa - thêm nhiều màu hơn
+    const colors = [
+        '#FF5252', '#FF4081', '#E040FB', '#7C4DFF', '#536DFE', 
+        '#448AFF', '#40C4FF', '#18FFFF', '#64FFDA', '#69F0AE', 
+        '#B2FF59', '#EEFF41', '#FFFF00', '#FFD740', '#FFAB40', '#FF6E40',
+        '#FF1744', '#F50057', '#D500F9', '#651FFF', '#3D5AFE',
+        '#2979FF', '#00B0FF', '#00E5FF', '#1DE9B6', '#00E676',
+        '#76FF03', '#C6FF00', '#FFEA00', '#FFC400', '#FF9100', '#FF3D00'
+    ];
+    
+    // Tạo pháo hoa với số lượng lớn hơn và tần suất nhanh hơn
+    for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+            createFirework(container, colors);
+        }, i * 20); // Giảm thời gian giữa mỗi pháo hoa để tạo hiệu ứng dày đặc hơn
+    }
+    
+    // Xóa container sau khi hiệu ứng kết thúc
+    setTimeout(() => {
+        if (container && container.parentNode) {
+            container.parentNode.removeChild(container);
+        }
+    }, count * 20 + 3000); // Điều chỉnh thời gian hiển thị
+}
+
+// Cải tiến hàm tạo pháo hoa
+function createFirework(container, colors) {
+    // Vị trí xuất hiện ngẫu nhiên trên toàn màn hình
+    const x = Math.random() * 100;
+    const y = Math.random() * 80 + 10;
+    
+    // Kích thước ngẫu nhiên - tăng kích thước
+    const size = Math.random() * 10 + 5; // Tăng kích thước pháo hoa
+    
+    // Màu ngẫu nhiên
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    
+    // Tạo pháo hoa
+    const firework = document.createElement('div');
+    firework.className = 'firework';
+    firework.style.position = 'absolute';
+    firework.style.left = `${x}%`;
+    firework.style.top = `${y}%`;
+    firework.style.width = `${size}px`;
+    firework.style.height = `${size}px`;
+    firework.style.backgroundColor = color;
+    firework.style.borderRadius = '50%';
+    firework.style.boxShadow = `0 0 ${size * 2}px ${size}px ${color}`;
+    firework.style.zIndex = '9999';
+    firework.style.opacity = '0';
+    firework.style.animation = 'firework-core 3s forwards';
+    
+    container.appendChild(firework);
+    
+    // Số lượng tia pháo hoa - tăng số lượng
+    const rayCount = Math.floor(Math.random() * 20) + 20; // 20-40 tia (tăng so với trước đó)
+    
+    // Tạo các tia
+    for (let i = 0; i < rayCount; i++) {
+        const angle = (i / rayCount) * 360;
+        const distance = 70 + Math.random() * 200; // 70-270px (tăng khoảng cách)
+        const duration = 0.5 + Math.random() * 1.5; // 0.5-2s (tăng thời gian)
+        
+        const ray = document.createElement('div');
+        ray.className = 'firework-ray';
+        ray.style.position = 'absolute';
+        
+        // Đặt vị trí và style
+        ray.style.left = `${x}%`;
+        ray.style.top = `${y}%`;
+        ray.style.width = `${size * 0.7}px`;
+        ray.style.height = `${size * 0.7}px`;
+        ray.style.backgroundColor = color;
+        ray.style.borderRadius = '50%';
+        ray.style.boxShadow = `0 0 ${size}px ${size / 2}px ${color}`;
+        ray.style.transform = `translate(-50%, -50%)`;
+        ray.style.opacity = '1';
+        ray.style.zIndex = '9999';
+        
+        // Thiết lập animation với CSS
+        ray.style.transition = `transform ${duration}s ease-out, opacity ${duration}s ease-out`;
+        
+        container.appendChild(ray);
+        
+        // Kích hoạt animation
+        setTimeout(() => {
+            ray.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateX(${distance}px)`;
+            ray.style.opacity = '0';
+        }, 10);
+        
+        // Xóa tia sau khi animation kết thúc
+        setTimeout(() => {
+            if (ray && ray.parentNode) {
+                ray.parentNode.removeChild(ray);
+            }
+        }, duration * 1000);
+    }
+    
+    // Xóa pháo hoa gốc
+    setTimeout(() => {
+        if (firework && firework.parentNode) {
+            firework.parentNode.removeChild(firework);
+        }
+    }, 2000);
+}
+
+// Function to handle task rating with iteration confirmation
+function rateTask(childName, taskId, rating) {
+    // Format ngày đang xem để lưu đánh giá
+    const dateString = viewDate.toISOString().split('T')[0];
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    
+    // Kiểm tra không cho đánh giá nhiệm vụ trong tương lai
+    if (dateString > today) {
+        alert("Không thể đánh giá nhiệm vụ trong tương lai!");
+        return;
+    }
+    
+    // Nếu là ngày hiện tại, kiểm tra không cho đánh giá nhiệm vụ chưa đến giờ
+    if (dateString === today) {
+        const task = tasks[childName].find(t => t.id === taskId);
+        if (task) {
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const taskHour = parseInt(task.time.split(':')[0]);
+            const taskMinute = parseInt(task.time.split(':')[1]);
+            
+            // Nếu thời gian hiện tại chưa đến giờ của nhiệm vụ
+            if (currentHour < taskHour || (currentHour === taskHour && currentMinute < taskMinute)) {
+                alert(`Chưa đến giờ thực hiện nhiệm vụ "${task.name}" (${task.time})!`);
+                return;
+            }
+        }
+    }
+    
+    // Yêu cầu xác nhận nếu đang đánh giá là "good"
+    if (rating === 'good') {
+        // Hỏi xác nhận "Continue to iterate?"
+        const confirmIteration = confirm("Continue to iterate? (Tiếp tục lặp lại nhiệm vụ để thực hiện tốt hơn?)");
+        
+        if (confirmIteration) {
+            // Nếu người dùng muốn tiếp tục lặp lại, không lưu đánh giá và thông báo
+            alert("Hãy tiếp tục thực hiện nhiệm vụ để đạt kết quả tốt nhất!");
+            return;
+        }
+        // Nếu không tiếp tục lặp lại, tiến hành đánh giá và lưu kết quả
+    }
+    
+    // Kiểm tra mật khẩu
+    const pin = prompt('Nhập mã PIN để xác nhận (****)');
+    if (pin !== '1234') { // Thay bằng mã PIN thực tế của bạn
+        alert("Mã PIN không đúng!");
+        return;
+    }
+    
+    // Tiếp tục với việc lưu đánh giá
+    // Lấy dữ liệu hiện tại
+    let assessments = JSON.parse(localStorage.getItem('taskAssessments') || '{}');
+    
+    // Tạo cấu trúc dữ liệu nếu chưa có
+    if (!assessments[dateString]) {
+        assessments[dateString] = {};
+    }
+    if (!assessments[dateString][childName]) {
+        assessments[dateString][childName] = {};
+    }
+    
+    // Lưu đánh giá
+    assessments[dateString][childName][taskId] = {
+        rating: rating,
+        timestamp: new Date().toISOString()
+    };
+    
+    // Cập nhật thống kê tuần
+    updateWeeklyStats(childName, rating);
+    
+    // Cập nhật điểm và thử thách
+    updatePointsAndChallenges(childName, taskId, rating);
+    
+    // Lưu vào localStorage
+    localStorage.setItem('taskAssessments', JSON.stringify(assessments));
+    
+    // Cập nhật giao diện
+    updateTaskDisplay();
+    
+    // Thông báo và phát âm thanh
+    showRatingFeedback(childName, rating);
+}
+
+// Initialize admin controls and weekly challenge when the document is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initWeeklyChallenge();
+    initAdminControls();
+    
+    // Add tasks rating event listeners to update challenge progress
+    document.querySelectorAll('.rating-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const taskId = this.closest('.task').dataset.id;
+            const rating = this.dataset.rating;
+            updateChallengeProgress(taskId, rating);
+        });
+    });
+});
+
+// Cải thiện chức năng phát âm thanh
+function playAudio(filename) {
+    console.log("Đang phát âm thanh:", filename);
+    
+    // Tạo đường dẫn đầy đủ đến file âm thanh
+    const audioPath = `audio/${filename}`;
+    
+    // Kiểm tra xem file âm thanh có tồn tại không
+    const audio = new Audio(audioPath);
+    
+    // Theo dõi quá trình tải âm thanh
+    audio.onloadeddata = function() {
+        console.log("Âm thanh đã được tải:", filename);
+    };
+    
+    // Xử lý lỗi khi tải âm thanh
+    audio.onerror = function(e) {
+        console.error("Lỗi tải âm thanh:", e);
+        console.warn("Không thể tải:", audioPath);
+        alert(`Không thể phát âm thanh "${filename}". Vui lòng kiểm tra kết nối mạng hoặc thiết bị của bạn.`);
+    };
+    
+    // Phát âm thanh và xử lý lỗi với Promise
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            console.log("Âm thanh đang phát:", filename);
+        }).catch(error => {
+            console.warn("Không thể phát âm thanh:", error);
+            
+            // Thông báo theo loại lỗi cụ thể
+            if (error.name === "NotAllowedError") {
+                // Lỗi phát sinh do chính sách bảo mật của trình duyệt
+                alert("Bạn cần tương tác với trang web trước khi phát âm thanh. Vui lòng nhấp vào bất kỳ vị trí nào trên trang.");
+            } else if (error.name === "AbortError") {
+                console.log("Phát âm thanh bị hủy bỏ");
+            } else {
+                // Các lỗi khác
+                alert("Không thể phát âm thanh. Vui lòng kiểm tra kết nối mạng và thiết lập âm thanh trên thiết bị của bạn.");
+            }
+        });
+    }
+    
+    return audio;
+}
+
+// Hàm phát âm thanh khi nhấp vào nút Play
+function playTaskAudio(filename) {
+    // Kiểm tra xem đã có tương tác người dùng chưa
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Kiểm tra trạng thái của AudioContext
+    if (audioContext.state === "suspended") {
+        audioContext.resume().then(() => {
+            playAudio(filename);
+        });
+    } else {
+        playAudio(filename);
+    }
+    
+    // Thêm hiệu ứng chớp nháy cho nút
+    const button = event.currentTarget;
+    button.classList.add('audio-playing');
+    
+    setTimeout(() => {
+        button.classList.remove('audio-playing');
+    }, 500);
+}
+
+// Khởi tạo âm thanh khi trang web được tải
+window.addEventListener('DOMContentLoaded', function() {
+    // Tương tác với AudioContext để "mở khóa" âm thanh trên iOS
+    document.addEventListener('click', function initAudio() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        audioContext.resume().then(() => {
+            console.log('AudioContext đã được kích hoạt thành công!');
+        });
+        
+        // Chỉ cần thực hiện một lần
+        document.removeEventListener('click', initAudio);
+    });
+    
+    // Thêm nút phát âm thanh cho mỗi nhiệm vụ
+    addAudioButtonsToTasks();
+});
+
+// Thêm nút âm thanh cho các nhiệm vụ
+function addAudioButtonsToTasks() {
+    // Thêm nút phát âm thanh cho mỗi nhiệm vụ
+    document.querySelectorAll('.task').forEach(task => {
+        const taskHeader = task.querySelector('.task-header');
+        if (!taskHeader) return;
+        
+        // Tìm tên nhiệm vụ
+        const taskNameElement = taskHeader.querySelector('.task-name');
+        if (!taskNameElement) return;
+        
+        // Xác định file âm thanh dựa trên nhiệm vụ
+        // (Đây là phương pháp tạm thời, lý tưởng nhất là nên lấy từ cấu trúc dữ liệu)
+        const taskName = taskNameElement.textContent.trim();
+        let audioFile = '';
+        
+        if (taskName.includes('Thức dậy')) {
+            audioFile = 'thuc_day_ve_sinh_ca_nhan_di_hoc.mp3';
+        } else if (taskName.includes('Đọc sách')) {
+            audioFile = 'doc_sach_to_mau_hoac_lam_toan.mp3';
+        } else if (taskName.includes('Chơi tự do')) {
+            audioFile = 'choi_tu_do.mp3';
+        } else if (taskName.includes('Ăn tối')) {
+            audioFile = 'an_toi_tai_nha.mp3';
+        } else if (taskName.includes('Vệ sinh')) {
+            audioFile = 've_sinh_ca_nhan_buoi_toi.mp3';
+        } else if (taskName.includes('Đi ngủ')) {
+            audioFile = 'di_ngu.mp3';
+        }
+        
+        if (audioFile) {
+            // Tạo nút phát âm thanh
+            const audioButton = document.createElement('button');
+            audioButton.className = 'play-audio';
+            audioButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+            audioButton.setAttribute('aria-label', 'Phát âm thanh');
+            audioButton.setAttribute('title', 'Nghe hướng dẫn bằng giọng nói');
+            
+            // Thêm sự kiện click
+            audioButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                playTaskAudio(audioFile);
+            });
+            
+            // Thêm vào giao diện
+            taskNameElement.appendChild(audioButton);
+        }
+    });
+}
+
+// Hệ thống tăng cấp cho cả hai bé
+const LEVEL_THRESHOLDS = {
+    1: 0,    // Cấp 1: 0 điểm
+    2: 50,   // Cấp 2: 50 điểm
+    3: 150,  // Cấp 3: 150 điểm
+    4: 300,  // Cấp 4: 300 điểm
+    5: 500,  // Cấp 5: 500 điểm
+    6: 750,  // Cấp 6: 750 điểm
+    7: 1000, // Cấp 7: 1000 điểm
+    8: 1500, // Cấp 8: 1500 điểm
+    9: 2000, // Cấp 9: 2000 điểm
+    10: 3000 // Cấp 10: 3000 điểm
+};
+
+// Tính toán cấp độ dựa trên điểm
+function calculateLevel(points) {
+    let level = 1;
+    for (const [lvl, threshold] of Object.entries(LEVEL_THRESHOLDS)) {
+        if (points >= threshold) {
+            level = parseInt(lvl);
+        } else {
+            break;
+        }
+    }
+    return level;
+}
+
+// Tính toán tiến độ phần trăm đến cấp độ tiếp theo
+function calculateLevelProgress(points) {
+    const currentLevel = calculateLevel(points);
+    const nextLevel = currentLevel + 1;
+    
+    // Nếu đã đạt cấp độ tối đa
+    if (!LEVEL_THRESHOLDS[nextLevel]) {
+        return 100;
+    }
+    
+    const currentThreshold = LEVEL_THRESHOLDS[currentLevel] || 0;
+    const nextThreshold = LEVEL_THRESHOLDS[nextLevel] || currentThreshold + 100;
+    
+    const pointsNeeded = nextThreshold - currentThreshold;
+    const pointsEarned = points - currentThreshold;
+    
+    return Math.min(100, Math.floor((pointsEarned / pointsNeeded) * 100));
+}
+
+// Hiển thị thông báo tăng cấp
+function showLevelUpNotification(childName, newLevel) {
+    // Tạo phần tử thông báo
+    const notification = document.createElement('div');
+    notification.className = 'level-up-notification';
+    
+    // Xác định tên hiển thị
+    const displayName = childName === 'tridung' ? 'Trí Dũng' : 'Thảo Vy';
+    
+    // Tạo nội dung thông báo
+    notification.innerHTML = `
+        <img src="images/gift.png" alt="Level Up" width="80">
+        <h2>Chúc mừng!</h2>
+        <p>Bé ${displayName} đã đạt</p>
+        <div class="level">CẤP ${newLevel}</div>
+        <p class="message">Hãy tiếp tục hoàn thành tốt các nhiệm vụ để đạt cấp độ cao hơn!</p>
+        <button class="close-button" onclick="this.parentNode.remove()">Đóng</button>
+    `;
+    
+    // Thêm vào trang
+    document.body.appendChild(notification);
+    
+    // Hiệu ứng pháo hoa
+    triggerFireworks(50); // 50 pháo hoa
+    
+    // Phát âm thanh
+    playAudio('firework.mp3');
+    
+    // Tự động đóng sau 5 giây
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Cập nhật hiển thị cấp độ
+function updateLevelDisplay(childName) {
+    // Lấy dữ liệu của bé
+    const childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
+    const points = childData.points || 0;
+    
+    // Tính cấp độ và tiến độ
+    const level = calculateLevel(points);
+    const progress = calculateLevelProgress(points);
+    
+    // Cập nhật hiển thị cấp độ
+    const levelElement = document.getElementById(`${childName}-level`);
+    if (levelElement) {
+        levelElement.textContent = level;
+    }
+    
+    // Cập nhật thanh tiến độ
+    const progressElement = document.getElementById(`${childName}-xp-progress`);
+    if (progressElement) {
+        progressElement.style.width = `${progress}%`;
+    }
+}
+
+// Cải tiến hiệu ứng pháo hoa
+function triggerFireworks(count = 200) {  // Tăng số lượng pháo hoa mặc định lên 200 (gấp 10 lần so với trước đó)
+    // Tạo container cho pháo hoa
+    let container = document.getElementById('fireworks-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'fireworks-container';
+        container.id = 'fireworks-container';
+        document.body.appendChild(container);
+    }
+    
+    // Phát âm thanh pháo hoa
+    const audio = new Audio('audio/firework.mp3');
+    audio.volume = 0.8;  // Đảm bảo âm lượng phù hợp
+    audio.play().catch(e => console.log("Lỗi phát âm thanh:", e));
+    
+    // Màu sắc pháo hoa - thêm nhiều màu hơn
+    const colors = [
+        '#FF5252', '#FF4081', '#E040FB', '#7C4DFF', '#536DFE', 
+        '#448AFF', '#40C4FF', '#18FFFF', '#64FFDA', '#69F0AE', 
+        '#B2FF59', '#EEFF41', '#FFFF00', '#FFD740', '#FFAB40', '#FF6E40',
+        '#FF1744', '#F50057', '#D500F9', '#651FFF', '#3D5AFE',
+        '#2979FF', '#00B0FF', '#00E5FF', '#1DE9B6', '#00E676',
+        '#76FF03', '#C6FF00', '#FFEA00', '#FFC400', '#FF9100', '#FF3D00'
+    ];
+    
+    // Tạo pháo hoa với số lượng lớn hơn và tần suất nhanh hơn
+    for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+            createFirework(container, colors);
+        }, i * 20); // Giảm thời gian giữa mỗi pháo hoa để tạo hiệu ứng dày đặc hơn
+    }
+    
+    // Xóa container sau khi hiệu ứng kết thúc
+    setTimeout(() => {
+        if (container && container.parentNode) {
+            container.parentNode.removeChild(container);
+        }
+    }, count * 20 + 3000); // Điều chỉnh thời gian hiển thị
+}
+
+// Cải tiến hàm tạo pháo hoa
+function createFirework(container, colors) {
+    // Vị trí xuất hiện ngẫu nhiên trên toàn màn hình
+    const x = Math.random() * 100;
+    const y = Math.random() * 80 + 10;
+    
+    // Kích thước ngẫu nhiên - tăng kích thước
+    const size = Math.random() * 10 + 5; // Tăng kích thước pháo hoa
+    
+    // Màu ngẫu nhiên
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    
+    // Tạo pháo hoa
+    const firework = document.createElement('div');
+    firework.className = 'firework';
+    firework.style.position = 'absolute';
+    firework.style.left = `${x}%`;
+    firework.style.top = `${y}%`;
+    firework.style.width = `${size}px`;
+    firework.style.height = `${size}px`;
+    firework.style.backgroundColor = color;
+    firework.style.borderRadius = '50%';
+    firework.style.boxShadow = `0 0 ${size * 2}px ${size}px ${color}`;
+    firework.style.zIndex = '9999';
+    firework.style.opacity = '0';
+    firework.style.animation = 'firework-core 3s forwards';
+    
+    container.appendChild(firework);
+    
+    // Số lượng tia pháo hoa - tăng số lượng
+    const rayCount = Math.floor(Math.random() * 20) + 20; // 20-40 tia (tăng so với trước đó)
+    
+    // Tạo các tia
+    for (let i = 0; i < rayCount; i++) {
+        const angle = (i / rayCount) * 360;
+        const distance = 70 + Math.random() * 200; // 70-270px (tăng khoảng cách)
+        const duration = 0.5 + Math.random() * 1.5; // 0.5-2s (tăng thời gian)
+        
+        const ray = document.createElement('div');
+        ray.className = 'firework-ray';
+        ray.style.position = 'absolute';
+        
+        // Đặt vị trí và style
+        ray.style.left = `${x}%`;
+        ray.style.top = `${y}%`;
+        ray.style.width = `${size * 0.7}px`;
+        ray.style.height = `${size * 0.7}px`;
+        ray.style.backgroundColor = color;
+        ray.style.borderRadius = '50%';
+        ray.style.boxShadow = `0 0 ${size}px ${size / 2}px ${color}`;
+        ray.style.transform = `translate(-50%, -50%)`;
+        ray.style.opacity = '1';
+        ray.style.zIndex = '9999';
+        
+        // Thiết lập animation với CSS
+        ray.style.transition = `transform ${duration}s ease-out, opacity ${duration}s ease-out`;
+        
+        container.appendChild(ray);
+        
+        // Kích hoạt animation
+        setTimeout(() => {
+            ray.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateX(${distance}px)`;
+            ray.style.opacity = '0';
+        }, 10);
+        
+        // Xóa tia sau khi animation kết thúc
+        setTimeout(() => {
+            if (ray && ray.parentNode) {
+                ray.parentNode.removeChild(ray);
+            }
+        }, duration * 1000);
+    }
+    
+    // Xóa pháo hoa gốc
+    setTimeout(() => {
+        if (firework && firework.parentNode) {
+            firework.parentNode.removeChild(firework);
+        }
+    }, 2000);
 }
