@@ -10,7 +10,6 @@
     
     <!-- Thêm CSS cho profile, cây và các phần thiếu -->
     <style>
-        /* Thêm màu sắc sinh động hơn cho trẻ em */
         :root {
             --primary-color: #FF7043;
             --accent-color: #4CAF50;
@@ -21,16 +20,32 @@
             --btn-neutral: #8B7355;
             --btn-bad: #7B1818;
             --highlight-color: #FFEB3B;
-            --pastel-blue: #81D4FA;
-            --pastel-green: #A5D6A7;
-            --pastel-yellow: #FFF59D;
-            --pastel-red: #FFAB91;
-            --pastel-purple: #CE93D8;
         }
 
+        body {
+            /* background-image: url('images/hinhnen.jpg');*/
+            background: linear-gradient(135deg, #ffffff, #ffffff);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            font-family: 'Baloo 2', cursive;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
 
-
-
+        /* Add overlay to improve text readability on the background image */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(45, 36, 36, 0.2);
+            z-index: -1;
+        }
 
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
@@ -43,18 +58,18 @@
             padding: 10px 0;
             position: relative;
         }
-
+        
         .header h1 {
-    font-size: 2rem;
-    margin: 10px 0 5px;
-    color: #e95ae2; /* Màu cam đậm như trong hình */
-    text-shadow: 0px 0px 10px rgba(255, 102, 0, 0.5); /* Hiệu ứng phát sáng cam */
-    font-weight: bold;
-    letter-spacing: 1px;
-    padding: 5px 10px;
-    display: inline-block;
-    position: relative;
-}
+            font-size: 1.8rem;
+            margin: 10px 0 5px;
+            background: linear-gradient(45deg, #FF7043, #FF9800);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0px 2px 4px rgba(0,0,0,0.3);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
         
         /* CSS cho thử thách tuần mới - nhỏ lại và xinh hơn */
         .weekly-challenge-container {
@@ -63,7 +78,7 @@
             border-radius: 15px;
             padding: 15px;
             margin: 15px 0;
-            box-shadow: 0 4px 15px rgba(163, 240, 153, 0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             position: relative;
             overflow: hidden;
             border-left: 3px solid #FFEB3B;
@@ -76,7 +91,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(164, 240, 174, 0.1) 0%, rgba(255,255,255,0) 70%);
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
             opacity: 0.5;
             animation: shineBg 3s infinite linear;
             pointer-events: none;
@@ -98,7 +113,7 @@
 
         .progress-bar {
             height: 8px;
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255,255,255,0.2);
             border-radius: 10px;
             overflow: hidden;
             position: relative;
@@ -136,12 +151,12 @@
         
         /* Thi đua tuần này */
         .weekly-competition {
-            background: linear-gradient(135deg, #9eec8f, #96e477);
+            background: linear-gradient(135deg, #212121, #424242);
             color: white;
             border-radius: 15px;
             padding: 15px;
             margin: 15px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             position: relative;
         }
         
@@ -341,12 +356,12 @@
             align-items: center;
             justify-content: center;
             margin: 10px 0;
-            background: rgba(245, 86, 12, 0.932);
+            background: #FF7043;
             border-radius: 20px;
             padding: 8px 15px;
             width: 100%; /* Kéo dài khung ra */
             max-width: 570px; /* Giới hạn chiều rộng tối đa */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            /*box-shadow: 0 2px 8px rgba(0,0,0,0.3);*/
             margin-left: auto;
             margin-right: auto;
         }
@@ -376,7 +391,7 @@
         }
         
         .current-time {
-            color: #fdfdfd;
+            color: #ffffff;
             font-weight: bold;
             font-size: 16px;
         }
@@ -396,7 +411,7 @@
             border-radius: 15px;
             padding: 20px;
             margin: 20px 0;
-            box-shadow: 0 4px 15px rgba(185, 250, 196, 0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             position: relative;
             overflow: hidden;
             border-left: 5px solid #FFEB3B;
@@ -1159,6 +1174,7 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             transition: transform 0.3s, box-shadow 0.3s;
             z-index: 1000;
+            border: none; /* Thêm để đảm bảo không có border mặc định */
         }
         
         .tree-icon-button:hover {
@@ -1167,182 +1183,50 @@
             animation: pulse 2s infinite alternate;
         }
         
-        @keyframes pulse {
-            0% { box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-            100% { box-shadow: 0 4px 20px rgba(76, 175, 80, 0.6); }
-        }
-        
-        .tree-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-        }
-        
-        .tree-modal.active {
-            display: flex;
-        }
-        
-        .tree-modal-content {
-            background: #2D2424;
-            border-radius: 15px;
-            padding: 20px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: scaleIn 0.3s forwards;
-        }
-        
-        .tree-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding-bottom: 10px;
-        }
-        
-        .tree-modal-header h2 {
-            margin: 0;
-            color: var(--primary-color);
-        }
-        
-        .tree-modal-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        
-        .tree-display {
-            text-align: center;
-        }
-        
-        .tree-info {
-            margin-top: 20px;
-        }
-        
-        .points {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-        
-        .level {
-            font-size: 1.1em;
-            color: #FFEB3B;
-            margin-top: 5px;
-        }
-        
-        .progress-to-next-level {
-            margin-top: 10px;
-        }
-        
-        .level-bar {
-            height: 10px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .level-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #FFEB3B, #FFC107);
-            border-radius: 10px;
-            width: 0%;
-            transition: width 1s ease;
-        }
-        
-        .level-markers {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8em;
-            color: rgba(255,255,255,0.5);
-            margin-top: 5px;
-        }
+        <style>
+  .tree-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
 
-        /* CSS cho các khối nội dung (làm trong suốt để thấy hình nền) */
-        .weekly-challenge-container, .weekly-competition, .task, .stats-container, .tree-modal-content, .level-up-notification {
-            background-color: rgba(3, 82, 11, 0.5) !important; /* Màu nền tối với độ trong suốt */
-            backdrop-filter: blur(5px); /* Hiệu ứng mờ phía sau */
-            -webkit-backdrop-filter: blur(5px); /* Hỗ trợ Safari */
-            border: 1px solid rgba(255, 255, 255, 0.3); /* Viền mỏng */
-        }
+  .tree-modal.active {
+    display: flex;
+  }
+
+  .tree-modal-content {
+    background: #2D2424;
+    border-radius: 15px;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: scaleIn 0.3s ease-in-out forwards;
+  }
+
+  .tree-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .tree-image {
+    width: 180px;
+    height: auto;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+  }
+</style>
         
-        /* CSS cho thử thách tuần mới */
-        .weekly-challenge-container {
-            background: linear-gradient(135deg, rgba(98, 0, 234, 0.5)) !important;
-            border-left: 5px solid #FFEB3B;
-        }
-        
-        /* CSS cho thi đua tuần này */
-        .weekly-competition {
-            background: linear-gradient(135deg, rgba(183, 235, 186, 0.5)) !important;
-        }
-        
-        /* Tối ưu hóa giao diện cho thiết bị di động */
-        @media screen and (max-width: 576px) {
-            body {
-                /* Đảm bảo hình nền hiển thị tốt trên thiết bị nhỏ */
-                background-position: center center;
-                background-size: cover;
-                background-attachment: fixed;
-            }
-            
-            /* Tăng kích thước font chữ cho dễ đọc */
-            .task-time {
-                font-size: 18px !important;
-                font-weight: bold;
-            }
-            
-            .task-name {
-                font-size: 16px !important;
-            }
-            
-            .rating-btn {
-                padding: 12px 5px !important;
-                font-size: 14px !important;
-            }
-            
-            /* Cây chiếm ít không gian hơn trên màn hình nhỏ */
-            .tree-image {
-                width: 180px !important;
-                height: 180px !important;
-            }
-            
-            /* Điều chỉnh kích thước ảnh đại diện */
-            .profile-container img {
-                width: 100px !important;
-                height: 100px !important;
-            }
-            
-            /* Điều chỉnh tiêu đề cho vừa màn hình */
-            .header h1 {
-                font-size: 1.5rem !important;
-            }
-        }
-        
-        /* CSS cho giao diện mobile */
-        @media screen and (max-width: 480px) {
-            /* Điều chỉnh các nút đánh giá */
-            .rating-buttons {
-                display: flex;
-                flex-wrap: wrap;
-            }
-            
-            .rating-btn {
-                flex: 0 0 100%; /* Mỗi nút chiếm một hàng */
-                margin-bottom: 5px;
-            }
-        }
+   
     </style>
 </head>
 <body>
@@ -1377,7 +1261,7 @@
 
     <div class="container">
         <div class="header">
-            <h1>THỜI GIAN BIỂU CHO BÉ</h1>
+            <h1>Thời gian biểu cho bé</h1>
             
             <!-- Thêm điều hướng ngày -->
             <div class="date-navigation">
@@ -1495,7 +1379,7 @@
                     </div>
                     <div class="stats-row">
                         <div class="stats-label">Độ tuân thủ:</div>
-                        <div class="stats-value" id="stats-compliance">0%</div>
+                        <div class="stats-value" id="stats-compliance">0%</</div>
                     </div>
                 </div>
             </div>
@@ -1671,123 +1555,113 @@
         };
 
         // Đánh giá nhiệm vụ và cập nhật thống kê
-        function rateTask(childName, taskId, rating) {
-            // Format ngày đang xem để lưu đánh giá
-            const dateString = viewDate.toISOString().split('T')[0];
-            const now = new Date();
-            const today = now.toISOString().split('T')[0];
-            
-            // Kiểm tra không cho đánh giá nhiệm vụ trong tương lai
-            if (dateString > today) {
-                alert("Không thể đánh giá nhiệm vụ trong tương lai!");
-                return;
-            }
-            
-            // Nếu là ngày hiện tại, kiểm tra không cho đánh giá nhiệm vụ chưa đến giờ
-            if (dateString === today) {
-                const task = tasks[childName].find(t => t.id === taskId);
-                if (task) {
-                    const currentHour = now.getHours();
-                    const currentMinute = now.getMinutes();
-                    const taskHour = parseInt(task.time.split(':')[0]);
-                    const taskMinute = parseInt(task.time.split(':')[1]);
-                    
-                    // Nếu thời gian hiện tại chưa đến giờ của nhiệm vụ
-                    if (currentHour < taskHour || (currentHour === taskHour && currentMinute < taskMinute)) {
-                        alert(`Chưa đến giờ thực hiện nhiệm vụ "${task.name}" (${task.time})!`);
-                        return;
-                    }
-                }
-            }
-            
-            // Kiểm tra mật khẩu nếu không phải là môi trường phát triển
-            if (!window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
-                const pin = prompt("Nhập mã PIN để xác nhận (****)");
-                if (pin !== "2022") {
-                    alert("Mã PIN không đúng!");
-                    return;
-                }
-            }
-            
-            // Lưu đánh giá cho ngày đang xem
-            let childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
-            if (!childData.tasks) childData.tasks = {};
-            if (!childData.tasks[dateString]) childData.tasks[dateString] = {};
-            
-            // Cập nhật đánh giá và thống kê
-            const previousRating = childData.tasks[dateString][taskId];
-            childData.tasks[dateString][taskId] = rating;
-            
-            // Xử lý thống kê tuần nếu đang xem ngày hiện tại
-            if (dateOffset === 0) {
-                updateWeeklyStats(childName, rating, previousRating);
-            }
-            
-            // Tính điểm và cập nhật cấp độ
-            let pointsEarned = 0;
-            
-            if (rating === 'good') {
-                // Thêm điểm cho đánh giá tốt
-                pointsEarned = POINTS.good;
-                
-                // Thêm lượt tưới nước nếu đang xem ngày hiện tại
-                if (dateOffset === 0) {
-                    addWaterCredits(1);
-                    
-                    // Tạo hiệu ứng pháo hoa khi được vote good
-                    createFireworks();
-                }
-                
-                // Phát âm thanh khen ngợi
-                const task = tasks[childName].find(t => t.id === taskId);
-                if (task && task.audio) {
-                    playAudio(task.audio);
-                }
-                
-                // Hiển thị popup chúc mừng nếu đang xem ngày hiện tại
-                if (dateOffset === 0) {
-                    showCongratulation(task.name, childName);
-                }
-            } else if (rating === 'neutral') {
-                // Thêm điểm cho đánh giá trung bình
-                pointsEarned = POINTS.neutral;
-                
-                // Phát âm thanh "cố gắng"
-                playAudio("ban_co_gang_vao_lan_sau_nhe.mp3");
-            } else if (rating === 'bad') {
-                // Phát âm thanh "chưa tốt"
-                playAudio("chua_tot.mp3");
-            }
-            
-            // Nếu đang xem ngày hiện tại, thêm điểm kinh nghiệm
-            if (dateOffset === 0 && pointsEarned > 0) {
-                addExperiencePoints(childName, pointsEarned);
-            }
-            
-            // Lưu dữ liệu
-            localStorage.setItem(`${childName}Data`, JSON.stringify(childData));
-            
-            // Cập nhật giao diện
-            updateTaskDisplay();
-            
-            // Cập nhật hiển thị thống kê
-            updateStatsDisplay();
-            
-            // Cập nhật tiến độ thử thách tuần nếu đây là nhiệm vụ đi ngủ
-            if ((childName === 'tridung' && taskId === 'td6') || 
-                (childName === 'thaoVy' && taskId === 'tv6')) {
-                updateWeeklyChallengeProgress();
-            }
-            
-            // Kiểm tra và cập nhật huy hiệu nếu đang xem ngày hiện tại
-            if (dateOffset === 0) {
-                checkBadges(childName);
-            }
-            
-            // Cập nhật điểm thi đua
-            updateCompetitionScores(childName, rating);
+function rateTask(childName, taskId, rating) {
+    console.log("Bắt đầu đánh giá nhiệm vụ:", childName, taskId, rating);
+    
+    // Format ngày đang xem để lưu đánh giá
+    const dateString = viewDate.toISOString().split('T')[0];
+    
+    // Kiểm tra mật khẩu nếu không phải là môi trường phát triển
+    if (!window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+        const pin = prompt("Nhập mã PIN để xác nhận (****)");
+        if (pin !== "2022") {
+            alert("Mã PIN không đúng!");
+            return;
         }
-
+    }
+    
+    // Lưu đánh giá cho ngày đang xem
+    let childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
+    if (!childData.tasks) childData.tasks = {};
+    if (!childData.tasks[dateString]) childData.tasks[dateString] = {};
+    
+    // Lấy đánh giá trước đó nếu có
+    const previousRating = childData.tasks[dateString][taskId];
+    
+    // Cập nhật đánh giá mới
+    childData.tasks[dateString][taskId] = rating;
+    
+    // Lưu dữ liệu ngay lập tức để đảm bảo không mất
+    localStorage.setItem(`${childName}Data`, JSON.stringify(childData));
+    
+    // Cập nhật thống kê
+    updateWeeklyStats(childName, rating, previousRating);
+    
+    // Tính điểm dựa trên đánh giá
+    let pointsEarned = 0;
+    if (rating === 'good') {
+        pointsEarned = POINTS.good;
+        
+        // Thêm lượt tưới nước
+        addWaterCredits(1);
+        
+        // Hiển thị hiệu ứng
+        createFireworks();
+        
+        // Phát âm thanh khen ngợi
+        const task = tasks[childName].find(t => t.id === taskId);
+        if (task && task.audio) {
+            playAudio(task.audio);
+        }
+        
+        // Hiển thị popup chúc mừng
+        showCongratulation(task.name, childName);
+        
+    } else if (rating === 'neutral') {
+        pointsEarned = POINTS.neutral;
+        playAudio("ban_co_gang_vao_lan_sau_nhe.mp3");
+    } else if (rating === 'bad') {
+        playAudio("chua_tot.mp3");
+    }
+    
+    // Thêm điểm kinh nghiệm
+    if (pointsEarned > 0) {
+        addExperiencePoints(childName, pointsEarned);
+    }
+    
+    // Cập nhật thông tin hiển thị
+    updateTaskDisplay();
+    
+    // Cập nhật hiển thị thống kê
+    updateStatsDisplay();
+    
+    // Cập nhật tiến độ thử thách tuần
+    if ((childName === 'tridung' && taskId === 'td6') || (childName === 'thaoVy' && taskId === 'tv6')) {
+        updateWeeklyChallengeProgress();
+    }
+    
+    // Cập nhật huy hiệu
+    checkBadges(childName);
+    
+    // Cập nhật điểm thi đua
+    updateCompetitionScores(childName, rating);
+    
+    // Cập nhật trực tiếp trạng thái nút
+    const taskElement = document.querySelector(`#${childName} [data-task-id="${taskId}"]`);
+    if (taskElement) {
+        // Cập nhật lớp cho task
+        taskElement.className = `task completed-${rating}`;
+        
+        // Cập nhật trạng thái cho các nút
+        const goodBtn = taskElement.querySelector('.good-btn');
+        const neutralBtn = taskElement.querySelector('.neutral-btn');
+        const badBtn = taskElement.querySelector('.bad-btn');
+        
+        if (goodBtn && neutralBtn && badBtn) {
+            // Xóa trạng thái active cũ
+            goodBtn.classList.remove('active');
+            neutralBtn.classList.remove('active');
+            badBtn.classList.remove('active');
+            
+            // Thêm active cho nút được chọn
+            if (rating === 'good') goodBtn.classList.add('active');
+            if (rating === 'neutral') neutralBtn.classList.add('active');
+            if (rating === 'bad') badBtn.classList.add('active');
+        }
+    }
+    
+    console.log("Đánh giá thành công:", childName, taskId, rating);
+}
         // Cập nhật thống kê tuần
         function updateWeeklyStats(childName, newRating, previousRating) {
             // Tải thống kê hiện tại
@@ -1961,6 +1835,15 @@
             // Format ngày theo chuẩn ISO để so sánh với dữ liệu lưu trữ
             const viewDateString = viewDate.toISOString().split('T')[0];
             
+            // Lấy ngày và giờ hiện tại để kiểm tra task đã tới giờ chưa
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const isToday = viewDate.toISOString().split('T')[0] === now.toISOString().split('T')[0];
+            
+            // Kiểm tra xem ngày xem có phải là ngày trong tương lai hay không
+            const isFutureDate = viewDate > now;
+            
             // Hiển thị nhiệm vụ cho từng bé
             for (const childName in tasks) {
                 const childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
@@ -1971,26 +1854,46 @@
                 tasks[childName].forEach(task => {
                     // Lấy đánh giá của ngày đang xem
                     const rating = childData.tasks && childData.tasks[viewDateString] ? 
-                                   childData.tasks[viewDateString][task.id] : null;
+                                childData.tasks[viewDateString][task.id] : null;
+                    
+                    // Kiểm tra xem task đã tới giờ chưa
+                    const taskHour = parseInt(task.time.split(':')[0]);
+                    const taskMinute = parseInt(task.time.split(':')[1]);
+                    
+                    // Một nhiệm vụ bị khóa nếu:
+                    // 1. Là ngày trong tương lai HOẶC
+                    // 2. Là ngày hôm nay nhưng chưa tới giờ
+                    const isTaskTime = !isFutureDate && (!isToday || (currentHour > taskHour || 
+                                    (currentHour === taskHour && currentMinute >= taskMinute)));
+                    
+                    // Tạo class cho disabled nếu chưa tới giờ
+                    const disabledClass = !isTaskTime ? 'disabled-task' : '';
                     
                     const taskElement = document.createElement('div');
-                    taskElement.className = `task ${rating ? 'completed-' + rating : ''}`;
+                    taskElement.className = `task ${rating ? 'completed-' + rating : ''} ${disabledClass}`;
+                    taskElement.setAttribute('data-task-id', task.id);
+                    
+                    // Nội dung task và các nút
                     taskElement.innerHTML = `
                         <div class="task-header">
                             <div class="task-time">${task.time}</div>
                             <div class="task-name">${task.name}</div>
+                            ${!isTaskTime ? '<span class="lock-icon"><i class="fas fa-lock"></i></span>' : ''}
                         </div>
                         <div class="rating-buttons">
                             <button class="rating-btn good-btn ${rating === 'good' ? 'active' : ''}" 
-                                    onclick="rateTask('${childName}', '${task.id}', 'good')">
+                                    ${!isTaskTime ? 'disabled' : ''}
+                                    onclick="${isTaskTime ? `rateTask('${childName}', '${task.id}', 'good')` : 'taskNotAvailable()'}">
                                 <i class="fas fa-smile"></i> Tốt
                             </button>
                             <button class="rating-btn neutral-btn ${rating === 'neutral' ? 'active' : ''}" 
-                                    onclick="rateTask('${childName}', '${task.id}', 'neutral')">
+                                    ${!isTaskTime ? 'disabled' : ''}
+                                    onclick="${isTaskTime ? `rateTask('${childName}', '${task.id}', 'neutral')` : 'taskNotAvailable()'}">
                                 <i class="fas fa-meh"></i> Chấp nhận được
                             </button>
                             <button class="rating-btn bad-btn ${rating === 'bad' ? 'active' : ''}" 
-                                    onclick="rateTask('${childName}', '${task.id}', 'bad')">
+                                    ${!isTaskTime ? 'disabled' : ''}
+                                    onclick="${isTaskTime ? `rateTask('${childName}', '${task.id}', 'bad')` : 'taskNotAvailable()'}">
                                 <i class="fas fa-frown"></i> Chưa tốt
                             </button>
                         </div>
@@ -2088,34 +1991,47 @@
                 document.getElementById('water-units').textContent = waterCredits;
             }
             
-            // Thêm sự kiện cho biểu tượng cây và nút đóng modal
+            // Thêm sự kiện cho nút cây và nút đóng modal
             const treeIcon = document.getElementById('tree-icon');
             const treeModal = document.getElementById('tree-modal');
             const closeTreeModal = document.getElementById('close-tree-modal');
             
+            // Sửa sự kiện click cho nút cây
             if (treeIcon) {
-                treeIcon.addEventListener('click', function() {
+                treeIcon.addEventListener('click', function(event) {
+                    event.preventDefault(); // Ngăn chặn hành vi mặc định
                     treeModal.classList.add('active');
-                    // Cập nhật hiển thị cây khi mở modal
                     updateTreeDisplay();
+                    console.log("Tree icon clicked, modal should be visible now");
                 });
             }
             
+            // Sửa sự kiện đóng modal cây
             if (closeTreeModal) {
                 closeTreeModal.addEventListener('click', function() {
                     treeModal.classList.remove('active');
+                    console.log("Close button clicked, modal should be hidden now");
                 });
             }
             
-            // Đóng modal khi click ra ngoài
-            treeModal.addEventListener('click', function(e) {
-                if (e.target === treeModal) {
+            // Đóng modal khi click ra ngoài - Sửa lại cách xử lý
+            treeModal.addEventListener('click', function(event) {
+                if (event.target === treeModal) {
                     treeModal.classList.remove('active');
+                    console.log("Outside modal clicked, modal should be hidden now");
                 }
             });
             
-            // Cập nhật hiển thị cây chỉ trong modal
+            // Cập nhật hiển thị cây trong modal
             updateTreeDisplay();
+            
+            // Khởi tạo các sự kiện và dữ liệu cho hệ thống cấp độ
+            updateProfileDisplay('tridung');
+            updateProfileDisplay('thaoVy');
+            
+            // Tải dữ liệu thi đua
+            loadCompetitionScores();
+            updateCompetitionDisplay();
         });
 
         // Các hàm khác vẫn giữ nguyên...
@@ -2920,6 +2836,195 @@
                 firework.remove();
             }, 1000);
         }
+        // Thêm hàm này vào phần script của bạn (ngay trước thẻ đóng script cuối cùng)
+// Thêm hàm này vào phần script
+function resetCurrentDayVotes() {
+    const pin = prompt("Nhập mã PIN để xác nhận đặt lại bình chọn ngày hiện tại (****)");
+    if (pin !== "2022") {
+        alert("Mã PIN không đúng!");
+        return;
+    }
+    
+    // Format ngày đang xem
+    const dateString = viewDate.toISOString().split('T')[0];
+    
+    if (confirm(`Bạn có chắc chắn muốn đặt lại bình chọn cho ngày ${dateString} không?`)) {
+        // Reset cho mỗi trẻ
+        ['tridung', 'thaoVy'].forEach(childName => {
+            let childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
+            if (childData.tasks && childData.tasks[dateString]) {
+                // Xoá chỉ ngày cụ thể
+                delete childData.tasks[dateString];
+                localStorage.setItem(`${childName}Data`, JSON.stringify(childData));
+            }
+        });
+        
+        // Cập nhật giao diện
+        updateTaskDisplay();
+        
+        // Nếu đang xem ngày hiện tại, cập nhật thống kê và thi đua
+        if (dateOffset === 0) {
+            loadWeeklyStats();
+            updateStatsDisplay();
+            updateCompetitionDisplay();
+        }
+        
+        alert(`Đã đặt lại bình chọn cho ngày ${dateString}!`);
+    }
+}
+        function resetAllVotes() {
+    // Kiểm tra xác nhận
+    const pin = prompt("Nhập mã PIN để xác nhận đặt lại tất cả bình chọn (****)");
+    if (pin !== "2022") {
+        alert("Mã PIN không đúng!");
+        return;
+    }
+    
+    if (confirm("Bạn có chắc chắn muốn đặt lại TẤT CẢ bình chọn không? Hành động này không thể hoàn tác!")) {
+        // Lấy danh sách trẻ em
+        const children = ['tridung', 'thaoVy'];
+        
+        // Xoá dữ liệu bình chọn cho mỗi trẻ
+        children.forEach(childName => {
+            let childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
+            if (childData.tasks) {
+                childData.tasks = {};  // Xoá tất cả bình chọn
+                localStorage.setItem(`${childName}Data`, JSON.stringify(childData));
+            }
+        });
+        
+        // Reset thống kê tuần
+        weeklyStats = {
+            tridung: { good: 0, neutral: 0, bad: 0 },
+            thaoVy: { good: 0, neutral: 0, bad: 0 }
+        };
+        saveWeeklyStats();
+        
+        // Reset điểm thi đua
+        competitionScores = {
+            tridung: 0,
+            thaoVy: 0
+        };
+        saveCompetitionScores();
+        
+        // Cập nhật giao diện
+        updateTaskDisplay();
+        updateStatsDisplay();
+        updateCompetitionDisplay();
+        
+        alert("Đã đặt lại tất cả bình chọn thành công!");
+    }
+}
+        // Thêm điểm kinh nghiệm
+function addExperiencePoints(childName, points) {
+    // Tải dữ liệu hiện tại
+    const childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
+    
+    // Thêm điểm
+    if (!childData.points) childData.points = 0;
+    childData.points += points;
+    
+    // Tính cấp độ mới
+    const oldLevel = calculateLevel(childData.points - points);
+    const newLevel = calculateLevel(childData.points);
+    
+    // Lưu dữ liệu
+    localStorage.setItem(`${childName}Data`, JSON.stringify(childData));
+    
+    // Cập nhật hiển thị
+    updateProfileDisplay(childName);
+    
+    // Nếu cấp độ tăng, hiển thị thông báo
+    if (newLevel > oldLevel) {
+        showLevelUpNotification(childName, newLevel);
+    }
+}
+
+// Tính cấp độ dựa trên điểm
+function calculateLevel(points) {
+    // Công thức tính cấp độ: mỗi cấp cần thêm 10 điểm so với cấp trước
+    // Cấp 1: 0-9, Cấp 2: 10-29, Cấp 3: 30-59, Cấp 4: 60-99, Cấp 5: 100-149...
+    let level = 1;
+    let threshold = 10;
+    
+    while (points >= threshold) {
+        level++;
+        threshold += level * 10;
+    }
+    
+    return level;
+}
+
+// Cập nhật hiển thị hồ sơ
+function updateProfileDisplay(childName) {
+    // Tải dữ liệu
+    const childData = JSON.parse(localStorage.getItem(`${childName}Data`) || '{}');
+    const points = childData.points || 0;
+    
+    // Tính cấp độ và tiến độ
+    const level = calculateLevel(points);
+    
+    // Tính ngưỡng điểm hiện tại
+    let lowerThreshold = 0;
+    for (let i = 1; i < level; i++) {
+        lowerThreshold += i * 10;
+    }
+    
+    // Tính ngưỡng điểm tiếp theo
+    const upperThreshold = lowerThreshold + level * 10;
+    
+    // Tính phần trăm tiến độ
+    const progress = ((points - lowerThreshold) / (upperThreshold - lowerThreshold)) * 100;
+    
+    // Cập nhật hiển thị
+    document.getElementById(`${childName}-level`).textContent = level;
+    document.getElementById(`${childName}-xp-progress`).style.width = `${progress}%`;
+}
+
+// Hiển thị thông báo tăng cấp
+function showLevelUpNotification(childName, level) {
+    // Tạo phần tử thông báo
+    const notification = document.createElement('div');
+    notification.className = 'level-up-notification';
+    
+    // Tên hiển thị
+    const displayName = childName === 'thaoVy' ? 'Thảo Vy' : 'Trí Dũng';
+    
+    // Nội dung thông báo
+    notification.innerHTML = `
+        <h2>Chúc mừng bạn!</h2>
+        <p>Bé ${displayName} đã đạt</p>
+        <div class="level">Cấp ${level}</div>
+        <div class="message">Tiếp tục hoàn thành tốt các nhiệm vụ để tăng cấp!</div>
+        <button class="close-button">Đóng</button>
+    `;
+    
+    // Thêm vào trang
+    document.body.appendChild(notification);
+    
+    // Xử lý sự kiện nút đóng
+    notification.querySelector('.close-button').addEventListener('click', () => {
+        notification.remove();
+    });
+    
+    // Tự động đóng sau 5 giây
+    setTimeout(() => {
+        if (document.body.contains(notification)) {
+            notification.remove();
+        }
+    }, 5000);
+    
+    // Phát âm thanh
+    playAudio('firework.mp3');
+    
+    // Hiệu ứng pháo hoa
+    createFireworks();
+}
+
+// Hiển thị thông báo khi cố gắng đánh giá nhiệm vụ chưa tới giờ
+function taskNotAvailable() {
+    alert("Bạn không thể đánh giá nhiệm vụ này vì chưa tới giờ thực hiện hoặc bạn đang xem ngày trong tương lai!");
+}
     </script>
 </body>
 </html>
